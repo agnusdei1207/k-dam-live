@@ -46,6 +46,7 @@
       btnThemeToggle: document.getElementById('btn-theme-toggle'),
       themeMoon: document.getElementById('theme-moon'),
       themeSun: document.getElementById('theme-sun'),
+      langSelect: document.getElementById('lang-select'),
 
       tickerContent: document.getElementById('ticker-content'),
 
@@ -185,6 +186,14 @@
     initTheme();
     updateTimestamp();
     initEvents();
+
+    // Initialize 22-language i18n
+    if (window.i18n) {
+      const urlLang = new URLSearchParams(window.location.search).get('lang');
+      const initialLang = (urlLang && i18n.LANGUAGES[urlLang]) ? urlLang : i18n.getStoredLang();
+      i18n.setLanguage(initialLang);
+      if (elements.langSelect) elements.langSelect.value = initialLang;
+    }
 
     // Check and restore cached GPS coordinates if previously enabled
     loadCachedLocation();
@@ -415,13 +424,23 @@
   }
 
   function renderStats() {
+    const isI18n = Boolean(window.i18n);
     const m = telemetryService.getOverviewMetrics();
     if (elements.valAvgRate) elements.valAvgRate.textContent = `${m.avgStorageRate}%`;
-    if (elements.deltaAvgRate) elements.deltaAvgRate.textContent = `예년 대비 ${m.diffPrevYear}`;
+    if (elements.deltaAvgRate) {
+      const diffLabel = isI18n ? i18n.t('diffPrevYear') : '예년 대비';
+      elements.deltaAvgRate.textContent = `${diffLabel} ${m.diffPrevYear}`;
+    }
     if (elements.valTotalStorage) elements.valTotalStorage.textContent = `${Number(m.totalStorageVolume).toLocaleString()} M㎥`;
     if (elements.valTotalInflow) elements.valTotalInflow.textContent = `${Number(m.totalInflow).toLocaleString()} ㎥/s`;
     if (elements.valTotalOutflow) elements.valTotalOutflow.textContent = `${Number(m.totalOutflow).toLocaleString()} ㎥/s`;
-    if (elements.valDischargeCount) elements.valDischargeCount.textContent = `방류 중인 댐 ${m.dischargingCount}개소 / 가뭄주의 ${m.droughtCount}개소`;
+    if (elements.valDischargeCount) {
+      if (isI18n) {
+        elements.valDischargeCount.textContent = i18n.t('dischargingCount', { count: m.dischargingCount });
+      } else {
+        elements.valDischargeCount.textContent = `방류 중인 댐 ${m.dischargingCount}개소 / 가뭄주의 ${m.droughtCount}개소`;
+      }
+    }
   }
 
   function getTypeBadgeClass(type) {
@@ -447,26 +466,42 @@
     }
 
     elements.damsTbody.innerHTML = dams.map((dam) => {
+      const isI18n = Boolean(window.i18n);
       let barColor = 'var(--bar-fill-green)';
       let badgeClass = 'badge-green';
-      let badgeLabel = '정상';
+      let badgeLabel = isI18n ? i18n.t('statusNormal') : '정상';
 
       if (dam.currentOutflow >= 20) {
         badgeClass = 'badge-blue live-discharge';
-        badgeLabel = '🌊 수문방류';
+        badgeLabel = `🌊 ${isI18n ? i18n.t('statusDischarge') : '수문방류'}`;
         barColor = 'var(--bar-fill-blue)';
       } else if (dam.storageRate < 40) {
         badgeClass = 'badge-red';
-        badgeLabel = '가뭄경계';
+        badgeLabel = isI18n ? i18n.t('statusDrought') : '가뭄경계';
         barColor = 'var(--bar-fill-red)';
       } else if (dam.storageRate < 50) {
         badgeClass = 'badge-yellow';
-        badgeLabel = '가뭄주의';
+        badgeLabel = isI18n ? i18n.t('statusDrought') : '가뭄주의';
         barColor = 'var(--bar-fill-yellow)';
       } else if (dam.storageRate < 60) {
         badgeClass = 'badge-yellow';
-        badgeLabel = '가뭄관심';
+        badgeLabel = isI18n ? i18n.t('statusDrought') : '가뭄관심';
         barColor = 'var(--bar-fill-yellow)';
+      }
+
+      let localizedType = dam.type;
+      if (isI18n) {
+        if (dam.type.includes('다목적')) localizedType = i18n.t('multiPurpose');
+        else if (dam.type.includes('용수전용')) localizedType = i18n.t('waterSupply');
+        else if (dam.type.includes('홍수조절')) localizedType = i18n.t('floodControl');
+      }
+
+      let localizedBasin = dam.basin;
+      if (isI18n) {
+        if (dam.basin.includes('한강')) localizedBasin = i18n.t('basinHan');
+        else if (dam.basin.includes('낙동강')) localizedBasin = i18n.t('basinNakdong');
+        else if (dam.basin.includes('금강')) localizedBasin = i18n.t('basinGeum');
+        else if (dam.basin.includes('영산') || dam.basin.includes('섬진')) localizedBasin = i18n.t('basinYeongsan');
       }
 
       const diffSign = dam.diffPrevYear > 0 ? '+' : '';
@@ -483,8 +518,8 @@
             <div class="dam-title-cell">${dam.name} ${distanceHtml}</div>
             <div class="dam-loc-sub">${dam.location}</div>
           </td>
-          <td>${dam.basin}</td>
-          <td><span class="badge ${typeClass}">${dam.type}</span></td>
+          <td>${localizedBasin}</td>
+          <td><span class="badge ${typeClass}">${localizedType}</span></td>
           <td class="text-right">
             <div class="rate-cell-wrap">
               <span class="rate-val live-num">${dam.storageRate.toFixed(1)}%</span>
@@ -739,6 +774,10 @@
 
   window.appInspectDam = openInspector;
   window.appCloseModal = closeInspector;
+  window.appReRenderTable = () => {
+    renderTable();
+    renderStats();
+  };
 
   /**
    * Robust Excel-Compatible UTF-8 BOM CSV Export Engine
@@ -812,6 +851,13 @@
   }
 
   function initEvents() {
+    if (elements.langSelect) {
+      elements.langSelect.addEventListener('change', (e) => {
+        if (window.i18n) {
+          i18n.setLanguage(e.target.value);
+        }
+      });
+    }
     if (elements.btnThemeToggle) {
       elements.btnThemeToggle.addEventListener('click', toggleTheme);
     }
