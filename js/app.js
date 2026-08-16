@@ -79,7 +79,7 @@
       renderAll();
     });
 
-    // Automatic 5-minute background refresh
+    // Automatic 1-hour background refresh
     setInterval(() => {
       telemetryService.simulateLiveTick();
       state.lastUpdatedTime = new Date();
