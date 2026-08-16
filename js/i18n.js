@@ -1322,10 +1322,6 @@
       }
     });
 
-    // 7. CSV button text
-    const btnCsvSpan = document.querySelector('#btn-export-csv span');
-    if (btnCsvSpan) btnCsvSpan.textContent = 'CSV';
-
     // Trigger re-render of table so type badges and numbers update localized if needed
     if (global.appReRenderTable) {
       global.appReRenderTable();
