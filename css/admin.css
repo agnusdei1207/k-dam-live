@@ -367,7 +367,7 @@ body {
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 16px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .filter-left {
@@ -375,8 +375,8 @@ body {
   align-items: center;
   gap: 8px;
   flex: 1;
-  max-width: 620px;
-  flex-wrap: wrap;
+  min-width: 0;
+  flex-wrap: nowrap;
 }
 
 .search-box {
@@ -388,8 +388,9 @@ body {
   border-radius: var(--radius);
   padding: 0 10px;
   height: 35px;
-  width: 100%;
-  max-width: 260px;
+  width: 220px;
+  min-width: 140px;
+  flex-shrink: 1;
   transition: border-color 0.12s ease;
 }
 
@@ -429,6 +430,8 @@ body {
   outline: none;
   font-family: inherit;
   cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
   transition: border-color 0.12s ease;
 }
 
@@ -445,7 +448,7 @@ body {
   align-items: center;
   gap: 6px;
   height: 35px;
-  padding: 0 12px;
+  padding: 0 10px;
   font-size: 0.82rem;
   font-weight: 500;
   border-radius: var(--radius);
@@ -455,6 +458,7 @@ body {
   cursor: pointer;
   font-family: inherit;
   white-space: nowrap;
+  flex-shrink: 0;
   transition: all 0.15s ease;
 }
 
@@ -1072,10 +1076,11 @@ body {
   .filter-bar {
     flex-direction: column;
     align-items: stretch;
+    gap: 10px;
   }
 
   .filter-left {
-    max-width: 100%;
+    width: 100%;
   }
 
   .basin-tabs {
@@ -1129,16 +1134,24 @@ body {
   }
 
   .filter-left {
-    flex-direction: column;
+    display: flex;
+    flex-wrap: wrap;
     align-items: stretch;
   }
 
   .search-box {
+    width: 100%;
     max-width: 100%;
   }
 
+  .btn-geo {
+    flex: 1;
+    justify-content: center;
+  }
+
   .filter-select {
-    width: 100%;
+    flex: 1;
+    min-width: 120px;
   }
 
   .basin-tabs {
