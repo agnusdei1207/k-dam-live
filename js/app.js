@@ -403,16 +403,13 @@
 
     setTimeout(() => {
       try {
-        if (typeof dialog.close === 'function') {
+        if (typeof dialog.close === 'function' && dialog.open) {
           dialog.close();
-        } else {
-          dialog.removeAttribute('open');
         }
-      } catch (err) {
-        dialog.removeAttribute('open');
-      }
+      } catch (err) {}
+      dialog.removeAttribute('open');
       dialog.classList.remove('closing');
-    }, 160);
+    }, 150);
   }
 
   window.appInspectDam = openInspector;
