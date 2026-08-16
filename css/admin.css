@@ -475,8 +475,8 @@ body {
 /* Location Status Banner */
 .geo-info-bar {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 8px;
   background: var(--surface);
   border: 1px solid var(--border-strong);
   border-left: 3px solid var(--primary);
@@ -490,6 +490,13 @@ body {
 @keyframes bannerFadeDown {
   from { opacity: 0; transform: translateY(-4px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+.geo-info-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .geo-info-content {
@@ -513,12 +520,54 @@ body {
   cursor: pointer;
   padding: 2px 6px;
   border-radius: var(--radius);
+  white-space: nowrap;
   transition: color 0.12s ease;
 }
 
 .geo-info-reset:hover {
   color: var(--primary);
   text-decoration: underline;
+}
+
+.geo-city-presets {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.geo-preset-label {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+
+.btn-city-preset {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.74rem;
+  padding: 2px 8px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: all 0.12s ease;
+}
+
+.btn-city-preset:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-subtle);
+}
+
+.btn-city-preset.active {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #ffffff;
+  font-weight: 600;
 }
 
 .distance-badge {

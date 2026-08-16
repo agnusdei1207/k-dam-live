@@ -107,30 +107,9 @@
       const savedLoc = localStorage.getItem('kdam_user_location');
       const isGeoSaved = localStorage.getItem('kdam_geo_active');
       if (savedLoc && isGeoSaved === 'true') {
-        const { lat, lng } = JSON.parse(savedLoc);
+        const { lat, lng, label } = JSON.parse(savedLoc);
         if (typeof lat === 'number' && typeof lng === 'number') {
-          state.userLocation = { lat, lng };
-          state.isGeoActive = true;
-          state.sortField = 'distanceKm';
-          state.sortOrder = 'asc';
-          telemetryService.updateUserLocation(lat, lng);
-
-          const sorted = [...telemetryService.currentData].sort(
-            (a, b) => (a.distanceKm ?? 9999) - (b.distanceKm ?? 9999)
-          );
-          const nearest = sorted[0];
-
-          if (elements.btnHeaderGps) {
-            elements.btnHeaderGps.classList.add('active');
-            elements.btnHeaderGps.setAttribute('title', '내 위치 기준 정렬 활성화됨 (클릭 시 해제)');
-          }
-
-          if (elements.geoInfoBar) {
-            elements.geoInfoBar.classList.remove('hidden');
-            if (elements.geoInfoText && nearest) {
-              elements.geoInfoText.innerHTML = `현재 위치에서 가장 가까운 댐은 <strong>${nearest.name}</strong>(약 <span class="num">${nearest.distanceKm}km</span>)입니다. 가까운 순서대로 정렬되었습니다.`;
-            }
-          }
+          applyLocation(lat, lng, label || '현재 위치', false);
         }
       }
     } catch (e) {
@@ -173,6 +152,61 @@
   }
 
   /**
+   * Apply Coordinates, Calculate Proximity, Highlight UI & Persist Cache
+   */
+  function applyLocation(latitude, longitude, locationLabel = '현재 위치', saveToStorage = true) {
+    state.userLocation = { lat: latitude, lng: longitude };
+    state.isGeoActive = true;
+    state.sortField = 'distanceKm';
+    state.sortOrder = 'asc';
+
+    if (saveToStorage) {
+      try {
+        localStorage.setItem('kdam_user_location', JSON.stringify({
+          lat: latitude,
+          lng: longitude,
+          label: locationLabel,
+          updatedAt: Date.now()
+        }));
+        localStorage.setItem('kdam_geo_active', 'true');
+      } catch (e) {}
+    }
+
+    telemetryService.updateUserLocation(latitude, longitude);
+
+    // Find the closest dam
+    const sorted = [...telemetryService.currentData].sort(
+      (a, b) => (a.distanceKm ?? 9999) - (b.distanceKm ?? 9999)
+    );
+    const nearest = sorted[0];
+
+    if (elements.btnHeaderGps) {
+      elements.btnHeaderGps.classList.add('active');
+      elements.btnHeaderGps.setAttribute('title', `${locationLabel} 기준 정렬 활성화됨 (클릭 시 해제)`);
+    }
+
+    // Highlight active preset button if matched
+    document.querySelectorAll('.btn-city-preset').forEach((btn) => {
+      const bLat = parseFloat(btn.getAttribute('data-lat'));
+      const bLng = parseFloat(btn.getAttribute('data-lng'));
+      if (Math.abs(bLat - latitude) < 0.05 && Math.abs(bLng - longitude) < 0.05) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    if (elements.geoInfoBar) {
+      elements.geoInfoBar.classList.remove('hidden');
+      if (elements.geoInfoText && nearest) {
+        elements.geoInfoText.innerHTML = `<strong>${locationLabel}</strong> 기준 가장 가까운 댐은 <strong>${nearest.name}</strong>(약 <span class="num">${nearest.distanceKm}km</span>)입니다. 가까운 순서대로 정렬되었습니다.`;
+      }
+    }
+
+    renderTable();
+  }
+
+  /**
    * Browser Geolocation Request & Proximity Distance Sorting
    * @param {boolean} silent - Whether to suppress error alerts on initial silent check
    */
@@ -185,42 +219,7 @@
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        state.userLocation = { lat: latitude, lng: longitude };
-        state.isGeoActive = true;
-        state.sortField = 'distanceKm';
-        state.sortOrder = 'asc';
-
-        // Persist coordinates and active status to localStorage
-        try {
-          localStorage.setItem('kdam_user_location', JSON.stringify({
-            lat: latitude,
-            lng: longitude,
-            updatedAt: Date.now()
-          }));
-          localStorage.setItem('kdam_geo_active', 'true');
-        } catch (e) {}
-
-        telemetryService.updateUserLocation(latitude, longitude);
-
-        // Find the closest dam
-        const sorted = [...telemetryService.currentData].sort(
-          (a, b) => (a.distanceKm ?? 9999) - (b.distanceKm ?? 9999)
-        );
-        const nearest = sorted[0];
-
-        if (elements.btnHeaderGps) {
-          elements.btnHeaderGps.classList.add('active');
-          elements.btnHeaderGps.setAttribute('title', '내 위치 기준 정렬 활성화됨 (클릭 시 해제)');
-        }
-
-        if (elements.geoInfoBar) {
-          elements.geoInfoBar.classList.remove('hidden');
-          if (elements.geoInfoText && nearest) {
-            elements.geoInfoText.innerHTML = `현재 위치에서 가장 가까운 댐은 <strong>${nearest.name}</strong>(약 <span class="num">${nearest.distanceKm}km</span>)입니다. 가까운 순서대로 정렬되었습니다.`;
-          }
-        }
-
-        renderTable();
+        applyLocation(latitude, longitude, '현재 GPS 위치', true);
       },
       (error) => {
         if (!silent) {
@@ -232,9 +231,9 @@
         }
       },
       {
-        enableHighAccuracy: false,
-        timeout: 8000,
-        maximumAge: 60000
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
       }
     );
   }
@@ -252,6 +251,10 @@
       elements.btnHeaderGps.classList.remove('active');
       elements.btnHeaderGps.setAttribute('title', '내 위치 기준 가까운 댐 순으로 정렬 (GPS)');
     }
+
+    document.querySelectorAll('.btn-city-preset').forEach((btn) => {
+      btn.classList.remove('active');
+    });
 
     if (elements.geoInfoBar) {
       elements.geoInfoBar.classList.add('hidden');
@@ -647,6 +650,16 @@
     if (elements.btnGeoReset) {
       elements.btnGeoReset.addEventListener('click', resetGeoLocation);
     }
+
+    document.querySelectorAll('.btn-city-preset').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const lat = parseFloat(btn.getAttribute('data-lat'));
+        const lng = parseFloat(btn.getAttribute('data-lng'));
+        const city = btn.getAttribute('data-city');
+        applyLocation(lat, lng, city, true);
+      });
+    });
+
     if (elements.searchInput) {
       elements.searchInput.addEventListener('input', (e) => {
         state.searchQuery = e.target.value.trim();
