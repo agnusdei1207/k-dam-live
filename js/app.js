@@ -380,34 +380,43 @@
       </div>
     `;
 
-    if (elements.dialogInspector) {
-      elements.dialogInspector.classList.remove('closing');
-      isModalClosing = false;
-      if (!elements.dialogInspector.open) {
-        elements.dialogInspector.showModal();
+    const dialog = elements.dialogInspector || document.getElementById('dam-inspector-dialog');
+    if (dialog) {
+      dialog.classList.remove('closing');
+      try {
+        if (typeof dialog.showModal === 'function') {
+          if (!dialog.open) dialog.showModal();
+        } else {
+          dialog.setAttribute('open', '');
+        }
+      } catch (err) {
+        dialog.setAttribute('open', '');
       }
     }
   }
 
-  let isModalClosing = false;
-
   function closeInspector() {
-    if (!elements.dialogInspector || isModalClosing) return;
-    if (!elements.dialogInspector.open) return;
+    const dialog = elements.dialogInspector || document.getElementById('dam-inspector-dialog');
+    if (!dialog) return;
 
-    isModalClosing = true;
-    elements.dialogInspector.classList.add('closing');
+    dialog.classList.add('closing');
 
     setTimeout(() => {
-      if (elements.dialogInspector) {
-        elements.dialogInspector.close();
-        elements.dialogInspector.classList.remove('closing');
+      try {
+        if (typeof dialog.close === 'function') {
+          dialog.close();
+        } else {
+          dialog.removeAttribute('open');
+        }
+      } catch (err) {
+        dialog.removeAttribute('open');
       }
-      isModalClosing = false;
-    }, 180);
+      dialog.classList.remove('closing');
+    }, 160);
   }
 
   window.appInspectDam = openInspector;
+  window.appCloseModal = closeInspector;
 
   /**
    * Robust Excel-Compatible UTF-8 BOM CSV Export Engine
@@ -531,8 +540,12 @@
     });
 
     if (elements.btnModalClose) {
-      elements.btnModalClose.addEventListener('click', closeInspector);
+      elements.btnModalClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeInspector();
+      });
     }
+
     if (elements.dialogInspector) {
       elements.dialogInspector.addEventListener('cancel', (e) => {
         e.preventDefault();
@@ -548,9 +561,17 @@
             rect.left <= e.clientX && e.clientX <= rect.right
           );
           if (!isInside) closeInspector();
+        } else {
+          closeInspector();
         }
       });
     }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        closeInspector();
+      }
+    });
   }
 
   if (document.readyState === 'loading') {
