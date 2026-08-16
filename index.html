@@ -36,12 +36,13 @@
   <header class="site-header">
     <div class="header-container">
       <a href="./" class="brand-wrap">
+        <span class="kr-flag" aria-label="대한민국 국기">🇰🇷</span>
         <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="currentColor" fill-opacity="0.15"/>
           <path d="M2 13h20M4 17h16M7 21h10"/>
         </svg>
         <span class="brand-title">K-DAM LIVE</span>
-        <span class="brand-tag">실시간 수문 현황</span>
+        <span class="brand-tag">대한민국 댐 실시간 수문 현황</span>
       </a>
 
       <div class="header-actions">
@@ -54,7 +55,7 @@
           <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
           </svg>
-          <span>CSV</span>
+          <span>CSV 다운로드</span>
         </button>
 
         <button id="btn-theme-toggle" class="btn-icon" type="button" aria-label="테마 전환">
@@ -73,7 +74,7 @@
   <main class="main-container">
     <div class="page-intro">
       <h1>전국 댐 저수율 실시간 모니터링</h1>
-      <p>전국 34개 다목적댐 및 용수전용댐의 실시간 수위, 저수율, 유입량, 방류량 현황입니다.</p>
+      <p>전국 34개 다목적댐 및 용수전용댐의 실시간 수위, 저수율, 유입량, 방류량 현황입니다. (행을 클릭하면 상세 제원이 표시됩니다)</p>
     </div>
 
     <!-- 4 Key Stats Cards -->
@@ -157,7 +158,6 @@
             <th data-sort="outflow" class="sortable text-right">방류량 (㎥/s) ↕</th>
             <th data-sort="diffPrevYear" class="sortable text-right">예년 대비 ↕</th>
             <th>상태</th>
-            <th class="text-center">상세</th>
           </tr>
         </thead>
         <tbody id="dams-tbody">

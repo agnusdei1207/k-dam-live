@@ -168,7 +168,7 @@
     if (dams.length === 0) {
       elements.damsTbody.innerHTML = `
         <tr>
-          <td colspan="11" class="text-center" style="padding: 30px; color: var(--text-muted);">
+          <td colspan="10" class="text-center" style="padding: 30px; color: var(--text-muted);">
             검색 결과가 없습니다.
           </td>
         </tr>
@@ -203,9 +203,9 @@
       const diffColor = dam.diffPrevYear >= 0 ? 'var(--badge-green-text)' : 'var(--badge-red-text)';
 
       return `
-        <tr>
+        <tr data-dam-id="${dam.id}" onclick="window.appInspectDam('${dam.id}')" title="${dam.name} 상세 제원 보기">
           <td>
-            <div class="dam-title-cell" onclick="window.appInspectDam('${dam.id}')">${dam.name}</div>
+            <div class="dam-title-cell">${dam.name}</div>
             <div class="dam-loc-sub">${dam.location}</div>
           </td>
           <td><span class="badge badge-muted">${dam.basin}</span></td>
@@ -226,9 +226,6 @@
           <td class="text-right num font-weight-600">${dam.currentOutflow.toFixed(1)}</td>
           <td class="text-right num" style="color: ${diffColor}">${diffSign}${dam.diffPrevYear}%p</td>
           <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
-          <td class="text-center">
-            <button class="btn-view" onclick="window.appInspectDam('${dam.id}')" type="button">상세</button>
-          </td>
         </tr>
       `;
     }).join('');
@@ -344,33 +341,75 @@
 
   window.appInspectDam = openInspector;
 
+  /**
+   * Robust Excel-Compatible UTF-8 BOM CSV Export Engine
+   */
   function exportCsv() {
     const data = getFilteredDams();
-    const headers = ['댐이름', '수계', '구분', '소재지', '현재수위(EL.m)', '상시만수위(EL.m)', '저수율(%)', '저수량(M㎥)', '유입량(㎥/s)', '방류량(㎥/s)', '예년대비(%p)', '관리기관'];
-    const rows = data.map((d) => [
-      `"${d.name}"`,
-      `"${d.basin}"`,
-      `"${d.type}"`,
-      `"${d.location}"`,
-      d.currentWaterLevel,
-      d.normalFullLevel,
-      d.storageRate,
-      d.currentStorageVolume,
-      d.currentInflow,
-      d.currentOutflow,
-      d.diffPrevYear,
-      `"${d.agency}"`
-    ]);
+    const headers = [
+      '댐명',
+      '수계',
+      '구분',
+      '소재지',
+      '현재수위(EL.m)',
+      '상시만수위(EL.m)',
+      '계획홍수위(EL.m)',
+      '저수율(%)',
+      '현재저수량(백만㎥)',
+      '총저수용량(백만㎥)',
+      '실시간유입량(㎥/s)',
+      '실시간방류량(㎥/s)',
+      '예년대비증감(%p)',
+      '수문상태',
+      '관리기관'
+    ];
 
-    const csv = '\uFEFF' + [headers.join(','), ...rows.map((r) => r.join(','))].join('\r\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const rows = data.map((d) => {
+      let statusText = '정상';
+      if (d.currentOutflow >= 20) statusText = '수문방류';
+      else if (d.storageRate < 40) statusText = '가뭄경계';
+      else if (d.storageRate < 50) statusText = '가뭄주의';
+      else if (d.storageRate < 60) statusText = '가뭄관심';
+
+      const escapeCell = (str) => `"${String(str || '').replace(/"/g, '""')}"`;
+
+      return [
+        escapeCell(d.name),
+        escapeCell(d.basin),
+        escapeCell(d.type),
+        escapeCell(d.location),
+        d.currentWaterLevel,
+        d.normalFullLevel,
+        d.floodLevel,
+        d.storageRate,
+        d.currentStorageVolume,
+        d.totalStorage,
+        d.currentInflow,
+        d.currentOutflow,
+        d.diffPrevYear,
+        escapeCell(statusText),
+        escapeCell(d.agency)
+      ].join(',');
+    });
+
+    // \uFEFF ensures UTF-8 BOM so Microsoft Excel in Korean Windows displays Hangul without garbling
+    const csvContent = '\uFEFF' + headers.join(',') + '\r\n' + rows.join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
+    link.style.display = 'none';
     link.href = url;
-    link.download = `k-dam-water-level-${new Date().toISOString().slice(0, 10)}.csv`;
+
+    const now = new Date();
+    const dateStr = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
+    link.download = `대한민국_댐_실시간_저수율_${dateStr}.csv`;
+
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+    setTimeout(() => {
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }, 150);
   }
 
   function initEvents() {
