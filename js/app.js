@@ -380,11 +380,31 @@
       </div>
     `;
 
-    if (elements.dialogInspector) elements.dialogInspector.showModal();
+    if (elements.dialogInspector) {
+      elements.dialogInspector.classList.remove('closing');
+      isModalClosing = false;
+      if (!elements.dialogInspector.open) {
+        elements.dialogInspector.showModal();
+      }
+    }
   }
 
+  let isModalClosing = false;
+
   function closeInspector() {
-    if (elements.dialogInspector) elements.dialogInspector.close();
+    if (!elements.dialogInspector || isModalClosing) return;
+    if (!elements.dialogInspector.open) return;
+
+    isModalClosing = true;
+    elements.dialogInspector.classList.add('closing');
+
+    setTimeout(() => {
+      if (elements.dialogInspector) {
+        elements.dialogInspector.close();
+        elements.dialogInspector.classList.remove('closing');
+      }
+      isModalClosing = false;
+    }, 180);
   }
 
   window.appInspectDam = openInspector;
@@ -514,6 +534,11 @@
       elements.btnModalClose.addEventListener('click', closeInspector);
     }
     if (elements.dialogInspector) {
+      elements.dialogInspector.addEventListener('cancel', (e) => {
+        e.preventDefault();
+        closeInspector();
+      });
+
       elements.dialogInspector.addEventListener('click', (e) => {
         const panel = elements.dialogInspector.querySelector('.inspector-modal-panel');
         if (panel) {

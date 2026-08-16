@@ -663,7 +663,7 @@ body {
 }
 
 /* ==========================================================================
-   6. MODAL INSPECTOR (RADIX / SHADCN SMOOTH MOTION)
+   6. MODAL INSPECTOR (SMOOTH RADIX / SHADCN OPEN & CLOSE MOTION)
    ========================================================================== */
 .inspector-dialog {
   position: fixed;
@@ -680,26 +680,54 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 100;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .inspector-dialog[open] {
-  opacity: 1;
-  pointer-events: auto;
+  animation: dialogFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.inspector-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.7);
+.inspector-dialog[open]::backdrop {
+  background: rgba(0, 0, 0, 0.72);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  animation: backdropFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: backdropFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.inspector-dialog[open] .inspector-modal-panel {
+  animation: modalScaleUp 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Smooth Closing State */
+.inspector-dialog.closing {
+  animation: dialogFadeOut 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.inspector-dialog.closing::backdrop {
+  animation: backdropFadeOut 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.inspector-dialog.closing .inspector-modal-panel {
+  animation: modalScaleDown 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes backdropFadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+@keyframes backdropFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes dialogFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dialogFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 .inspector-modal-panel {
@@ -712,17 +740,27 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  animation: modalScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes modalScaleUp {
-  from {
+  0% {
     opacity: 0;
-    transform: scale(0.96) translateY(14px);
+    transform: scale(0.93) translateY(14px);
   }
-  to {
+  100% {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes modalScaleDown {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
   }
 }
 
