@@ -268,9 +268,9 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(239, 68, 68, 0.12);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.28);
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.28);
   padding: 2px 8px;
   border-radius: var(--radius);
   font-size: 0.70rem;
@@ -282,18 +282,24 @@ body {
 }
 
 :root[data-theme='light'] .ticker-badge {
-  background: #fee2e2;
-  color: #dc2626;
-  border-color: #fca5a5;
+  background: #e0f2fe;
+  color: #0284c7;
+  border-color: #bae6fd;
 }
 
 .ticker-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #ef4444;
+  background: #38bdf8;
+  box-shadow: 0 0 6px rgba(56, 189, 248, 0.6);
   display: inline-block;
   animation: radarBlink 1.4s infinite ease-in-out;
+}
+
+:root[data-theme='light'] .ticker-dot {
+  background: #0284c7;
+  box-shadow: 0 0 6px rgba(2, 132, 199, 0.4);
 }
 
 @keyframes radarBlink {
