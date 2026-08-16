@@ -2,29 +2,28 @@
  * ============================================================================
  * K-DAM LIVE — Hydrological Dataset & Real-Time Sensor Stream Engine
  * Comprehensive hydrographic data for 34 major multipurpose and water dams in Korea
- * Designed to work seamlessly in both local file:// and web server / GitHub Pages
+ * Designed for pure static edge execution with zero backend dependency
  * ============================================================================
  */
 
 (function(window) {
   'use strict';
 
-  const BASINS = {
+  const BASINS = Object.freeze({
     HAN: '한강',
     NAKDONG: '낙동강',
     GEUM: '금강',
     SEOMJIN: '영산·섬진강'
-  };
+  });
 
-  const DAM_TYPES = {
+  const DAM_TYPES = Object.freeze({
     MULTIPURPOSE: '다목적댐',
     WATER_SUPPLY: '용수전용댐',
     FLOOD_CONTROL: '홍수조절용'
-  };
+  });
 
   /**
    * 34 Major South Korean Dams with Authentic Geographical & Hydrographic Specs
-   * Coordinates mapped to SVG 540x680 canvas
    */
   const DAMS_DATABASE = [
     // ─── 1. 한강 수계 (Han River Basin) ───────────────────────────────────────
@@ -34,8 +33,6 @@
       basin: BASINS.HAN,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '강원특별자치도 춘천시 신북읍',
-      mapX: 285,
-      mapY: 135,
       normalFullLevel: 193.5,
       floodLevel: 198.0,
       lowWaterLevel: 150.0,
@@ -57,8 +54,6 @@
       basin: BASINS.HAN,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '충청북도 충주시 종민동',
-      mapX: 295,
-      mapY: 220,
       normalFullLevel: 141.0,
       floodLevel: 145.0,
       lowWaterLevel: 110.0,
@@ -80,8 +75,6 @@
       basin: BASINS.HAN,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '강원특별자치도 횡성군 갑천면',
-      mapX: 305,
-      mapY: 175,
       normalFullLevel: 180.0,
       floodLevel: 182.5,
       lowWaterLevel: 150.0,
@@ -103,8 +96,6 @@
       basin: BASINS.HAN,
       type: DAM_TYPES.FLOOD_CONTROL,
       location: '강원특별자치도 화천군 화천읍',
-      mapX: 278,
-      mapY: 90,
       normalFullLevel: 264.7,
       floodLevel: 264.7,
       lowWaterLevel: 200.0,
@@ -126,8 +117,6 @@
       basin: BASINS.HAN,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '강원특별자치도 삼척시 하장면',
-      mapX: 388,
-      mapY: 205,
       normalFullLevel: 674.0,
       floodLevel: 676.2,
       lowWaterLevel: 647.0,
@@ -149,8 +138,6 @@
       basin: BASINS.HAN,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '강원특별자치도 동해시 삼화동',
-      mapX: 412,
-      mapY: 185,
       normalFullLevel: 135.0,
       floodLevel: 137.5,
       lowWaterLevel: 105.0,
@@ -174,8 +161,6 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '경상북도 안동시 상아동',
-      mapX: 385,
-      mapY: 310,
       normalFullLevel: 160.0,
       floodLevel: 161.7,
       lowWaterLevel: 130.0,
@@ -197,8 +182,6 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '경상북도 안동시 임하면',
-      mapX: 405,
-      mapY: 325,
       normalFullLevel: 163.0,
       floodLevel: 164.7,
       lowWaterLevel: 137.0,
@@ -220,8 +203,6 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '경상남도 합천군 대병면',
-      mapX: 310,
-      mapY: 460,
       normalFullLevel: 176.0,
       floodLevel: 179.0,
       lowWaterLevel: 140.0,
@@ -243,8 +224,6 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '경상남도 진주시 판문동',
-      mapX: 315,
-      mapY: 510,
       normalFullLevel: 41.0,
       floodLevel: 46.0,
       lowWaterLevel: 34.0,
@@ -266,8 +245,6 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '경상남도 밀양시 단장면',
-      mapX: 415,
-      mapY: 485,
       normalFullLevel: 189.5,
       floodLevel: 191.0,
       lowWaterLevel: 155.0,
@@ -289,8 +266,6 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '대구광역시 군위군 삼국유사면',
-      mapX: 365,
-      mapY: 365,
       normalFullLevel: 205.0,
       floodLevel: 208.0,
       lowWaterLevel: 165.0,
@@ -312,8 +287,6 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '경상북도 김천시 부항면',
-      mapX: 300,
-      mapY: 375,
       normalFullLevel: 196.5,
       floodLevel: 199.5,
       lowWaterLevel: 165.0,
@@ -335,8 +308,6 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '경상북도 영주시 평은면',
-      mapX: 375,
-      mapY: 265,
       normalFullLevel: 161.0,
       floodLevel: 163.5,
       lowWaterLevel: 135.0,
@@ -358,8 +329,6 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '경상북도 영천시 화북면',
-      mapX: 425,
-      mapY: 375,
       normalFullLevel: 242.0,
       floodLevel: 244.5,
       lowWaterLevel: 215.0,
@@ -381,8 +350,6 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '경상북도 청송군 안덕면',
-      mapX: 420,
-      mapY: 345,
       normalFullLevel: 278.0,
       floodLevel: 280.5,
       lowWaterLevel: 240.0,
@@ -404,8 +371,6 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '경상북도 영천시 자양면',
-      mapX: 435,
-      mapY: 410,
       normalFullLevel: 158.3,
       floodLevel: 160.5,
       lowWaterLevel: 130.0,
@@ -427,8 +392,6 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '경상북도 청도군 운문면',
-      mapX: 405,
-      mapY: 440,
       normalFullLevel: 150.5,
       floodLevel: 152.8,
       lowWaterLevel: 122.0,
@@ -450,8 +413,6 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '울산광역시 울주군 범서읍',
-      mapX: 460,
-      mapY: 465,
       normalFullLevel: 60.0,
       floodLevel: 63.0,
       lowWaterLevel: 45.0,
@@ -473,8 +434,6 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '울산광역시 울주군 삼동면',
-      mapX: 465,
-      mapY: 485,
       normalFullLevel: 48.5,
       floodLevel: 51.5,
       lowWaterLevel: 32.0,
@@ -498,8 +457,6 @@
       basin: BASINS.GEUM,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '대전광역시 대덕구 / 충북 청주시',
-      mapX: 255,
-      mapY: 315,
       normalFullLevel: 76.5,
       floodLevel: 80.0,
       lowWaterLevel: 60.0,
@@ -521,8 +478,6 @@
       basin: BASINS.GEUM,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '전북특별자치도 진안군 용담면',
-      mapX: 245,
-      mapY: 410,
       normalFullLevel: 265.5,
       floodLevel: 268.5,
       lowWaterLevel: 228.0,
@@ -544,8 +499,6 @@
       basin: BASINS.GEUM,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '충청남도 보령시 미산면',
-      mapX: 180,
-      mapY: 335,
       normalFullLevel: 75.0,
       floodLevel: 76.5,
       lowWaterLevel: 50.0,
@@ -556,7 +509,7 @@
       damLength: 291.0,
       builtYear: 1998,
       agency: 'K-water',
-      baseRate: 46.5, // 가뭄 주의
+      baseRate: 46.5,
       baseInflow: 3.2,
       baseOutflow: 2.8,
       diffPrevYear: -8.4
@@ -567,8 +520,6 @@
       basin: BASINS.GEUM,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '전북특별자치도 부안군 변산면',
-      mapX: 165,
-      mapY: 450,
       normalFullLevel: 50.0,
       floodLevel: 52.4,
       lowWaterLevel: 30.0,
@@ -592,8 +543,6 @@
       basin: BASINS.SEOMJIN,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '전라남도 순천시 주암면',
-      mapX: 240,
-      mapY: 535,
       normalFullLevel: 108.5,
       floodLevel: 110.5,
       lowWaterLevel: 85.0,
@@ -615,8 +564,6 @@
       basin: BASINS.SEOMJIN,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '전라남도 순천시 상사면',
-      mapX: 255,
-      mapY: 550,
       normalFullLevel: 108.5,
       floodLevel: 110.5,
       lowWaterLevel: 85.0,
@@ -638,8 +585,6 @@
       basin: BASINS.SEOMJIN,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '전북특별자치도 임실군 강진면',
-      mapX: 220,
-      mapY: 470,
       normalFullLevel: 196.5,
       floodLevel: 197.7,
       lowWaterLevel: 160.0,
@@ -661,8 +606,6 @@
       basin: BASINS.SEOMJIN,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '전라남도 장흥군 유치면',
-      mapX: 185,
-      mapY: 580,
       normalFullLevel: 82.0,
       floodLevel: 83.5,
       lowWaterLevel: 55.0,
@@ -684,8 +627,6 @@
       basin: BASINS.SEOMJIN,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '전라남도 장성군 삼계면',
-      mapX: 165,
-      mapY: 515,
       normalFullLevel: 110.0,
       floodLevel: 112.5,
       lowWaterLevel: 80.0,
@@ -696,7 +637,7 @@
       damLength: 260.0,
       builtYear: 2007,
       agency: 'K-water',
-      baseRate: 48.0, // 가뭄 주의
+      baseRate: 48.0,
       baseInflow: 0.6,
       baseOutflow: 0.5,
       diffPrevYear: -7.1
@@ -707,8 +648,6 @@
       basin: BASINS.SEOMJIN,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '전라남도 광양시 진상면',
-      mapX: 285,
-      mapY: 545,
       normalFullLevel: 67.0,
       floodLevel: 69.5,
       lowWaterLevel: 45.0,
@@ -730,8 +669,6 @@
       basin: BASINS.SEOMJIN,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '전라남도 화순군 이서면',
-      mapX: 205,
-      mapY: 530,
       normalFullLevel: 168.2,
       floodLevel: 170.0,
       lowWaterLevel: 140.0,
@@ -753,8 +690,6 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '울산광역시 남구 선암동',
-      mapX: 475,
-      mapY: 495,
       normalFullLevel: 46.0,
       floodLevel: 48.0,
       lowWaterLevel: 30.0,
@@ -776,8 +711,6 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '경상북도 경주시 문무대왕면',
-      mapX: 470,
-      mapY: 425,
       normalFullLevel: 74.0,
       floodLevel: 76.5,
       lowWaterLevel: 50.0,
@@ -799,8 +732,6 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '경상남도 사천시 축동면',
-      mapX: 305,
-      mapY: 535,
       normalFullLevel: 17.5,
       floodLevel: 19.0,
       lowWaterLevel: 10.0,
@@ -825,48 +756,6 @@
     constructor() {
       this.currentData = this.initializeTelemetry();
       this.eventListeners = [];
-      this.eventLog = [
-        {
-          id: 'ev-1',
-          time: new Date(Date.now() - 1000 * 60 * 3),
-          damId: 'chungju',
-          damName: '충주댐',
-          type: 'DISCHARGE',
-          icon: '🌊',
-          title: '충주댐 수문 방류 개방',
-          detail: '초당 62.0㎥/s 발전 및 하천유지방류 정상 가동 중'
-        },
-        {
-          id: 'ev-2',
-          time: new Date(Date.now() - 1000 * 60 * 8),
-          damId: 'soyang',
-          damName: '소양강댐',
-          type: 'INFLOW',
-          icon: '📈',
-          title: '소양강댐 상류 강우 유입 감지',
-          detail: '유입량 45.8㎥/s 기록, 저수율 74.2% 안정 유지'
-        },
-        {
-          id: 'ev-3',
-          time: new Date(Date.now() - 1000 * 60 * 18),
-          damId: 'boryeong',
-          damName: '보령댐',
-          type: 'DROUGHT',
-          icon: '⚠️',
-          title: '보령댐 가뭄 대응 [관심] 단계 진입',
-          detail: '저수율 46.5%로 예년 대비 -8.4%p 하회, 금강 도수로 연계 대기'
-        },
-        {
-          id: 'ev-4',
-          time: new Date(Date.now() - 1000 * 60 * 32),
-          damId: 'daecheong',
-          damName: '대청댐',
-          type: 'NORMAL',
-          icon: '🟢',
-          title: '대청댐 수위 안정화',
-          detail: '현재수위 EL.73.4m (상시만수위 76.5m 대비 96%)'
-        }
-      ];
     }
 
     initializeTelemetry() {
@@ -954,39 +843,6 @@
         };
       });
 
-      if (Math.random() > 0.65) {
-        const randomDam = this.currentData[Math.floor(Math.random() * this.currentData.length)];
-        const eventTypes = [
-          {
-            type: 'TELEMETRY',
-            icon: '📡',
-            title: `${randomDam.name} 실시간 수문 데이터 수신`,
-            detail: `수위 ${randomDam.currentWaterLevel}m · 저수율 ${randomDam.storageRate}% 갱신 완료`
-          },
-          {
-            type: 'DISCHARGE',
-            icon: '💧',
-            title: `${randomDam.name} 방류량 변동 관측`,
-            detail: `현재 방류량 ${randomDam.currentOutflow}㎥/s (유입량 ${randomDam.currentInflow}㎥/s)`
-          }
-        ];
-        const evChoice = eventTypes[Math.floor(Math.random() * eventTypes.length)];
-        this.eventLog.unshift({
-          id: `ev-${Date.now()}`,
-          time: new Date(),
-          damId: randomDam.id,
-          damName: randomDam.name,
-          type: evChoice.type,
-          icon: evChoice.icon,
-          title: evChoice.title,
-          detail: evChoice.detail
-        });
-
-        if (this.eventLog.length > 25) {
-          this.eventLog.pop();
-        }
-      }
-
       this.notifySubscribers();
       return this.currentData;
     }
@@ -1001,7 +857,7 @@
       const totalOutflow = this.currentData.reduce((acc, d) => acc + d.currentOutflow, 0);
       const dischargingCount = this.currentData.filter((d) => d.currentOutflow >= 15.0).length;
 
-      const droughtCount = this.currentData.filter((d) => d.storageRate < 55.0).length;
+      const droughtCount = this.currentData.filter((d) => d.storageRate < 50.0).length;
       const floodRiskCount = this.currentData.filter((d) => d.currentWaterLevel >= d.floodLevel * 0.95).length;
 
       return {
@@ -1014,36 +870,8 @@
         dischargingCount,
         totalDams,
         droughtCount,
-        floodRiskCount,
-        sensorHealth: '100%'
+        floodRiskCount
       };
-    }
-
-    getBasinSummaries() {
-      const basins = [BASINS.HAN, BASINS.NAKDONG, BASINS.GEUM, BASINS.SEOMJIN];
-      return basins.map((basinName) => {
-        const dams = this.currentData.filter((d) => d.basin === basinName);
-        const currentStorage = dams.reduce((acc, d) => acc + d.currentStorageVolume, 0);
-        const totalCapacity = dams.reduce((acc, d) => acc + d.totalStorage, 0);
-        const avgRate = totalCapacity > 0 ? (currentStorage / totalCapacity) * 100 : 0;
-
-        return {
-          basin: basinName,
-          damCount: dams.length,
-          currentStorage: currentStorage.toFixed(1),
-          totalCapacity: totalCapacity.toFixed(1),
-          storageRate: avgRate.toFixed(1)
-        };
-      });
-    }
-
-    getDroughtStages() {
-      const normal = this.currentData.filter((d) => d.storageRate >= 60.0).length;
-      const attention = this.currentData.filter((d) => d.storageRate >= 50.0 && d.storageRate < 60.0).length;
-      const caution = this.currentData.filter((d) => d.storageRate >= 40.0 && d.storageRate < 50.0).length;
-      const alert = this.currentData.filter((d) => d.storageRate < 40.0).length;
-
-      return { normal, attention, caution, alert };
     }
 
     subscribe(callback) {
