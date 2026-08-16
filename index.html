@@ -90,6 +90,13 @@
           <span>CSV 다운로드</span>
         </button>
 
+        <button id="btn-header-gps" class="btn-icon" type="button" aria-label="내 GPS 위치 기반 정렬" title="내 위치 기준 가까운 댐 순으로 정렬 (GPS)">
+          <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+          </svg>
+        </button>
+
         <button id="btn-theme-toggle" class="btn-icon" type="button" aria-label="다크/라이트 테마 전환">
           <svg id="theme-moon" viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2" aria-hidden="true">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
@@ -188,14 +195,6 @@
             aria-label="댐 이름 또는 소재지 검색"
           />
         </div>
-
-        <button id="btn-geo-search" class="btn-geo" type="button" title="현재 내 GPS 위치를 기반으로 가까운 댐부터 정렬합니다">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
-          </svg>
-          <span>내 위치 주변</span>
-        </button>
 
         <select id="select-status-filter" class="filter-select" aria-label="수문 상태별 필터">
           <option value="ALL">전체 상태</option>

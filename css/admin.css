@@ -216,6 +216,33 @@ body {
   outline-offset: 1px;
 }
 
+#btn-header-gps {
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+#btn-header-gps.active {
+  background: var(--primary-subtle);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+#btn-header-gps.active svg {
+  color: var(--primary);
+}
+
+#btn-header-gps.active::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 4px var(--primary);
+}
+
 .hidden {
   display: none !important;
 }
@@ -443,49 +470,7 @@ body {
   border-color: var(--primary);
 }
 
-.btn-geo {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 35px;
-  padding: 0 10px;
-  font-size: 0.82rem;
-  font-weight: 500;
-  border-radius: var(--radius);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text);
-  cursor: pointer;
-  font-family: inherit;
-  white-space: nowrap;
-  flex-shrink: 0;
-  transition: all 0.15s ease;
-}
 
-.btn-geo svg {
-  color: var(--primary);
-  transition: transform 0.2s ease;
-}
-
-.btn-geo:hover {
-  background: var(--surface-hover);
-  border-color: var(--border-strong);
-}
-
-.btn-geo:hover svg {
-  transform: scale(1.1);
-}
-
-.btn-geo.active {
-  background: var(--primary-subtle);
-  border-color: var(--primary);
-  color: var(--primary);
-  font-weight: 600;
-}
-
-.btn-geo.active svg {
-  color: var(--primary);
-}
 
 /* Location Status Banner */
 .geo-info-bar {
@@ -1142,11 +1127,6 @@ body {
   .search-box {
     width: 100%;
     max-width: 100%;
-  }
-
-  .btn-geo {
-    flex: 1;
-    justify-content: center;
   }
 
   .filter-select {

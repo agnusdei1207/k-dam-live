@@ -42,6 +42,7 @@
     elements = {
       dataUpdatedTime: document.getElementById('data-updated-time'),
       btnExportCsv: document.getElementById('btn-export-csv'),
+      btnHeaderGps: document.getElementById('btn-header-gps'),
       btnThemeToggle: document.getElementById('btn-theme-toggle'),
       themeMoon: document.getElementById('theme-moon'),
       themeSun: document.getElementById('theme-sun'),
@@ -54,7 +55,6 @@
       valDischargeCount: document.getElementById('val-discharge-count'),
 
       searchInput: document.getElementById('search-input'),
-      btnGeoSearch: document.getElementById('btn-geo-search'),
       geoInfoBar: document.getElementById('geo-info-bar'),
       geoInfoText: document.getElementById('geo-info-text'),
       btnGeoReset: document.getElementById('btn-geo-reset'),
@@ -91,6 +91,11 @@
       state.lastUpdatedTime = new Date();
       updateTimestamp();
     }, AUTO_REFRESH_INTERVAL_MS);
+
+    // Initial GPS location prompt on access
+    setTimeout(() => {
+      requestUserLocation(true);
+    }, 400);
   }
 
   function updateTimestamp() {
@@ -128,17 +133,13 @@
   }
 
   /**
-   * Browser Geolocation Request & Distance Sorting
+   * Browser Geolocation Request & Proximity Distance Sorting
+   * @param {boolean} silent - Whether to suppress error alerts on initial silent check
    */
-  function requestUserLocation() {
+  function requestUserLocation(silent = false) {
     if (!navigator.geolocation) {
-      alert('사용 중인 브라우저 환경에서 GPS 위치 정보를 지원하지 않습니다.');
+      if (!silent) alert('사용 중인 브라우저 환경에서 GPS 위치 정보를 지원하지 않습니다.');
       return;
-    }
-
-    if (elements.btnGeoSearch) {
-      const span = elements.btnGeoSearch.querySelector('span');
-      if (span) span.textContent = '위치 확인 중...';
     }
 
     navigator.geolocation.getCurrentPosition(
@@ -157,10 +158,9 @@
         );
         const nearest = sorted[0];
 
-        if (elements.btnGeoSearch) {
-          elements.btnGeoSearch.classList.add('active');
-          const span = elements.btnGeoSearch.querySelector('span');
-          if (span) span.textContent = '내 위치 적용됨';
+        if (elements.btnHeaderGps) {
+          elements.btnHeaderGps.classList.add('active');
+          elements.btnHeaderGps.setAttribute('title', '내 위치 기준 정렬 활성화됨 (클릭 시 해제)');
         }
 
         if (elements.geoInfoBar) {
@@ -173,17 +173,13 @@
         renderTable();
       },
       (error) => {
-        if (elements.btnGeoSearch) {
-          elements.btnGeoSearch.classList.remove('active');
-          const span = elements.btnGeoSearch.querySelector('span');
-          if (span) span.textContent = '내 위치 주변';
+        if (!silent) {
+          let msg = '위치 정보를 가져올 수 없습니다.';
+          if (error.code === error.PERMISSION_DENIED) {
+            msg = '위치 정보 접근 권한이 허용되지 않았습니다. 브라우저 주소창 좌측의 사이트 설정에서 위치 권한을 허용해 주세요.';
+          }
+          alert(msg);
         }
-
-        let msg = '위치 정보를 가져올 수 없습니다.';
-        if (error.code === error.PERMISSION_DENIED) {
-          msg = '위치 정보 접근 권한이 허용되지 않았습니다. 브라우저 주소창 좌측의 설정에서 위치 권한을 허용해 주세요.';
-        }
-        alert(msg);
       },
       {
         enableHighAccuracy: false,
@@ -198,10 +194,9 @@
     state.sortField = 'storageRate';
     state.sortOrder = 'desc';
 
-    if (elements.btnGeoSearch) {
-      elements.btnGeoSearch.classList.remove('active');
-      const span = elements.btnGeoSearch.querySelector('span');
-      if (span) span.textContent = '내 위치 주변';
+    if (elements.btnHeaderGps) {
+      elements.btnHeaderGps.classList.remove('active');
+      elements.btnHeaderGps.setAttribute('title', '내 위치 기준 가까운 댐 순으로 정렬 (GPS)');
     }
 
     if (elements.geoInfoBar) {
@@ -586,12 +581,12 @@
     if (elements.btnExportCsv) {
       elements.btnExportCsv.addEventListener('click', exportCsv);
     }
-    if (elements.btnGeoSearch) {
-      elements.btnGeoSearch.addEventListener('click', () => {
+    if (elements.btnHeaderGps) {
+      elements.btnHeaderGps.addEventListener('click', () => {
         if (state.isGeoActive) {
           resetGeoLocation();
         } else {
-          requestUserLocation();
+          requestUserLocation(false);
         }
       });
     }
