@@ -395,9 +395,9 @@
           <td class="text-right num">
             <strong>${dam.currentWaterLevel.toFixed(1)}</strong> <small style="color:var(--text-subtle)">/ ${dam.normalFullLevel}m</small>
           </td>
-          <td class="text-right num">${dam.currentStorageVolume.toLocaleString()}</td>
-          <td class="text-right num">${dam.currentInflow.toFixed(1)}</td>
-          <td class="text-right num font-weight-600">${dam.currentOutflow.toFixed(1)}</td>
+          <td class="text-center num">${dam.currentStorageVolume.toLocaleString()}</td>
+          <td class="text-center num">${dam.currentInflow.toFixed(1)}</td>
+          <td class="text-center num font-weight-600">${dam.currentOutflow.toFixed(1)}</td>
         </tr>
       `;
     }).join('');
