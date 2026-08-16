@@ -48,7 +48,6 @@
       themeSun: document.getElementById('theme-sun'),
 
       tickerContent: document.getElementById('ticker-content'),
-      tickerStatusPill: document.getElementById('ticker-status-pill'),
 
       valAvgRate: document.getElementById('val-avg-rate'),
       deltaAvgRate: document.getElementById('delta-avg-rate'),

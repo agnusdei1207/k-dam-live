@@ -267,7 +267,7 @@ body {
 .ticker-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   background: rgba(56, 189, 248, 0.12);
   color: #38bdf8;
   border: 1px solid rgba(56, 189, 248, 0.28);
@@ -287,24 +287,20 @@ body {
   border-color: #bae6fd;
 }
 
-.ticker-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #38bdf8;
-  box-shadow: 0 0 6px rgba(56, 189, 248, 0.6);
-  display: inline-block;
-  animation: radarBlink 1.4s infinite ease-in-out;
+.ticker-signal-icon {
+  width: 13px;
+  height: 13px;
+  color: #38bdf8;
+  animation: pulseBeat 1.8s infinite ease-in-out;
 }
 
-:root[data-theme='light'] .ticker-dot {
-  background: #0284c7;
-  box-shadow: 0 0 6px rgba(2, 132, 199, 0.4);
+:root[data-theme='light'] .ticker-signal-icon {
+  color: #0284c7;
 }
 
-@keyframes radarBlink {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.3; transform: scale(0.75); }
+@keyframes pulseBeat {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.18); opacity: 1; }
 }
 
 .ticker-track {
@@ -323,26 +319,6 @@ body {
   transition: opacity 0.25s ease, transform 0.25s ease;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.ticker-meta {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 0.72rem;
-  color: var(--badge-green-text);
-  font-family: var(--font-mono);
-  flex-shrink: 0;
-}
-
-.ticker-meta svg {
-  color: var(--badge-green-text);
-  animation: pulseBeat 1.8s infinite ease-in-out;
-}
-
-@keyframes pulseBeat {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
 }
 
 /* ==========================================================================
