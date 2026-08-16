@@ -1,6 +1,6 @@
 /* ==========================================================================
    K-DAM LIVE — Minimalist Admin Layout & Design System (shadcn/ui style)
-   Comfortable typography, high readability, accessible, consistent motion
+   Rock-solid layout, zero jump/shake on click, comfortable typography
    ========================================================================== */
 
 *, *::before, *::after {
@@ -14,6 +14,7 @@ html {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -30,7 +31,7 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* Custom Scrollbars */
+/* Custom Scrollbars (Webkit & Standard) */
 ::-webkit-scrollbar {
   width: 7px;
   height: 7px;
@@ -166,7 +167,6 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   user-select: none;
-  transition: all 0.15s ease;
 }
 
 .btn-icon,
@@ -184,7 +184,7 @@ body {
   color: var(--text);
   cursor: pointer;
   font-family: inherit;
-  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background 0.12s ease, border-color 0.12s ease;
 }
 
 .btn-icon {
@@ -199,7 +199,7 @@ body {
 
 .btn-icon:active,
 .btn-action:active {
-  transform: scale(0.96);
+  background: var(--surface-active);
 }
 
 .btn-icon:focus-visible,
@@ -258,13 +258,11 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color 0.15s ease;
 }
 
 .stat-card:hover {
   border-color: var(--border-strong);
-  transform: translateY(-1.5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .stat-card-header {
@@ -287,14 +285,10 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.15s ease;
 }
 
-.stat-card:hover .stat-icon-wrap {
-  transform: scale(1.1);
-}
-
-/* Icon Badges (Eye-comfortable warm & vibrant accents) */
+/* Icon Badges */
 .icon-cyan {
   background: rgba(56, 189, 248, 0.12);
   color: #38bdf8;
@@ -388,7 +382,7 @@ body {
   height: 36px;
   width: 100%;
   max-width: 270px;
-  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color 0.12s ease;
 }
 
 .search-box:focus-within {
@@ -427,7 +421,7 @@ body {
   outline: none;
   font-family: inherit;
   cursor: pointer;
-  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color 0.12s ease;
 }
 
 .filter-select:hover {
@@ -458,8 +452,7 @@ body {
   border-radius: calc(var(--radius) - 2px);
   cursor: pointer;
   font-family: inherit;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
+  transition: background 0.12s ease, color 0.12s ease;
 }
 
 .tab-btn:hover {
@@ -471,16 +464,11 @@ body {
   background: var(--bg);
   color: var(--text);
   font-weight: 600;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
-  transform: translateY(-0.5px);
-}
-
-.tab-btn:active {
-  transform: scale(0.96);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
 }
 
 /* ==========================================================================
-   5. HIGH-DENSITY DATA TABLE (COMFORTABLE READABILITY)
+   5. HIGH-DENSITY DATA TABLE (STABLE & JITTER-FREE)
    ========================================================================== */
 .table-wrapper {
   background: var(--surface);
@@ -494,7 +482,20 @@ body {
   border-collapse: collapse;
   font-size: 0.88rem;
   text-align: left;
+  table-layout: auto;
 }
+
+/* Fixed column width constraints to eliminate horizontal and vertical jitter */
+.data-table th:nth-child(1) { width: 17%; min-width: 150px; }
+.data-table th:nth-child(2) { width: 9%;  min-width: 80px; }
+.data-table th:nth-child(3) { width: 10%; min-width: 90px; }
+.data-table th:nth-child(4) { width: 13%; min-width: 130px; }
+.data-table th:nth-child(5) { width: 9%;  min-width: 85px; }
+.data-table th:nth-child(6) { width: 9%;  min-width: 85px; }
+.data-table th:nth-child(7) { width: 13%; min-width: 135px; }
+.data-table th:nth-child(8) { width: 10%; min-width: 95px; }
+.data-table th:nth-child(9) { width: 8%;  min-width: 85px; }
+.data-table th:nth-child(10){ width: 8%;  min-width: 85px; }
 
 .data-table th {
   padding: 12px 16px;
@@ -526,29 +527,8 @@ body {
 
 .data-table tbody tr {
   cursor: pointer;
-  transition: background 0.12s cubic-bezier(0.16, 1, 0.3, 1);
-  animation: tableRowFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: background 0.1s ease;
 }
-
-@keyframes tableRowFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.data-table tbody tr:nth-child(1) { animation-delay: 0.01s; }
-.data-table tbody tr:nth-child(2) { animation-delay: 0.02s; }
-.data-table tbody tr:nth-child(3) { animation-delay: 0.03s; }
-.data-table tbody tr:nth-child(4) { animation-delay: 0.04s; }
-.data-table tbody tr:nth-child(5) { animation-delay: 0.05s; }
-.data-table tbody tr:nth-child(6) { animation-delay: 0.06s; }
-.data-table tbody tr:nth-child(7) { animation-delay: 0.07s; }
-.data-table tbody tr:nth-child(8) { animation-delay: 0.08s; }
 
 .data-table tbody tr:last-child td {
   border-bottom: none;
