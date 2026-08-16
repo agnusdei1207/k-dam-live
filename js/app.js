@@ -9,12 +9,6 @@
   'use strict';
 
   const { telemetryService } = window.KDAM || {};
-  const BASINS = window.KDAM?.BASINS || {
-    HAN: '한강',
-    NAKDONG: '낙동강',
-    GEUM: '금강',
-    SEOMJIN: '영산·섬진강'
-  };
 
   if (!telemetryService) {
     console.error('KDAM telemetry service unavailable');

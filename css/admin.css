@@ -1182,8 +1182,6 @@ body {
   border-color: var(--border);
 }
 
-
-
 /* Dam Type Badges (구분별 전용 컬러) */
 .badge-type-multi {
   background: rgba(226, 160, 110, 0.14);
