@@ -809,6 +809,92 @@ body {
   border-color: var(--border);
 }
 
+/* Basin Badges (수계별 전용 컬러) */
+.badge-basin-han {
+  background: rgba(6, 182, 212, 0.12);
+  color: #22d3ee;
+  border-color: rgba(6, 182, 212, 0.25);
+}
+
+.badge-basin-nakdong {
+  background: rgba(99, 102, 241, 0.12);
+  color: #818cf8;
+  border-color: rgba(99, 102, 241, 0.25);
+}
+
+.badge-basin-geum {
+  background: rgba(168, 85, 247, 0.12);
+  color: #c084fc;
+  border-color: rgba(168, 85, 247, 0.25);
+}
+
+.badge-basin-seomjin {
+  background: rgba(20, 184, 166, 0.12);
+  color: #2dd4bf;
+  border-color: rgba(20, 184, 166, 0.25);
+}
+
+:root[data-theme='light'] .badge-basin-han {
+  background: #ecfeff;
+  color: #0e7490;
+  border-color: #a5f3fc;
+}
+
+:root[data-theme='light'] .badge-basin-nakdong {
+  background: #eef2ff;
+  color: #4338ca;
+  border-color: #c7d2fe;
+}
+
+:root[data-theme='light'] .badge-basin-geum {
+  background: #faf5ff;
+  color: #7e22ce;
+  border-color: #e9d5ff;
+}
+
+:root[data-theme='light'] .badge-basin-seomjin {
+  background: #f0fdfa;
+  color: #0f766e;
+  border-color: #99f6e4;
+}
+
+/* Dam Type Badges (구분별 전용 컬러) */
+.badge-type-multi {
+  background: rgba(226, 160, 110, 0.14);
+  color: #f5b98a;
+  border-color: rgba(226, 160, 110, 0.28);
+}
+
+.badge-type-water {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.25);
+}
+
+.badge-type-flood {
+  background: rgba(244, 63, 94, 0.12);
+  color: #fb7185;
+  border-color: rgba(244, 63, 94, 0.25);
+}
+
+:root[data-theme='light'] .badge-type-multi {
+  background: #fdf6ec;
+  color: #9c4c1e;
+  border-color: #f9d8ba;
+}
+
+:root[data-theme='light'] .badge-type-water {
+  background: #f0f9ff;
+  color: #0369a1;
+  border-color: #bae6fd;
+}
+
+:root[data-theme='light'] .badge-type-flood {
+  background: #fff1f2;
+  color: #be123c;
+  border-color: #fecdd3;
+}
+
 /* ==========================================================================
    6. MODAL INSPECTOR (ROCK-SOLID OVERLAY & SMOOTH TRANSITION)
    ========================================================================== */
