@@ -1,51 +1,52 @@
 /* ==========================================================================
-   K-DAM LIVE — Minimalist Design Tokens (Geist / shadcn style)
-   Clean, neutral, high-contrast, zero AI-gimmick palette
+   K-DAM LIVE — Harmonious Warm Tokens (Inspired by ../study palette)
+   Warm Charcoal Dark & Natural Cream Parchment Light (Eye-Comfort Grade)
    ========================================================================== */
 
 :root {
   color-scheme: dark;
 
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Inter', 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Noto Sans KR', 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* Surfaces (Zinc / Neutral) */
-  --bg: #09090b;
-  --bg-subtle: #121215;
-  --surface: #18181b;
-  --surface-hover: #27272a;
-  --surface-active: #3f3f46;
+  /* Surfaces (Warm Obsidian / Charcoal) */
+  --bg: #191715;
+  --bg-subtle: #211e1b;
+  --surface: #24211e;
+  --surface-hover: #2e2a26;
+  --surface-active: #3c3732;
 
   /* Borders */
-  --border: #27272a;
-  --border-subtle: #1f1f23;
-  --border-strong: #3f3f46;
+  --border: #38332e;
+  --border-subtle: #2c2824;
+  --border-strong: #4f4942;
 
   /* Typography */
-  --text: #f4f4f5;
-  --text-muted: #a1a1aa;
-  --text-subtle: #71717a;
+  --text: #f2ece4;
+  --text-muted: #b6afa6;
+  --text-subtle: #8c867e;
 
-  /* Functional Accents (Subdued & Professional) */
-  --primary: #3b82f6;
-  --primary-hover: #2563eb;
-  --primary-subtle: rgba(59, 130, 246, 0.12);
+  /* Functional Accents */
+  --primary: #e2a06e;
+  --primary-hover: #f5d0a9;
+  --primary-subtle: rgba(226, 160, 110, 0.12);
 
-  --badge-green-bg: rgba(16, 185, 129, 0.12);
+  /* Status Badges */
+  --badge-green-bg: rgba(52, 211, 153, 0.12);
   --badge-green-text: #34d399;
-  --badge-green-border: rgba(16, 185, 129, 0.25);
+  --badge-green-border: rgba(52, 211, 153, 0.25);
 
-  --badge-blue-bg: rgba(59, 130, 246, 0.12);
-  --badge-blue-text: #60a5fa;
-  --badge-blue-border: rgba(59, 130, 246, 0.25);
+  --badge-blue-bg: rgba(56, 189, 248, 0.12);
+  --badge-blue-text: #38bdf8;
+  --badge-blue-border: rgba(56, 189, 248, 0.25);
 
-  --badge-yellow-bg: rgba(245, 158, 11, 0.12);
+  --badge-yellow-bg: rgba(251, 191, 36, 0.12);
   --badge-yellow-text: #fbbf24;
-  --badge-yellow-border: rgba(245, 158, 11, 0.25);
+  --badge-yellow-border: rgba(251, 191, 36, 0.25);
 
-  --badge-red-bg: rgba(239, 68, 68, 0.12);
+  --badge-red-bg: rgba(248, 113, 113, 0.12);
   --badge-red-text: #f87171;
-  --badge-red-border: rgba(239, 68, 68, 0.25);
+  --badge-red-border: rgba(248, 113, 113, 0.25);
 
   --radius: 6px;
   --radius-lg: 8px;
@@ -54,37 +55,42 @@
 :root[data-theme='light'] {
   color-scheme: light;
 
-  --bg: #ffffff;
-  --bg-subtle: #f8fafc;
-  --surface: #ffffff;
-  --surface-hover: #f1f5f9;
-  --surface-active: #e2e8f0;
+  /* Surfaces (Warm Parchment / Cream Sand — No Eye-Straining Harsh White) */
+  --bg: #f4efe3;
+  --bg-subtle: #ede7db;
+  --surface: #faf6ee;
+  --surface-hover: #eae3d4;
+  --surface-active: #ded5c3;
 
-  --border: #e2e8f0;
-  --border-subtle: #f1f5f9;
-  --border-strong: #cbd5e1;
+  /* Borders */
+  --border: #ded5c3;
+  --border-subtle: #eae3d4;
+  --border-strong: #c5bcaa;
 
-  --text: #0f172a;
-  --text-muted: #64748b;
-  --text-subtle: #94a3b8;
+  /* Typography */
+  --text: #191715;
+  --text-muted: #5e574c;
+  --text-subtle: #8e8575;
 
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --primary-subtle: rgba(37, 99, 235, 0.08);
+  /* Functional Accents */
+  --primary: #a65b32;
+  --primary-hover: #71391f;
+  --primary-subtle: rgba(166, 91, 50, 0.12);
 
-  --badge-green-bg: #ecfdf5;
-  --badge-green-text: #059669;
+  /* Status Badges */
+  --badge-green-bg: #d1fae5;
+  --badge-green-text: #065f46;
   --badge-green-border: #a7f3d0;
 
-  --badge-blue-bg: #eff6ff;
-  --badge-blue-text: #2563eb;
-  --badge-blue-border: #bfdbfe;
+  --badge-blue-bg: #e0f2fe;
+  --badge-blue-text: #0369a1;
+  --badge-blue-border: #bae6fd;
 
-  --badge-yellow-bg: #fffbeb;
-  --badge-yellow-text: #d97706;
-  --badge-yellow-border: #fde68a;
+  --badge-yellow-bg: #fef9c3;
+  --badge-yellow-text: #854d0e;
+  --badge-yellow-border: #fef08a;
 
-  --badge-red-bg: #fef2f2;
-  --badge-red-text: #dc2626;
+  --badge-red-bg: #fee2e2;
+  --badge-red-text: #991b1b;
   --badge-red-border: #fecaca;
 }
