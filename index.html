@@ -187,9 +187,10 @@
         <div class="stat-card-header">
           <span class="stat-card-label">전국 평균 저수율</span>
           <div class="stat-icon-wrap icon-cyan" aria-hidden="true" title="전국 댐 평균 저수율">
-            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2.5 C12 2.5, 19.5 11, 19.5 15.8 C19.5 19.8 16.1 23 12 23 C7.9 23 4.5 19.8 4.5 15.8 C4.5 11, 12 2.5, 12 2.5 Z"/>
-              <path d="M7 16c2-1.2 4-1.2 6 0s4 1.2 5 0"/>
+            <svg class="live-icon-droplet" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2.5 C12 2.5, 19.5 11, 19.5 15.8 C19.5 19.8 16.1 23 12 23 C7.9 23 4.5 19.8 4.5 15.8 C4.5 11, 12 2.5, 12 2.5 Z" class="droplet-body"/>
+              <path d="M7 16 c2 -1.5, 4 -1.5, 6 0 s4 1.5, 5 0" class="droplet-wave-1"/>
+              <path d="M8 18.5 c1.8 -1.2, 3.8 -1.2, 5.5 0 s3.5 1.2, 4.5 0" class="droplet-wave-2"/>
             </svg>
           </div>
         </div>
@@ -201,10 +202,11 @@
         <div class="stat-card-header">
           <span class="stat-card-label">전국 총 저수량</span>
           <div class="stat-icon-wrap icon-blue" aria-hidden="true" title="전국 댐 현재 총 저수용량">
-            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <ellipse cx="12" cy="6" rx="8" ry="3"/>
-              <path d="M4 6v6c0 1.66 3.58 3 8 3s8-1.34 8-3V6"/>
-              <path d="M4 12v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/>
+            <svg class="live-icon-storage" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="8" ry="2.8" class="storage-top"/>
+              <path d="M4 5v6c0 1.5 3.58 2.8 8 2.8s8-1.3 8-2.8V5" class="storage-mid"/>
+              <path d="M4 11v6c0 1.5 3.58 2.8 8 2.8s8-1.3 8-2.8v-6" class="storage-bot"/>
+              <circle cx="12" cy="11" r="1.5" fill="currentColor" class="storage-pulse"/>
             </svg>
           </div>
         </div>
@@ -216,11 +218,11 @@
         <div class="stat-card-header">
           <span class="stat-card-label">실시간 총 유입량</span>
           <div class="stat-icon-wrap icon-emerald" aria-hidden="true" title="상류 하천 유입량 합산">
-            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 6c4 1.5 6 3.5 9 3.5s5-2 9-3.5"/>
-              <path d="M3 12c4 1.5 6 3.5 9 3.5s5-2 9-3.5"/>
-              <path d="M3 18c4 1.5 6 3.5 9 3.5s5-2 9-3.5"/>
-              <path d="M12 2v6M9.5 5.5L12 8l2.5-2.5"/>
+            <svg class="live-icon-inflow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 7c4 1.5 6 3 9 3s5-1.8 9-3" class="inflow-wave-1"/>
+              <path d="M3 13c4 1.5 6 3 9 3s5-1.8 9-3" class="inflow-wave-2"/>
+              <path d="M3 19c4 1.5 6 3 9 3s5-1.8 9-3" class="inflow-wave-3"/>
+              <path d="M12 2v6M9.5 5.5L12 8l2.5-2.5" class="inflow-arrow"/>
             </svg>
           </div>
         </div>
@@ -232,11 +234,11 @@
         <div class="stat-card-header">
           <span class="stat-card-label">실시간 총 방류량</span>
           <div class="stat-icon-wrap icon-amber" aria-hidden="true" title="하류 수문 방류량 합산">
-            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 4h18"/>
-              <path d="M6 4v4c0 3 2 5 6 5s6-2 6-5V4"/>
-              <path d="M4 17c2.5-1.5 5-1.5 8 0s5.5 1.5 8 0"/>
-              <path d="M12 13v7M9.5 17.5L12 20l2.5-2.5"/>
+            <svg class="live-icon-outflow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 4h18" class="outflow-gate-top"/>
+              <path d="M6 4v4c0 3 2 5 6 5s6-2 6-5V4" class="outflow-dam"/>
+              <path d="M12 13v7M9.5 17.5L12 20l2.5-2.5" class="outflow-arrow"/>
+              <path d="M4 17c2.5-1.5 5-1.5 8 0s5.5 1.5 8 0" class="outflow-spray"/>
             </svg>
           </div>
         </div>
