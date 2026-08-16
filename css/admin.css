@@ -78,9 +78,9 @@ body {
 
 .header-container {
   width: 100%;
-  max-width: 1360px;
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -252,9 +252,9 @@ body {
    ========================================================================== */
 .main-container {
   width: 100%;
-  max-width: 1360px;
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 22px 16px 48px;
+  padding: 24px 24px 56px;
   flex: 1;
 }
 
@@ -645,21 +645,21 @@ body {
   table-layout: auto;
 }
 
-/* Highly optimized, balanced column width constraints */
-.data-table th:nth-child(1) { width: 15%; min-width: 110px; } /* 댐 이름 */
-.data-table th:nth-child(2) { width: 8%;  min-width: 65px; }  /* 수계 */
-.data-table th:nth-child(3) { width: 8.5%; min-width: 70px; } /* 구분 */
-.data-table th:nth-child(4) { width: 12.5%; min-width: 95px; } /* 저수율 (%) */
-.data-table th:nth-child(5) { width: 8%;  min-width: 65px; }  /* 상태 */
-.data-table th:nth-child(6) { width: 8%;  min-width: 65px; }  /* 예년 대비 */
-.data-table th:nth-child(7) { width: 13.5%; min-width: 100px; } /* 현재 수위 (EL.m) */
-.data-table th:nth-child(8) { width: 9.5%;  min-width: 78px; }  /* 저수량 (M㎥) */
-.data-table th:nth-child(9) { width: 8.5%;  min-width: 70px; }  /* 유입량 (㎥/s) */
-.data-table th:nth-child(10){ width: 8.5%;  min-width: 70px; }  /* 방류량 (㎥/s) */
+/* Highly optimized, compact & balanced column width constraints */
+.data-table th:nth-child(1) { width: 14%; min-width: 95px; } /* 댐 이름 */
+.data-table th:nth-child(2) { width: 7.5%; min-width: 58px; } /* 수계 */
+.data-table th:nth-child(3) { width: 8%;  min-width: 62px; }  /* 구분 */
+.data-table th:nth-child(4) { width: 9.5%; min-width: 68px; } /* 저수율 (%) */
+.data-table th:nth-child(5) { width: 6.5%; min-width: 50px; } /* 상태 */
+.data-table th:nth-child(6) { width: 7.5%; min-width: 58px; } /* 예년 대비 */
+.data-table th:nth-child(7) { width: 14%; min-width: 95px; }  /* 현재 수위 (EL.m) */
+.data-table th:nth-child(8) { width: 11%; min-width: 75px; }  /* 저수량 (M㎥) */
+.data-table th:nth-child(9) { width: 11%; min-width: 70px; }  /* 유입량 (㎥/s) */
+.data-table th:nth-child(10){ width: 11%; min-width: 70px; }  /* 방류량 (㎥/s) */
 
 .data-table th {
-  padding: 10px 8px;
-  font-size: 0.75rem;
+  padding: 8px 6px;
+  font-size: 0.73rem;
   font-weight: 600;
   color: var(--text-muted);
   border-bottom: 1px solid var(--border);
@@ -675,7 +675,7 @@ body {
 
 .data-table th.sortable::after {
   content: " ↕";
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   opacity: 0.35;
   margin-left: 2px;
   transition: opacity 0.12s ease;
@@ -690,11 +690,12 @@ body {
 }
 
 .data-table td {
-  padding: 10px 8px;
+  padding: 8px 6px;
   border-bottom: 1px solid var(--border-subtle);
   color: var(--text);
   white-space: nowrap;
   vertical-align: middle;
+  font-size: 0.82rem;
 }
 
 .data-table tbody tr {
@@ -723,37 +724,37 @@ body {
 
 /* Table Columns */
 .dam-title-cell {
-  font-size: 0.92rem;
+  font-size: 0.86rem;
   font-weight: 600;
   color: var(--text);
   transition: color 0.12s ease;
 }
 
 .dam-loc-sub {
-  font-size: 0.72rem;
+  font-size: 0.69rem;
   color: var(--text-subtle);
   margin-top: 1px;
 }
 
-/* Progress bar in table */
+/* Compact Progress bar in table */
 .rate-cell-wrap {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 5px;
 }
 
 .rate-val {
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 0.88rem;
-  min-width: 44px;
+  font-size: 0.82rem;
+  min-width: 36px;
   text-align: right;
 }
 
 .rate-bar-track {
-  width: 44px;
-  height: 5px;
+  width: 32px;
+  height: 4px;
   background: var(--border);
   border-radius: 999px;
   overflow: hidden;
@@ -764,21 +765,21 @@ body {
   border-radius: 999px;
 }
 
-/* Badges */
+/* Compact Badges */
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 6px;
+  gap: 3px;
+  padding: 1.5px 5px;
   border-radius: var(--radius);
-  font-size: 0.72rem;
+  font-size: 0.70rem;
   font-weight: 600;
   border: 1px solid transparent;
 }
 
 .badge-dot {
-  width: 4px;
-  height: 4px;
+  width: 3.5px;
+  height: 3.5px;
   border-radius: 50%;
   background: currentColor;
   display: inline-block;
