@@ -553,7 +553,7 @@ body {
   font-family: var(--font-mono);
   display: inline-block;
   background: transparent;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, color, text-shadow;
 }
 
@@ -912,7 +912,7 @@ body {
   display: inline-block;
   background: transparent !important;
   box-shadow: none !important;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, color, text-shadow;
 }
 
@@ -998,28 +998,25 @@ body {
 @keyframes livePulseUp {
   0% {
     color: var(--text);
-    text-shadow: none;
     transform: scale(0.98);
   }
   12% {
-    color: #34d399 !important;
+    color: #34d399;
     font-weight: 800;
-    text-shadow: 0 0 6px rgba(52, 211, 153, 0.35);
+    text-shadow: 0 0 6px rgba(52, 211, 153, 0.3);
     transform: scale(1.08);
   }
   40% {
-    color: #6ee7b7 !important;
-    text-shadow: 0 0 3px rgba(52, 211, 153, 0.2);
+    color: #6ee7b7;
+    text-shadow: none;
     transform: scale(1.03);
   }
   75% {
-    color: #a7f3d0 !important;
-    text-shadow: none;
+    color: #a7f3d0;
     transform: scale(1.01);
   }
   100% {
     color: var(--text);
-    text-shadow: none;
     transform: scale(1);
   }
 }
@@ -1027,33 +1024,30 @@ body {
 @keyframes livePulseDown {
   0% {
     color: var(--text);
-    text-shadow: none;
     transform: scale(0.98);
   }
   12% {
-    color: #38bdf8 !important;
+    color: #38bdf8;
     font-weight: 800;
-    text-shadow: 0 0 6px rgba(56, 189, 248, 0.35);
+    text-shadow: 0 0 6px rgba(56, 189, 248, 0.3);
     transform: scale(1.08);
   }
   40% {
-    color: #7dd3fc !important;
-    text-shadow: 0 0 3px rgba(56, 189, 248, 0.2);
+    color: #7dd3fc;
+    text-shadow: none;
     transform: scale(1.03);
   }
   75% {
-    color: #bae6fd !important;
-    text-shadow: none;
+    color: #bae6fd;
     transform: scale(1.01);
   }
   100% {
     color: var(--text);
-    text-shadow: none;
     transform: scale(1);
   }
 }
 
-/* Light Theme Pure Text Fades */
+/* Light Theme Pure Text Color Shifts */
 :root[data-theme='light'] .live-pulse-up {
   animation-name: livePulseUpLight !important;
 }
@@ -1061,28 +1055,23 @@ body {
 @keyframes livePulseUpLight {
   0% {
     color: var(--text);
-    text-shadow: none;
     transform: scale(0.98);
   }
   12% {
-    color: #047857 !important;
+    color: #059669;
     font-weight: 800;
-    text-shadow: none;
     transform: scale(1.08);
   }
   40% {
-    color: #059669 !important;
-    text-shadow: none;
+    color: #10b981;
     transform: scale(1.03);
   }
   75% {
-    color: #34d399 !important;
-    text-shadow: none;
+    color: #34d399;
     transform: scale(1.01);
   }
   100% {
     color: var(--text);
-    text-shadow: none;
     transform: scale(1);
   }
 }
@@ -1094,28 +1083,23 @@ body {
 @keyframes livePulseDownLight {
   0% {
     color: var(--text);
-    text-shadow: none;
     transform: scale(0.98);
   }
   12% {
-    color: #0369a1 !important;
+    color: #0284c7;
     font-weight: 800;
-    text-shadow: none;
     transform: scale(1.08);
   }
   40% {
-    color: #0284c7 !important;
-    text-shadow: none;
+    color: #0ea5e9;
     transform: scale(1.03);
   }
   75% {
-    color: #38bdf8 !important;
-    text-shadow: none;
+    color: #38bdf8;
     transform: scale(1.01);
   }
   100% {
     color: var(--text);
-    text-shadow: none;
     transform: scale(1);
   }
 }
