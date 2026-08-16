@@ -45,17 +45,10 @@
       </a>
 
       <div class="header-actions">
-        <div class="live-badge">
+        <div class="live-badge" title="5분 주기로 데이터가 자동 갱신됩니다">
           <span class="status-dot"></span>
-          <span id="live-clock">00:00:00 KST</span>
+          <span id="data-updated-time">최신 기준: --:--:--</span>
         </div>
-
-        <button id="btn-manual-refresh" class="btn-action" type="button" title="실시간 데이터 갱신">
-          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2">
-            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
-          </svg>
-          <span>새로고침</span>
-        </button>
 
         <button id="btn-export-csv" class="btn-action" type="button" title="CSV 다운로드">
           <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2">

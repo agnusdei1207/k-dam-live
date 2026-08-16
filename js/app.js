@@ -1,7 +1,7 @@
 /**
  * ============================================================================
  * K-DAM LIVE — Minimalist Application Controller
- * Clean, fast, zero-fluff data rendering & filtering
+ * Clean, automatic 5-minute background refresh & timestamp tracking
  * ============================================================================
  */
 
@@ -22,6 +22,8 @@
     return;
   }
 
+  const AUTO_REFRESH_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
+
   const state = {
     activeBasin: 'ALL',
     damTypeFilter: 'ALL',
@@ -29,6 +31,7 @@
     searchQuery: '',
     sortField: 'storageRate',
     sortOrder: 'desc',
+    lastUpdatedTime: new Date(),
     theme: localStorage.getItem('kdam_theme') || 'dark'
   };
 
@@ -36,8 +39,7 @@
 
   function cacheElements() {
     elements = {
-      liveClock: document.getElementById('live-clock'),
-      btnManualRefresh: document.getElementById('btn-manual-refresh'),
+      dataUpdatedTime: document.getElementById('data-updated-time'),
       btnExportCsv: document.getElementById('btn-export-csv'),
       btnThemeToggle: document.getElementById('btn-theme-toggle'),
       themeMoon: document.getElementById('theme-moon'),
@@ -68,7 +70,7 @@
   function init() {
     cacheElements();
     initTheme();
-    initClock();
+    updateTimestamp();
     initEvents();
     renderAll();
 
@@ -76,10 +78,21 @@
       renderAll();
     });
 
-    // Background live tick every 15s
+    // Automatic 5-minute background refresh
     setInterval(() => {
       telemetryService.simulateLiveTick();
-    }, 15000);
+      state.lastUpdatedTime = new Date();
+      updateTimestamp();
+    }, AUTO_REFRESH_INTERVAL_MS);
+  }
+
+  function updateTimestamp() {
+    if (!elements.dataUpdatedTime) return;
+    const now = state.lastUpdatedTime;
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    elements.dataUpdatedTime.textContent = `최신 기준: ${hours}:${minutes}:${seconds}`;
   }
 
   function initTheme() {
@@ -103,19 +116,6 @@
     document.documentElement.setAttribute('data-theme', state.theme);
     localStorage.setItem('kdam_theme', state.theme);
     updateThemeIcons();
-  }
-
-  function initClock() {
-    const update = () => {
-      if (!elements.liveClock) return;
-      const now = new Date();
-      const h = String(now.getHours()).padStart(2, '0');
-      const m = String(now.getMinutes()).padStart(2, '0');
-      const s = String(now.getSeconds()).padStart(2, '0');
-      elements.liveClock.textContent = `${h}:${m}:${s} KST`;
-    };
-    update();
-    setInterval(update, 1000);
   }
 
   function getFilteredDams() {
@@ -332,11 +332,6 @@
   }
 
   function initEvents() {
-    if (elements.btnManualRefresh) {
-      elements.btnManualRefresh.addEventListener('click', () => {
-        telemetryService.simulateLiveTick();
-      });
-    }
     if (elements.btnThemeToggle) {
       elements.btnThemeToggle.addEventListener('click', toggleTheme);
     }
