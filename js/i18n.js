@@ -31,6 +31,43 @@
     'bn': { name: 'বাংলা', flag: '🇧🇩' }
   };
 
+  // English romanized dam locations (used for all non-Korean languages)
+  const DAM_LOCATIONS_EN = {
+    'soyang': 'Sinbuk-eup, Chuncheon-si, Gangwon',
+    'chungju': 'Jongmin-dong, Chungju-si, Chungbuk',
+    'hoengseong': 'Gapcheon-myeon, Hoengseong-gun, Gangwon',
+    'peace': 'Hwacheon-eup, Hwacheon-gun, Gangwon',
+    'gwangdong': 'Hajang-myeon, Samcheok-si, Gangwon',
+    'dalbang': 'Samhwa-dong, Donghae-si, Gangwon',
+    'andong': 'Sanga-dong, Andong-si, Gyeongbuk',
+    'imha': 'Imha-myeon, Andong-si, Gyeongbuk',
+    'hapcheon': 'Daebyeong-myeon, Hapcheon-gun, Gyeongnam',
+    'namgang': 'Panmun-dong, Jinju-si, Gyeongnam',
+    'miryang': 'Danjang-myeon, Miryang-si, Gyeongnam',
+    'gunwi': 'Samguk-yusa-myeon, Gunwi-gun, Daegu',
+    'buhang': 'Buhang-myeon, Gimcheon-si, Gyeongbuk',
+    'yeongju': 'Pyeongeun-myeon, Yeongju-si, Gyeongbuk',
+    'bohyunsan': 'Hwabuk-myeon, Yeongcheon-si, Gyeongbuk',
+    'seongdeok': 'Andeok-myeon, Cheongsong-gun, Gyeongbuk',
+    'yeongcheon': 'Jayang-myeon, Yeongcheon-si, Gyeongbuk',
+    'unmun': 'Unmun-myeon, Cheongdo-gun, Gyeongbuk',
+    'sayeon': 'Beomseo-eup, Ulju-gun, Ulsan',
+    'daeam': 'Samdong-myeon, Ulju-gun, Ulsan',
+    'daecheong': 'Daedeok-gu, Daejeon / Cheongju, Chungbuk',
+    'yongdam': 'Yongdam-myeon, Jinan-gun, Jeonbuk',
+    'boryeong': 'Misan-myeon, Boryeong-si, Chungnam',
+    'buan': 'Byeonsan-myeon, Buan-gun, Jeonbuk',
+    'jwam': 'Juam-myeon, Suncheon-si, Jeonnam',
+    'jwam-reg': 'Sangsa-myeon, Suncheon-si, Jeonnam',
+    'seomjin': 'Gangjin-myeon, Imsil-gun, Jeonbuk',
+    'jangheung': 'Yuchi-myeon, Jangheung-gun, Jeonnam',
+    'pyeongrim': 'Samgye-myeon, Jangseong-gun, Jeonnam',
+    'suo': 'Jinsang-myeon, Gwangyang-si, Jeonnam',
+    'dongbok': 'Iseo-myeon, Hwasun-gun, Jeonnam',
+    'seonam': 'Seonam-dong, Nam-gu, Ulsan',
+    'gampo': 'Munmu-daewang-myeon, Gyeongju-si, Gyeongbuk',
+  };
+
   const TRANSLATIONS = {
     'ko': {
       title: '전국 댐 저수율 실시간 모니터링',
@@ -1331,11 +1368,15 @@
   // Export i18n API
   global.i18n = {
     LANGUAGES,
-    currentLang: () => currentLang,
+    DAM_LOCATIONS_EN,
+    get currentLang() { return currentLang; },
     getStoredLang,
     setLanguage,
     t,
-    applyTranslations
+    applyTranslations,
+    getLocationEN: function(damId) {
+      return DAM_LOCATIONS_EN[damId] || null;
+    }
   };
 
 })(typeof window !== 'undefined' ? window : this);

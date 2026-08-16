@@ -528,10 +528,10 @@
       const typeClass = getTypeBadgeClass(dam.type);
 
       return `
-        <tr data-dam-id="${dam.id}" onclick="window.appInspectDam('${dam.id}')" title="${dam.name} 상세 제원 보기">
+        <tr data-dam-id="${dam.id}" onclick="window.appInspectDam('${dam.id}')" title="${isI18n ? i18n.t('modalTitle') : dam.name + ' 상세 제원 보기'}">
           <td>
             <div class="dam-title-cell">${dam.name} ${distanceHtml}</div>
-            <div class="dam-loc-sub">${dam.location}</div>
+            <div class="dam-loc-sub">${isI18n && i18n.currentLang !== 'ko' && i18n.getLocationEN(dam.id) ? i18n.getLocationEN(dam.id) : dam.location}</div>
           </td>
           <td>${localizedBasin}</td>
           <td><span class="badge ${typeClass}">${localizedType}</span></td>
