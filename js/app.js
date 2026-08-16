@@ -423,17 +423,33 @@
     renderTable();
   }
 
+  function updateStatCardValue(el, newValStr, numericVal, prevKey) {
+    if (!el) return;
+    const oldText = el.textContent.trim();
+    if (oldText !== newValStr) {
+      el.textContent = newValStr;
+      if (state.prevStats && state.prevStats[prevKey] !== undefined && state.prevStats[prevKey] !== null) {
+        const isUp = numericVal >= state.prevStats[prevKey];
+        triggerPulse(el, isUp);
+      }
+      if (!state.prevStats) state.prevStats = {};
+      state.prevStats[prevKey] = numericVal;
+    }
+  }
+
   function renderStats() {
     const isI18n = Boolean(window.i18n);
     const m = telemetryService.getOverviewMetrics();
-    if (elements.valAvgRate) elements.valAvgRate.textContent = `${m.avgStorageRate}%`;
+
+    updateStatCardValue(elements.valAvgRate, `${m.avgStorageRate}%`, parseFloat(m.avgStorageRate), 'avgRate');
+    updateStatCardValue(elements.valTotalStorage, `${Number(m.totalStorageVolume).toLocaleString()} M㎥`, parseFloat(m.totalStorageVolume), 'totalStorage');
+    updateStatCardValue(elements.valTotalInflow, `${Number(m.totalInflow).toLocaleString()} ㎥/s`, parseFloat(m.totalInflow), 'totalInflow');
+    updateStatCardValue(elements.valTotalOutflow, `${Number(m.totalOutflow).toLocaleString()} ㎥/s`, parseFloat(m.totalOutflow), 'totalOutflow');
+
     if (elements.deltaAvgRate) {
       const diffLabel = isI18n ? i18n.t('diffPrevYear') : '예년 대비';
       elements.deltaAvgRate.textContent = `${diffLabel} ${m.diffPrevYear}`;
     }
-    if (elements.valTotalStorage) elements.valTotalStorage.textContent = `${Number(m.totalStorageVolume).toLocaleString()} M㎥`;
-    if (elements.valTotalInflow) elements.valTotalInflow.textContent = `${Number(m.totalInflow).toLocaleString()} ㎥/s`;
-    if (elements.valTotalOutflow) elements.valTotalOutflow.textContent = `${Number(m.totalOutflow).toLocaleString()} ㎥/s`;
     if (elements.valDischargeCount) {
       if (isI18n) {
         elements.valDischargeCount.textContent = i18n.t('dischargingCount', { count: m.dischargingCount });
