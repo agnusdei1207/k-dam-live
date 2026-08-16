@@ -809,53 +809,43 @@ body {
   border-color: var(--border);
 }
 
-/* Basin Badges (수계별 전용 컬러) */
-.badge-basin-han {
-  background: rgba(6, 182, 212, 0.12);
+/* Basin Column: Clean Plain Text (카드가 아닌 깔끔한 텍스트) */
+.basin-text {
+  font-size: 0.83rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.basin-text.badge-basin-han {
   color: #22d3ee;
-  border-color: rgba(6, 182, 212, 0.25);
 }
 
-.badge-basin-nakdong {
-  background: rgba(99, 102, 241, 0.12);
+.basin-text.badge-basin-nakdong {
   color: #818cf8;
-  border-color: rgba(99, 102, 241, 0.25);
 }
 
-.badge-basin-geum {
-  background: rgba(168, 85, 247, 0.12);
+.basin-text.badge-basin-geum {
   color: #c084fc;
-  border-color: rgba(168, 85, 247, 0.25);
 }
 
-.badge-basin-seomjin {
-  background: rgba(20, 184, 166, 0.12);
+.basin-text.badge-basin-seomjin {
   color: #2dd4bf;
-  border-color: rgba(20, 184, 166, 0.25);
 }
 
-:root[data-theme='light'] .badge-basin-han {
-  background: #ecfeff;
+:root[data-theme='light'] .basin-text.badge-basin-han {
   color: #0e7490;
-  border-color: #a5f3fc;
 }
 
-:root[data-theme='light'] .badge-basin-nakdong {
-  background: #eef2ff;
+:root[data-theme='light'] .basin-text.badge-basin-nakdong {
   color: #4338ca;
-  border-color: #c7d2fe;
 }
 
-:root[data-theme='light'] .badge-basin-geum {
-  background: #faf5ff;
+:root[data-theme='light'] .basin-text.badge-basin-geum {
   color: #7e22ce;
-  border-color: #e9d5ff;
 }
 
-:root[data-theme='light'] .badge-basin-seomjin {
-  background: #f0fdfa;
+:root[data-theme='light'] .basin-text.badge-basin-seomjin {
   color: #0f766e;
-  border-color: #99f6e4;
 }
 
 /* Dam Type Badges (구분별 전용 컬러) */

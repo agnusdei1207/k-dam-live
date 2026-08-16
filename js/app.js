@@ -380,7 +380,7 @@
             <div class="dam-title-cell">${dam.name} ${distanceHtml}</div>
             <div class="dam-loc-sub">${dam.location}</div>
           </td>
-          <td><span class="badge ${basinClass}">${dam.basin}</span></td>
+          <td><span class="basin-text ${basinClass}">${dam.basin}</span></td>
           <td><span class="badge ${typeClass}">${dam.type}</span></td>
           <td class="text-right">
             <div class="rate-cell-wrap">
