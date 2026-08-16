@@ -246,7 +246,7 @@
     const d = String(now.getDate()).padStart(2, '0');
     const hh = String(now.getHours()).padStart(2, '0');
     const mm = String(now.getMinutes()).padStart(2, '0');
-    elements.dataUpdatedTime.textContent = `${y}.${m}.${d} ${hh}:${mm} 기준`;
+    elements.dataUpdatedTime.textContent = `${y}.${m}.${d} ${hh}:${mm}`;
   }
 
   function initTheme() {
@@ -320,7 +320,7 @@
     if (elements.geoInfoBar) {
       elements.geoInfoBar.classList.remove('hidden');
       if (elements.geoInfoText && nearest) {
-        elements.geoInfoText.innerHTML = `<strong>${locationLabel}</strong> 기준 가장 가까운 댐은 <strong>${nearest.name}</strong>(약 <span class="num">${nearest.distanceKm}km</span>)입니다. 가까운 순서대로 정렬되었습니다.`;
+        elements.geoInfoText.innerHTML = `<strong>${locationLabel}</strong>에서 가장 가까운 댐은 <strong>${nearest.name}</strong>(약 <span class="num">${nearest.distanceKm}km</span>)입니다. 가까운 순으로 정렬되었습니다.`;
       }
     }
 
