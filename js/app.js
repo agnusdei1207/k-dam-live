@@ -260,6 +260,28 @@
       barColor = 'var(--badge-yellow-text)';
     }
 
+    const trend = dam.hourlyTrend || [];
+    let minRate = 100, maxRate = 0;
+    trend.forEach((t) => {
+      if (t.rate < minRate) minRate = t.rate;
+      if (t.rate > maxRate) maxRate = t.rate;
+    });
+    if (minRate === maxRate) { minRate -= 1; maxRate += 1; }
+    const paddingY = (maxRate - minRate) * 0.2 || 1;
+    const yMin = Math.max(0, minRate - paddingY);
+    const yMax = Math.min(100, maxRate + paddingY);
+
+    const chartW = 500;
+    const chartH = 75;
+    const points = trend.map((t, idx) => {
+      const x = (idx / (trend.length - 1 || 1)) * (chartW - 24) + 12;
+      const y = chartH - ((t.rate - yMin) / (yMax - yMin || 1)) * (chartH - 20) - 10;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    });
+    const polylinePoints = points.join(' ');
+    const lastPoint = points.length > 0 ? points[points.length - 1].split(',') : ['12', '40'];
+    const areaPoints = `12,${chartH} ${polylinePoints} ${chartW - 12},${chartH}`;
+
     elements.modalDamContent.innerHTML = `
       <!-- Big Rate Hero -->
       <div class="modal-rate-hero">
@@ -273,6 +295,32 @@
         <div class="modal-rate-bar-track">
           <div class="modal-rate-bar-fill" style="width: ${Math.min(100, dam.storageRate)}%; background: ${barColor};"></div>
         </div>
+      </div>
+
+      <!-- 24-Hour Trend Chart -->
+      <div class="modal-chart-card">
+        <div class="modal-chart-header">
+          <span>최근 24시간 저수율(%) 변동 추이</span>
+          <span class="modal-chart-range">${minRate.toFixed(1)}% ~ ${maxRate.toFixed(1)}%</span>
+        </div>
+        <svg class="modal-svg-chart" viewBox="0 0 ${chartW} ${chartH + 18}" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="chart-grad-${dam.id}" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="${barColor}" stop-opacity="0.28"/>
+              <stop offset="100%" stop-color="${barColor}" stop-opacity="0.0"/>
+            </linearGradient>
+          </defs>
+          <line x1="12" y1="12" x2="${chartW - 12}" y2="12" stroke="var(--border-subtle)" stroke-dasharray="2 3" stroke-width="1" />
+          <line x1="12" y1="${chartH - 10}" x2="${chartW - 12}" y2="${chartH - 10}" stroke="var(--border-subtle)" stroke-dasharray="2 3" stroke-width="1" />
+          
+          <polygon points="${areaPoints}" fill="url(#chart-grad-${dam.id})" />
+          <polyline points="${polylinePoints}" fill="none" stroke="${barColor}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+          <circle cx="${lastPoint[0]}" cy="${lastPoint[1]}" r="4" fill="${barColor}" stroke="var(--surface)" stroke-width="2" />
+          
+          <text x="14" y="${chartH + 13}" fill="var(--text-subtle)" font-size="9" font-family="var(--font-mono)">24시간 전</text>
+          <text x="${chartW / 2}" y="${chartH + 13}" fill="var(--text-subtle)" font-size="9" font-family="var(--font-mono)" text-anchor="middle">12시간 전</text>
+          <text x="${chartW - 14}" y="${chartH + 13}" fill="var(--text-subtle)" font-size="9" font-family="var(--font-mono)" text-anchor="end">현재</text>
+        </svg>
       </div>
 
       <!-- 4-Box Telemetry Grid -->
