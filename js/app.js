@@ -60,7 +60,7 @@
       damsTbody: document.getElementById('dams-tbody'),
       tableHeaders: document.querySelectorAll('#dams-table thead th.sortable'),
 
-      dialogInspector: document.getElementById('dam-inspector-dialog'),
+      modalInspector: document.getElementById('dam-inspector-modal'),
       modalDamTitle: document.getElementById('modal-dam-title'),
       modalDamSub: document.getElementById('modal-dam-sub'),
       modalDamContent: document.getElementById('modal-dam-content'),
@@ -380,36 +380,21 @@
       </div>
     `;
 
-    const dialog = elements.dialogInspector || document.getElementById('dam-inspector-dialog');
-    if (dialog) {
-      dialog.classList.remove('closing');
-      try {
-        if (typeof dialog.showModal === 'function') {
-          if (!dialog.open) dialog.showModal();
-        } else {
-          dialog.setAttribute('open', '');
-        }
-      } catch (err) {
-        dialog.setAttribute('open', '');
-      }
+    const modal = elements.modalInspector || document.getElementById('dam-inspector-modal');
+    if (modal) {
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
     }
   }
 
   function closeInspector() {
-    const dialog = elements.dialogInspector || document.getElementById('dam-inspector-dialog');
-    if (!dialog) return;
-
-    dialog.classList.add('closing');
-
-    setTimeout(() => {
-      try {
-        if (typeof dialog.close === 'function' && dialog.open) {
-          dialog.close();
-        }
-      } catch (err) {}
-      dialog.removeAttribute('open');
-      dialog.classList.remove('closing');
-    }, 150);
+    const modal = elements.modalInspector || document.getElementById('dam-inspector-modal');
+    if (modal) {
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
   }
 
   window.appInspectDam = openInspector;
@@ -540,27 +525,6 @@
       elements.btnModalClose.addEventListener('click', (e) => {
         e.stopPropagation();
         closeInspector();
-      });
-    }
-
-    if (elements.dialogInspector) {
-      elements.dialogInspector.addEventListener('cancel', (e) => {
-        e.preventDefault();
-        closeInspector();
-      });
-
-      elements.dialogInspector.addEventListener('click', (e) => {
-        const panel = elements.dialogInspector.querySelector('.inspector-modal-panel');
-        if (panel) {
-          const rect = panel.getBoundingClientRect();
-          const isInside = (
-            rect.top <= e.clientY && e.clientY <= rect.bottom &&
-            rect.left <= e.clientX && e.clientX <= rect.right
-          );
-          if (!isInside) closeInspector();
-        } else {
-          closeInspector();
-        }
       });
     }
 

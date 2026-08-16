@@ -663,76 +663,30 @@ body {
 }
 
 /* ==========================================================================
-   6. MODAL INSPECTOR (SMOOTH RADIX / SHADCN OPEN & CLOSE MOTION)
+   6. MODAL INSPECTOR (ROCK-SOLID OVERLAY & SMOOTH TRANSITION)
    ========================================================================== */
-.inspector-dialog {
+.inspector-modal-overlay {
   position: fixed;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  max-width: 100vw;
-  max-height: 100vh;
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  border: none;
-  z-index: 100;
-}
-
-.inspector-dialog:not([open]) {
-  display: none !important;
-  pointer-events: none !important;
-}
-
-.inspector-dialog[open] {
-  display: flex !important;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
   align-items: center;
   justify-content: center;
-  animation: dialogFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.22s ease;
 }
 
-.inspector-dialog[open]::backdrop {
+.inspector-modal-backdrop {
+  position: absolute;
+  inset: 0;
   background: rgba(0, 0, 0, 0.72);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  animation: backdropFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.inspector-dialog[open] .inspector-modal-panel {
-  animation: modalScaleUp 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* Smooth Closing State */
-.inspector-dialog.closing {
-  animation: dialogFadeOut 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.inspector-dialog.closing::backdrop {
-  animation: backdropFadeOut 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.inspector-dialog.closing .inspector-modal-panel {
-  animation: modalScaleDown 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes backdropFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes backdropFadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-@keyframes dialogFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes dialogFadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  cursor: pointer;
 }
 
 .inspector-modal-panel {
@@ -745,28 +699,20 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  transform: scale(0.93) translateY(14px);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
 }
 
-@keyframes modalScaleUp {
-  0% {
-    opacity: 0;
-    transform: scale(0.93) translateY(14px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+/* Active Open State */
+.inspector-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
-@keyframes modalScaleDown {
-  0% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.95) translateY(10px);
-  }
+.inspector-modal-overlay.active .inspector-modal-panel {
+  transform: scale(1) translateY(0);
 }
 
 .modal-header {
