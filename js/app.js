@@ -102,6 +102,17 @@
     }, 250);
   }
 
+  function triggerPulse(el, isUp) {
+    if (!el) return;
+    const pulseClass = isUp ? 'live-pulse-up' : 'live-pulse-down';
+    el.classList.remove('live-pulse-up', 'live-pulse-down');
+    void el.offsetWidth; // Force synchronous reflow to guarantee CSS keyframe trigger
+    el.classList.add(pulseClass);
+    setTimeout(() => {
+      el.classList.remove(pulseClass);
+    }, 1800);
+  }
+
   // Periodic Micro-Telemetry Sensor Heartbeat (Breathing Live Dashboard)
   function liveSensorHeartbeat() {
     const data = telemetryService.currentData;
@@ -109,12 +120,12 @@
 
     // Pick 1~2 random dams to pulse live telemetry
     const targetDam = data[Math.floor(Math.random() * data.length)];
-    const deltaInflow = parseFloat((Math.random() * 0.8 - 0.4).toFixed(1));
+    const deltaInflow = parseFloat((Math.random() * 1.2 - 0.5).toFixed(1));
     const deltaOutflow = targetDam.currentOutflow >= 20
-      ? parseFloat((Math.random() * 0.6 - 0.3).toFixed(1))
-      : parseFloat((Math.random() * 0.2 - 0.1).toFixed(1));
-    const deltaWaterLevel = parseFloat((Math.random() * 0.04 - 0.02).toFixed(2));
-    const deltaRate = parseFloat((Math.random() * 0.06 - 0.03).toFixed(2));
+      ? parseFloat((Math.random() * 0.8 - 0.4).toFixed(1))
+      : parseFloat((Math.random() * 0.3 - 0.1).toFixed(1));
+    const deltaWaterLevel = parseFloat((Math.random() * 0.06 - 0.03).toFixed(2));
+    const deltaRate = parseFloat((Math.random() * 0.08 - 0.04).toFixed(2));
 
     targetDam.currentInflow = Math.max(0.1, parseFloat((targetDam.currentInflow + deltaInflow).toFixed(1)));
     targetDam.currentOutflow = Math.max(0.0, parseFloat((targetDam.currentOutflow + deltaOutflow).toFixed(1)));
@@ -122,72 +133,47 @@
     targetDam.storageRate = Math.min(100, Math.max(5, parseFloat((targetDam.storageRate + deltaRate).toFixed(1))));
     targetDam.currentStorageVolume = Math.round((targetDam.totalStorage * targetDam.storageRate) / 100);
 
-    // Momentarily flash the table cells if visible
+    // Conspicuously pulse the specific span elements with full color animation
     const rowEl = document.querySelector(`tr[data-dam-id="${targetDam.id}"]`);
     if (rowEl) {
-      // 1. Rate Cell (Col index 3)
-      const rateCell = rowEl.children[3];
-      if (rateCell) {
-        const rateValEl = rateCell.querySelector('.rate-val');
-        const rateBarFill = rateCell.querySelector('.rate-bar-fill');
-        if (rateValEl) {
-          rateValEl.textContent = `${targetDam.storageRate.toFixed(1)}%`;
-          const flashClass = deltaRate >= 0 ? 'cell-flash-up' : 'cell-flash-down';
-          rateValEl.classList.remove('cell-flash-up', 'cell-flash-down');
-          void rateValEl.offsetWidth;
-          rateValEl.classList.add(flashClass);
-          setTimeout(() => rateValEl.classList.remove(flashClass), 1600);
-        }
-        if (rateBarFill) {
-          rateBarFill.style.width = `${Math.min(100, targetDam.storageRate)}%`;
-        }
+      // 1. Rate Cell
+      const rateValEl = rowEl.querySelector('.rate-val');
+      const rateBarFill = rowEl.querySelector('.rate-bar-fill');
+      if (rateValEl) {
+        rateValEl.textContent = `${targetDam.storageRate.toFixed(1)}%`;
+        triggerPulse(rateValEl, deltaRate >= 0);
+      }
+      if (rateBarFill) {
+        rateBarFill.style.width = `${Math.min(100, targetDam.storageRate)}%`;
       }
 
-      // 2. Water Level Cell (Col index 6)
-      const waterLevelCell = rowEl.children[6];
-      if (waterLevelCell) {
-        const strongEl = waterLevelCell.querySelector('strong');
-        if (strongEl) {
-          strongEl.textContent = targetDam.currentWaterLevel.toFixed(1);
-          const flashClass = deltaWaterLevel >= 0 ? 'cell-flash-up' : 'cell-flash-down';
-          strongEl.classList.remove('cell-flash-up', 'cell-flash-down');
-          void strongEl.offsetWidth;
-          strongEl.classList.add(flashClass);
-          setTimeout(() => strongEl.classList.remove(flashClass), 1600);
-        }
+      // 2. Water Level Cell
+      const levelValEl = rowEl.querySelector('.level-val');
+      if (levelValEl) {
+        const strongEl = levelValEl.querySelector('strong');
+        if (strongEl) strongEl.textContent = targetDam.currentWaterLevel.toFixed(1);
+        triggerPulse(levelValEl, deltaWaterLevel >= 0);
       }
 
-      // 3. Storage Volume Cell (Col index 7)
-      const storageVolCell = rowEl.children[7];
-      if (storageVolCell) {
-        storageVolCell.textContent = targetDam.currentStorageVolume.toLocaleString();
-        const flashClass = deltaRate >= 0 ? 'cell-flash-up' : 'cell-flash-down';
-        storageVolCell.classList.remove('cell-flash-up', 'cell-flash-down');
-        void storageVolCell.offsetWidth;
-        storageVolCell.classList.add(flashClass);
-        setTimeout(() => storageVolCell.classList.remove(flashClass), 1600);
+      // 3. Storage Volume Cell
+      const volValEl = rowEl.querySelector('.vol-val');
+      if (volValEl) {
+        volValEl.textContent = targetDam.currentStorageVolume.toLocaleString();
+        triggerPulse(volValEl, deltaRate >= 0);
       }
 
-      // 4. Inflow Cell (Col index 8)
-      const inflowCell = rowEl.children[8];
-      if (inflowCell) {
-        inflowCell.textContent = targetDam.currentInflow.toFixed(1);
-        const flashClass = deltaInflow >= 0 ? 'cell-flash-up' : 'cell-flash-down';
-        inflowCell.classList.remove('cell-flash-up', 'cell-flash-down');
-        void inflowCell.offsetWidth;
-        inflowCell.classList.add(flashClass);
-        setTimeout(() => inflowCell.classList.remove(flashClass), 1600);
+      // 4. Inflow Cell
+      const inflowValEl = rowEl.querySelector('.inflow-val');
+      if (inflowValEl) {
+        inflowValEl.textContent = targetDam.currentInflow.toFixed(1);
+        triggerPulse(inflowValEl, deltaInflow >= 0);
       }
 
-      // 5. Outflow Cell (Col index 9)
-      const outflowCell = rowEl.children[9];
-      if (outflowCell) {
-        outflowCell.textContent = targetDam.currentOutflow.toFixed(1);
-        const flashClass = deltaOutflow >= 0 ? 'cell-flash-up' : 'cell-flash-down';
-        outflowCell.classList.remove('cell-flash-up', 'cell-flash-down');
-        void outflowCell.offsetWidth;
-        outflowCell.classList.add(flashClass);
-        setTimeout(() => outflowCell.classList.remove(flashClass), 1600);
+      // 5. Outflow Cell
+      const outflowValEl = rowEl.querySelector('.outflow-val');
+      if (outflowValEl) {
+        outflowValEl.textContent = targetDam.currentOutflow.toFixed(1);
+        triggerPulse(outflowValEl, deltaOutflow >= 0);
       }
     }
 
@@ -502,7 +488,7 @@
           <td><span class="badge ${typeClass}">${dam.type}</span></td>
           <td class="text-right">
             <div class="rate-cell-wrap">
-              <span class="rate-val">${dam.storageRate.toFixed(1)}%</span>
+              <span class="rate-val live-num">${dam.storageRate.toFixed(1)}%</span>
               <div class="rate-bar-track">
                 <div class="rate-bar-fill" style="width: ${Math.min(100, dam.storageRate)}%; background: ${barColor};"></div>
               </div>
@@ -511,11 +497,11 @@
           <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
           <td class="text-right num" style="color: ${diffColor}">${diffSign}${dam.diffPrevYear}%p</td>
           <td class="text-right num">
-            <strong>${dam.currentWaterLevel.toFixed(1)}</strong> <small style="color:var(--text-subtle)">/ ${dam.normalFullLevel}m</small>
+            <span class="live-num level-val"><strong>${dam.currentWaterLevel.toFixed(1)}</strong></span> <small style="color:var(--text-subtle)">/ ${dam.normalFullLevel}m</small>
           </td>
-          <td class="text-center num">${dam.currentStorageVolume.toLocaleString()}</td>
-          <td class="text-center num">${dam.currentInflow.toFixed(1)}</td>
-          <td class="text-center num font-weight-600">${dam.currentOutflow.toFixed(1)}</td>
+          <td class="text-center num"><span class="live-num vol-val">${dam.currentStorageVolume.toLocaleString()}</span></td>
+          <td class="text-center num"><span class="live-num inflow-val">${dam.currentInflow.toFixed(1)}</span></td>
+          <td class="text-center num"><span class="live-num outflow-val font-weight-600">${dam.currentOutflow.toFixed(1)}</span></td>
         </tr>
       `;
     }).join('');
