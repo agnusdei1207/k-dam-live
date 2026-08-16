@@ -118,66 +118,71 @@
     const data = telemetryService.currentData;
     if (!data || data.length === 0) return;
 
-    // Pick 1~2 random dams to pulse live telemetry
-    const targetDam = data[Math.floor(Math.random() * data.length)];
-    const deltaInflow = parseFloat((Math.random() * 1.2 - 0.5).toFixed(1));
-    const deltaOutflow = targetDam.currentOutflow >= 20
-      ? parseFloat((Math.random() * 0.8 - 0.4).toFixed(1))
-      : parseFloat((Math.random() * 0.3 - 0.1).toFixed(1));
-    const deltaWaterLevel = parseFloat((Math.random() * 0.06 - 0.03).toFixed(2));
-    const deltaRate = parseFloat((Math.random() * 0.08 - 0.04).toFixed(2));
+    // Pick 1~2 active dams to pulse live telemetry
+    const count = Math.random() < 0.65 ? 2 : 1;
+    const shuffled = [...data].sort(() => 0.5 - Math.random());
+    const selectedDams = shuffled.slice(0, count);
 
-    targetDam.currentInflow = Math.max(0.1, parseFloat((targetDam.currentInflow + deltaInflow).toFixed(1)));
-    targetDam.currentOutflow = Math.max(0.0, parseFloat((targetDam.currentOutflow + deltaOutflow).toFixed(1)));
-    targetDam.currentWaterLevel = parseFloat((targetDam.currentWaterLevel + deltaWaterLevel).toFixed(1));
-    targetDam.storageRate = Math.min(100, Math.max(5, parseFloat((targetDam.storageRate + deltaRate).toFixed(1))));
-    targetDam.currentStorageVolume = Math.round((targetDam.totalStorage * targetDam.storageRate) / 100);
+    selectedDams.forEach((targetDam) => {
+      const deltaInflow = parseFloat((Math.random() * 1.2 - 0.5).toFixed(1));
+      const deltaOutflow = targetDam.currentOutflow >= 20
+        ? parseFloat((Math.random() * 0.8 - 0.4).toFixed(1))
+        : parseFloat((Math.random() * 0.3 - 0.1).toFixed(1));
+      const deltaWaterLevel = parseFloat((Math.random() * 0.06 - 0.03).toFixed(2));
+      const deltaRate = parseFloat((Math.random() * 0.08 - 0.04).toFixed(2));
 
-    // Conspicuously pulse the specific span elements with full color animation
-    const rowEl = document.querySelector(`tr[data-dam-id="${targetDam.id}"]`);
-    if (rowEl) {
-      // 1. Rate Cell
-      const rateValEl = rowEl.querySelector('.rate-val');
-      const rateBarFill = rowEl.querySelector('.rate-bar-fill');
-      if (rateValEl) {
-        rateValEl.textContent = `${targetDam.storageRate.toFixed(1)}%`;
-        triggerPulse(rateValEl, deltaRate >= 0);
+      targetDam.currentInflow = Math.max(0.1, parseFloat((targetDam.currentInflow + deltaInflow).toFixed(1)));
+      targetDam.currentOutflow = Math.max(0.0, parseFloat((targetDam.currentOutflow + deltaOutflow).toFixed(1)));
+      targetDam.currentWaterLevel = parseFloat((targetDam.currentWaterLevel + deltaWaterLevel).toFixed(1));
+      targetDam.storageRate = Math.min(100, Math.max(5, parseFloat((targetDam.storageRate + deltaRate).toFixed(1))));
+      targetDam.currentStorageVolume = Math.round((targetDam.totalStorage * targetDam.storageRate) / 100);
+
+      // Conspicuously pulse the specific span elements with full gradual color animation
+      const rowEl = document.querySelector(`tr[data-dam-id="${targetDam.id}"]`);
+      if (rowEl) {
+        // 1. Rate Cell
+        const rateValEl = rowEl.querySelector('.rate-val');
+        const rateBarFill = rowEl.querySelector('.rate-bar-fill');
+        if (rateValEl) {
+          rateValEl.textContent = `${targetDam.storageRate.toFixed(1)}%`;
+          triggerPulse(rateValEl, deltaRate >= 0);
+        }
+        if (rateBarFill) {
+          rateBarFill.style.width = `${Math.min(100, targetDam.storageRate)}%`;
+        }
+
+        // 2. Water Level Cell
+        const levelValEl = rowEl.querySelector('.level-val');
+        if (levelValEl) {
+          const strongEl = levelValEl.querySelector('strong');
+          if (strongEl) strongEl.textContent = targetDam.currentWaterLevel.toFixed(1);
+          triggerPulse(levelValEl, deltaWaterLevel >= 0);
+        }
+
+        // 3. Storage Volume Cell
+        const volValEl = rowEl.querySelector('.vol-val');
+        if (volValEl) {
+          volValEl.textContent = targetDam.currentStorageVolume.toLocaleString();
+          triggerPulse(volValEl, deltaRate >= 0);
+        }
+
+        // 4. Inflow Cell
+        const inflowValEl = rowEl.querySelector('.inflow-val');
+        if (inflowValEl) {
+          inflowValEl.textContent = targetDam.currentInflow.toFixed(1);
+          triggerPulse(inflowValEl, deltaInflow >= 0);
+        }
+
+        // 5. Outflow Cell
+        const outflowValEl = rowEl.querySelector('.outflow-val');
+        if (outflowValEl) {
+          outflowValEl.textContent = targetDam.currentOutflow.toFixed(1);
+          triggerPulse(outflowValEl, deltaOutflow >= 0);
+        }
       }
-      if (rateBarFill) {
-        rateBarFill.style.width = `${Math.min(100, targetDam.storageRate)}%`;
-      }
+    });
 
-      // 2. Water Level Cell
-      const levelValEl = rowEl.querySelector('.level-val');
-      if (levelValEl) {
-        const strongEl = levelValEl.querySelector('strong');
-        if (strongEl) strongEl.textContent = targetDam.currentWaterLevel.toFixed(1);
-        triggerPulse(levelValEl, deltaWaterLevel >= 0);
-      }
-
-      // 3. Storage Volume Cell
-      const volValEl = rowEl.querySelector('.vol-val');
-      if (volValEl) {
-        volValEl.textContent = targetDam.currentStorageVolume.toLocaleString();
-        triggerPulse(volValEl, deltaRate >= 0);
-      }
-
-      // 4. Inflow Cell
-      const inflowValEl = rowEl.querySelector('.inflow-val');
-      if (inflowValEl) {
-        inflowValEl.textContent = targetDam.currentInflow.toFixed(1);
-        triggerPulse(inflowValEl, deltaInflow >= 0);
-      }
-
-      // 5. Outflow Cell
-      const outflowValEl = rowEl.querySelector('.outflow-val');
-      if (outflowValEl) {
-        outflowValEl.textContent = targetDam.currentOutflow.toFixed(1);
-        triggerPulse(outflowValEl, deltaOutflow >= 0);
-      }
-    }
-
-    // Refresh top summary cards
+    // Refresh top summary cards with identical synchronized pulse
     renderStats();
   }
 

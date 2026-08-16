@@ -911,8 +911,10 @@ body {
 
 .rate-val,
 .live-num {
-  transition: color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+  transition: color 0.4s ease, background 0.4s ease, transform 0.4s ease;
   display: inline-block;
+  border-radius: var(--radius);
+  padding: 1px 4px;
 }
 
 .text-right { text-align: right; }
