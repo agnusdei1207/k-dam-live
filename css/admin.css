@@ -1002,23 +1002,28 @@ body {
 
 @keyframes livePulseUp {
   0% {
-    color: inherit;
+    color: var(--text);
     text-shadow: none;
     transform: scale(0.98);
   }
-  15% {
+  12% {
     color: #34d399 !important;
     font-weight: 800;
-    text-shadow: 0 0 12px rgba(52, 211, 153, 0.95), 0 0 4px rgba(52, 211, 153, 0.8);
+    text-shadow: 0 0 6px rgba(52, 211, 153, 0.35);
     transform: scale(1.08);
   }
-  45% {
-    color: #34d399 !important;
-    text-shadow: 0 0 6px rgba(52, 211, 153, 0.6);
+  40% {
+    color: #6ee7b7 !important;
+    text-shadow: 0 0 3px rgba(52, 211, 153, 0.2);
     transform: scale(1.03);
   }
+  75% {
+    color: #a7f3d0 !important;
+    text-shadow: none;
+    transform: scale(1.01);
+  }
   100% {
-    color: inherit;
+    color: var(--text);
     text-shadow: none;
     transform: scale(1);
   }
@@ -1026,23 +1031,28 @@ body {
 
 @keyframes livePulseDown {
   0% {
-    color: inherit;
+    color: var(--text);
     text-shadow: none;
     transform: scale(0.98);
   }
-  15% {
+  12% {
     color: #38bdf8 !important;
     font-weight: 800;
-    text-shadow: 0 0 12px rgba(56, 189, 248, 0.95), 0 0 4px rgba(56, 189, 248, 0.8);
+    text-shadow: 0 0 6px rgba(56, 189, 248, 0.35);
     transform: scale(1.08);
   }
-  45% {
-    color: #38bdf8 !important;
-    text-shadow: 0 0 6px rgba(56, 189, 248, 0.6);
+  40% {
+    color: #7dd3fc !important;
+    text-shadow: 0 0 3px rgba(56, 189, 248, 0.2);
     transform: scale(1.03);
   }
+  75% {
+    color: #bae6fd !important;
+    text-shadow: none;
+    transform: scale(1.01);
+  }
   100% {
-    color: inherit;
+    color: var(--text);
     text-shadow: none;
     transform: scale(1);
   }
@@ -1055,23 +1065,28 @@ body {
 
 @keyframes livePulseUpLight {
   0% {
-    color: inherit;
+    color: var(--text);
     text-shadow: none;
     transform: scale(0.98);
   }
-  15% {
-    color: #059669 !important;
+  12% {
+    color: #047857 !important;
     font-weight: 800;
-    text-shadow: 0 0 10px rgba(5, 150, 105, 0.6), 0 0 2px rgba(5, 150, 105, 0.4);
+    text-shadow: none;
     transform: scale(1.08);
   }
-  45% {
+  40% {
     color: #059669 !important;
-    text-shadow: 0 0 4px rgba(5, 150, 105, 0.35);
+    text-shadow: none;
     transform: scale(1.03);
   }
+  75% {
+    color: #34d399 !important;
+    text-shadow: none;
+    transform: scale(1.01);
+  }
   100% {
-    color: inherit;
+    color: var(--text);
     text-shadow: none;
     transform: scale(1);
   }
@@ -1083,23 +1098,28 @@ body {
 
 @keyframes livePulseDownLight {
   0% {
-    color: inherit;
+    color: var(--text);
     text-shadow: none;
     transform: scale(0.98);
   }
-  15% {
-    color: #0284c7 !important;
+  12% {
+    color: #0369a1 !important;
     font-weight: 800;
-    text-shadow: 0 0 10px rgba(2, 132, 199, 0.6), 0 0 2px rgba(2, 132, 199, 0.4);
+    text-shadow: none;
     transform: scale(1.08);
   }
-  45% {
+  40% {
     color: #0284c7 !important;
-    text-shadow: 0 0 4px rgba(2, 132, 199, 0.35);
+    text-shadow: none;
     transform: scale(1.03);
   }
+  75% {
+    color: #38bdf8 !important;
+    text-shadow: none;
+    transform: scale(1.01);
+  }
   100% {
-    color: inherit;
+    color: var(--text);
     text-shadow: none;
     transform: scale(1);
   }
