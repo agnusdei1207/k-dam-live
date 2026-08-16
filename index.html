@@ -184,6 +184,14 @@
           />
         </div>
 
+        <button id="btn-geo-search" class="btn-geo" type="button" title="현재 내 GPS 위치를 기반으로 가까운 댐부터 정렬합니다">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+          </svg>
+          <span>내 위치 주변</span>
+        </button>
+
         <select id="select-status-filter" class="filter-select" aria-label="수문 상태별 필터">
           <option value="ALL">전체 상태</option>
           <option value="DISCHARGING">방류 중인 댐</option>
@@ -206,6 +214,18 @@
         <button class="tab-btn" data-basin="금강" role="tab" aria-selected="false" type="button">금강 (4)</button>
         <button class="tab-btn" data-basin="영산·섬진강" role="tab" aria-selected="false" type="button">영산·섬진강 (10)</button>
       </div>
+    </div>
+
+    <!-- Location Status Banner -->
+    <div id="geo-info-bar" class="geo-info-bar hidden" aria-live="polite">
+      <div class="geo-info-content">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+        <span id="geo-info-text">현재 위치를 기반으로 가까운 댐 순으로 정렬되었습니다.</span>
+      </div>
+      <button id="btn-geo-reset" class="geo-info-reset" type="button" title="위치 정렬 해제">기본순 복귀 ✕</button>
     </div>
 
     <!-- Main Data Table -->

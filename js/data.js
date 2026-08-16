@@ -1,8 +1,8 @@
 /**
  * ============================================================================
  * K-DAM LIVE — Hydrological Dataset & Real-Time Sensor Stream Engine
- * Comprehensive hydrographic data for 34 major multipurpose and water dams in Korea
- * Designed for pure static edge execution with zero backend dependency
+ * Comprehensive hydrographic data & WGS84 GPS coordinates for 34 major dams in Korea
+ * Pure static edge execution with zero backend dependency
  * ============================================================================
  */
 
@@ -23,7 +23,7 @@
   });
 
   /**
-   * 34 Major South Korean Dams with Authentic Geographical & Hydrographic Specs
+   * 34 Major South Korean Dams with Authentic Geographical, Hydrographic & GPS Specs
    */
   const DAMS_DATABASE = [
     // ─── 1. 한강 수계 (Han River Basin) ───────────────────────────────────────
@@ -33,6 +33,8 @@
       basin: BASINS.HAN,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '강원특별자치도 춘천시 신북읍',
+      lat: 37.9486,
+      lng: 127.8181,
       normalFullLevel: 193.5,
       floodLevel: 198.0,
       lowWaterLevel: 150.0,
@@ -54,6 +56,8 @@
       basin: BASINS.HAN,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '충청북도 충주시 종민동',
+      lat: 36.9997,
+      lng: 127.9944,
       normalFullLevel: 141.0,
       floodLevel: 145.0,
       lowWaterLevel: 110.0,
@@ -75,6 +79,8 @@
       basin: BASINS.HAN,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '강원특별자치도 횡성군 갑천면',
+      lat: 37.5458,
+      lng: 128.0286,
       normalFullLevel: 180.0,
       floodLevel: 182.5,
       lowWaterLevel: 150.0,
@@ -96,6 +102,8 @@
       basin: BASINS.HAN,
       type: DAM_TYPES.FLOOD_CONTROL,
       location: '강원특별자치도 화천군 화천읍',
+      lat: 38.2436,
+      lng: 127.7942,
       normalFullLevel: 264.7,
       floodLevel: 264.7,
       lowWaterLevel: 200.0,
@@ -117,6 +125,8 @@
       basin: BASINS.HAN,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '강원특별자치도 삼척시 하장면',
+      lat: 37.3883,
+      lng: 128.9389,
       normalFullLevel: 674.0,
       floodLevel: 676.2,
       lowWaterLevel: 647.0,
@@ -138,6 +148,8 @@
       basin: BASINS.HAN,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '강원특별자치도 동해시 삼화동',
+      lat: 37.4739,
+      lng: 129.0436,
       normalFullLevel: 135.0,
       floodLevel: 137.5,
       lowWaterLevel: 105.0,
@@ -161,6 +173,8 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '경상북도 안동시 상아동',
+      lat: 36.5861,
+      lng: 128.7758,
       normalFullLevel: 160.0,
       floodLevel: 161.7,
       lowWaterLevel: 130.0,
@@ -182,6 +196,8 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '경상북도 안동시 임하면',
+      lat: 36.5369,
+      lng: 128.8925,
       normalFullLevel: 163.0,
       floodLevel: 164.7,
       lowWaterLevel: 137.0,
@@ -203,6 +219,8 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '경상남도 합천군 대병면',
+      lat: 35.5342,
+      lng: 128.0281,
       normalFullLevel: 176.0,
       floodLevel: 179.0,
       lowWaterLevel: 140.0,
@@ -224,6 +242,8 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '경상남도 진주시 판문동',
+      lat: 35.1633,
+      lng: 128.0336,
       normalFullLevel: 41.0,
       floodLevel: 46.0,
       lowWaterLevel: 34.0,
@@ -245,6 +265,8 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '경상남도 밀양시 단장면',
+      lat: 35.5350,
+      lng: 128.9367,
       normalFullLevel: 189.5,
       floodLevel: 191.0,
       lowWaterLevel: 155.0,
@@ -266,6 +288,8 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '대구광역시 군위군 삼국유사면',
+      lat: 36.1436,
+      lng: 128.7667,
       normalFullLevel: 205.0,
       floodLevel: 208.0,
       lowWaterLevel: 165.0,
@@ -287,6 +311,8 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '경상북도 김천시 부항면',
+      lat: 35.9867,
+      lng: 127.9733,
       normalFullLevel: 196.5,
       floodLevel: 199.5,
       lowWaterLevel: 165.0,
@@ -308,6 +334,8 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '경상북도 영주시 평은면',
+      lat: 36.7583,
+      lng: 128.6750,
       normalFullLevel: 161.0,
       floodLevel: 163.5,
       lowWaterLevel: 135.0,
@@ -329,6 +357,8 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '경상북도 영천시 화북면',
+      lat: 36.0833,
+      lng: 128.9833,
       normalFullLevel: 242.0,
       floodLevel: 244.5,
       lowWaterLevel: 215.0,
@@ -350,6 +380,8 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '경상북도 청송군 안덕면',
+      lat: 36.2167,
+      lng: 128.9833,
       normalFullLevel: 278.0,
       floodLevel: 280.5,
       lowWaterLevel: 240.0,
@@ -371,6 +403,8 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '경상북도 영천시 자양면',
+      lat: 36.0667,
+      lng: 129.0333,
       normalFullLevel: 158.3,
       floodLevel: 160.5,
       lowWaterLevel: 130.0,
@@ -392,6 +426,8 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '경상북도 청도군 운문면',
+      lat: 35.6833,
+      lng: 128.9333,
       normalFullLevel: 150.5,
       floodLevel: 152.8,
       lowWaterLevel: 122.0,
@@ -413,6 +449,8 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '울산광역시 울주군 범서읍',
+      lat: 35.5783,
+      lng: 129.2133,
       normalFullLevel: 60.0,
       floodLevel: 63.0,
       lowWaterLevel: 45.0,
@@ -434,6 +472,8 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '울산광역시 울주군 삼동면',
+      lat: 35.5167,
+      lng: 129.1833,
       normalFullLevel: 48.5,
       floodLevel: 51.5,
       lowWaterLevel: 32.0,
@@ -457,6 +497,8 @@
       basin: BASINS.GEUM,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '대전광역시 대덕구 / 충북 청주시',
+      lat: 36.4783,
+      lng: 127.4817,
       normalFullLevel: 76.5,
       floodLevel: 80.0,
       lowWaterLevel: 60.0,
@@ -478,6 +520,8 @@
       basin: BASINS.GEUM,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '전북특별자치도 진안군 용담면',
+      lat: 35.9450,
+      lng: 127.5250,
       normalFullLevel: 265.5,
       floodLevel: 268.5,
       lowWaterLevel: 228.0,
@@ -499,6 +543,8 @@
       basin: BASINS.GEUM,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '충청남도 보령시 미산면',
+      lat: 36.2617,
+      lng: 126.6333,
       normalFullLevel: 75.0,
       floodLevel: 76.5,
       lowWaterLevel: 50.0,
@@ -520,6 +566,8 @@
       basin: BASINS.GEUM,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '전북특별자치도 부안군 변산면',
+      lat: 35.6883,
+      lng: 126.5783,
       normalFullLevel: 50.0,
       floodLevel: 52.4,
       lowWaterLevel: 30.0,
@@ -543,6 +591,8 @@
       basin: BASINS.SEOMJIN,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '전라남도 순천시 주암면',
+      lat: 35.0567,
+      lng: 127.2383,
       normalFullLevel: 108.5,
       floodLevel: 110.5,
       lowWaterLevel: 85.0,
@@ -564,6 +614,8 @@
       basin: BASINS.SEOMJIN,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '전라남도 순천시 상사면',
+      lat: 34.9667,
+      lng: 127.4167,
       normalFullLevel: 108.5,
       floodLevel: 110.5,
       lowWaterLevel: 85.0,
@@ -585,6 +637,8 @@
       basin: BASINS.SEOMJIN,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '전북특별자치도 임실군 강진면',
+      lat: 35.5417,
+      lng: 127.1333,
       normalFullLevel: 196.5,
       floodLevel: 197.7,
       lowWaterLevel: 160.0,
@@ -606,6 +660,8 @@
       basin: BASINS.SEOMJIN,
       type: DAM_TYPES.MULTIPURPOSE,
       location: '전라남도 장흥군 유치면',
+      lat: 34.7550,
+      lng: 126.9167,
       normalFullLevel: 82.0,
       floodLevel: 83.5,
       lowWaterLevel: 55.0,
@@ -627,6 +683,8 @@
       basin: BASINS.SEOMJIN,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '전라남도 장성군 삼계면',
+      lat: 35.3333,
+      lng: 126.7167,
       normalFullLevel: 110.0,
       floodLevel: 112.5,
       lowWaterLevel: 80.0,
@@ -648,6 +706,8 @@
       basin: BASINS.SEOMJIN,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '전라남도 광양시 진상면',
+      lat: 35.0333,
+      lng: 127.7333,
       normalFullLevel: 67.0,
       floodLevel: 69.5,
       lowWaterLevel: 45.0,
@@ -669,6 +729,8 @@
       basin: BASINS.SEOMJIN,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '전라남도 화순군 이서면',
+      lat: 35.0833,
+      lng: 127.1333,
       normalFullLevel: 168.2,
       floodLevel: 170.0,
       lowWaterLevel: 140.0,
@@ -690,6 +752,8 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '울산광역시 남구 선암동',
+      lat: 35.5167,
+      lng: 129.3167,
       normalFullLevel: 46.0,
       floodLevel: 48.0,
       lowWaterLevel: 30.0,
@@ -711,6 +775,8 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '경상북도 경주시 문무대왕면',
+      lat: 35.7833,
+      lng: 129.4833,
       normalFullLevel: 74.0,
       floodLevel: 76.5,
       lowWaterLevel: 50.0,
@@ -732,6 +798,8 @@
       basin: BASINS.NAKDONG,
       type: DAM_TYPES.WATER_SUPPLY,
       location: '경상남도 사천시 축동면',
+      lat: 35.0833,
+      lng: 128.0500,
       normalFullLevel: 17.5,
       floodLevel: 19.0,
       lowWaterLevel: 10.0,
@@ -748,6 +816,23 @@
       diffPrevYear: 1.9
     }
   ];
+
+  /**
+   * Distance Calculation Helper using Haversine Formula (Returns km)
+   */
+  function calcDistanceKm(lat1, lon1, lat2, lon2) {
+    if (!lat1 || !lon1 || !lat2 || !lon2) return null;
+    const R = 6371; // Earth's mean radius in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a = (
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2)
+    );
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return parseFloat((R * c).toFixed(1));
+  }
 
   /**
    * Real-Time Hydrological Simulation & Dynamic Data Model
@@ -774,6 +859,7 @@
           currentStorageVolume: parseFloat(storageVolume),
           currentInflow: dam.baseInflow,
           currentOutflow: dam.baseOutflow,
+          distanceKm: null,
           status: this.classifyStatus(rate, dam.baseOutflow, parseFloat(waterLevel), dam.floodLevel),
           hourlyTrend: this.generateHourlyTrend(rate, dam.normalFullLevel, dam.lowWaterLevel)
         };
@@ -814,6 +900,15 @@
         });
       }
       return trend;
+    }
+
+    updateUserLocation(userLat, userLng) {
+      this.currentData = this.currentData.map((dam) => ({
+        ...dam,
+        distanceKm: calcDistanceKm(userLat, userLng, dam.lat, dam.lng)
+      }));
+      this.notifySubscribers();
+      return this.currentData;
     }
 
     simulateLiveTick() {
@@ -893,6 +988,7 @@
     BASINS,
     DAM_TYPES,
     DAMS_DATABASE,
+    calcDistanceKm,
     telemetryService
   };
 

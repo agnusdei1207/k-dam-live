@@ -440,6 +440,118 @@ body {
   border-color: var(--primary);
 }
 
+.btn-geo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 35px;
+  padding: 0 12px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.btn-geo svg {
+  color: var(--primary);
+  transition: transform 0.2s ease;
+}
+
+.btn-geo:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+}
+
+.btn-geo:hover svg {
+  transform: scale(1.1);
+}
+
+.btn-geo.active {
+  background: var(--primary-subtle);
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.btn-geo.active svg {
+  color: var(--primary);
+}
+
+/* Location Status Banner */
+.geo-info-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-left: 3px solid var(--primary);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  font-size: 0.82rem;
+  animation: bannerFadeDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes bannerFadeDown {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.geo-info-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+}
+
+.geo-info-content svg {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.geo-info-reset {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: var(--radius);
+  transition: color 0.12s ease;
+}
+
+.geo-info-reset:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.distance-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--primary-subtle);
+  border: 1px solid rgba(226, 160, 110, 0.25);
+  border-radius: 4px;
+  padding: 1px 5px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+:root[data-theme='light'] .distance-badge {
+  background: rgba(166, 91, 50, 0.08);
+  border-color: rgba(166, 91, 50, 0.2);
+}
+
 .basin-tabs {
   display: flex;
   align-items: center;

@@ -1,16 +1,15 @@
 /**
  * ============================================================================
- * K-DAM LIVE — Minimalist Application Controller
- * Clean, automatic 5-minute background refresh & smooth modal inspection
+ * K-DAM LIVE — Core Application Orchestration & Presentation Layer
+ * Ultra-fast reactive data rendering, GPS proximity location search & high-precision telemetry
  * ============================================================================
  */
 
 (function(window) {
   'use strict';
 
-  const KDAM = window.KDAM || {};
-  const telemetryService = KDAM.telemetryService;
-  const BASINS = KDAM.BASINS || {
+  const { telemetryService } = window.KDAM || {};
+  const BASINS = window.KDAM?.BASINS || {
     HAN: '한강',
     NAKDONG: '낙동강',
     GEUM: '금강',
@@ -32,6 +31,8 @@
     sortField: 'storageRate',
     sortOrder: 'desc',
     lastUpdatedTime: new Date(),
+    userLocation: null,
+    isGeoActive: false,
     theme: localStorage.getItem('kdam_theme') || 'dark'
   };
 
@@ -53,6 +54,11 @@
       valDischargeCount: document.getElementById('val-discharge-count'),
 
       searchInput: document.getElementById('search-input'),
+      btnGeoSearch: document.getElementById('btn-geo-search'),
+      geoInfoBar: document.getElementById('geo-info-bar'),
+      geoInfoText: document.getElementById('geo-info-text'),
+      btnGeoReset: document.getElementById('btn-geo-reset'),
+
       basinTabs: document.querySelectorAll('.tab-btn'),
       selectDamType: document.getElementById('select-dam-type'),
       selectStatusFilter: document.getElementById('select-status-filter'),
@@ -90,10 +96,12 @@
   function updateTimestamp() {
     if (!elements.dataUpdatedTime) return;
     const now = state.lastUpdatedTime;
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    elements.dataUpdatedTime.textContent = `최신 기준: ${hours}:${minutes}:${seconds}`;
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    elements.dataUpdatedTime.textContent = `${y}.${m}.${d} ${hh}:${mm} 기준`;
   }
 
   function initTheme() {
@@ -119,6 +127,90 @@
     updateThemeIcons();
   }
 
+  /**
+   * Browser Geolocation Request & Distance Sorting
+   */
+  function requestUserLocation() {
+    if (!navigator.geolocation) {
+      alert('사용 중인 브라우저 환경에서 GPS 위치 정보를 지원하지 않습니다.');
+      return;
+    }
+
+    if (elements.btnGeoSearch) {
+      const span = elements.btnGeoSearch.querySelector('span');
+      if (span) span.textContent = '위치 확인 중...';
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        state.userLocation = { lat: latitude, lng: longitude };
+        state.isGeoActive = true;
+        state.sortField = 'distanceKm';
+        state.sortOrder = 'asc';
+
+        telemetryService.updateUserLocation(latitude, longitude);
+
+        // Find the closest dam
+        const sorted = [...telemetryService.currentData].sort(
+          (a, b) => (a.distanceKm ?? 9999) - (b.distanceKm ?? 9999)
+        );
+        const nearest = sorted[0];
+
+        if (elements.btnGeoSearch) {
+          elements.btnGeoSearch.classList.add('active');
+          const span = elements.btnGeoSearch.querySelector('span');
+          if (span) span.textContent = '내 위치 적용됨';
+        }
+
+        if (elements.geoInfoBar) {
+          elements.geoInfoBar.classList.remove('hidden');
+          if (elements.geoInfoText && nearest) {
+            elements.geoInfoText.innerHTML = `현재 위치에서 가장 가까운 댐은 <strong>${nearest.name}</strong>(약 <span class="num">${nearest.distanceKm}km</span>)입니다. 가까운 순서대로 정렬되었습니다.`;
+          }
+        }
+
+        renderTable();
+      },
+      (error) => {
+        if (elements.btnGeoSearch) {
+          elements.btnGeoSearch.classList.remove('active');
+          const span = elements.btnGeoSearch.querySelector('span');
+          if (span) span.textContent = '내 위치 주변';
+        }
+
+        let msg = '위치 정보를 가져올 수 없습니다.';
+        if (error.code === error.PERMISSION_DENIED) {
+          msg = '위치 정보 접근 권한이 허용되지 않았습니다. 브라우저 주소창 좌측의 설정에서 위치 권한을 허용해 주세요.';
+        }
+        alert(msg);
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 8000,
+        maximumAge: 60000
+      }
+    );
+  }
+
+  function resetGeoLocation() {
+    state.isGeoActive = false;
+    state.sortField = 'storageRate';
+    state.sortOrder = 'desc';
+
+    if (elements.btnGeoSearch) {
+      elements.btnGeoSearch.classList.remove('active');
+      const span = elements.btnGeoSearch.querySelector('span');
+      if (span) span.textContent = '내 위치 주변';
+    }
+
+    if (elements.geoInfoBar) {
+      elements.geoInfoBar.classList.add('hidden');
+    }
+
+    renderTable();
+  }
+
   function getFilteredDams() {
     return telemetryService.currentData.filter((dam) => {
       if (state.activeBasin !== 'ALL' && dam.basin !== state.activeBasin) return false;
@@ -139,6 +231,13 @@
     }).sort((a, b) => {
       let valA = a[state.sortField];
       let valB = b[state.sortField];
+
+      // Handle null distanceKm
+      if (state.sortField === 'distanceKm') {
+        if (valA === null || valA === undefined) return 1;
+        if (valB === null || valB === undefined) return -1;
+      }
+
       if (typeof valA === 'string') {
         return state.sortOrder === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
       }
@@ -201,11 +300,14 @@
 
       const diffSign = dam.diffPrevYear > 0 ? '+' : '';
       const diffColor = dam.diffPrevYear >= 0 ? 'var(--badge-green-text)' : 'var(--badge-red-text)';
+      const distanceHtml = dam.distanceKm !== null
+        ? `<span class="distance-badge">${dam.distanceKm}km</span>`
+        : '';
 
       return `
         <tr data-dam-id="${dam.id}" onclick="window.appInspectDam('${dam.id}')" title="${dam.name} 상세 제원 보기">
           <td>
-            <div class="dam-title-cell">${dam.name}</div>
+            <div class="dam-title-cell">${dam.name} ${distanceHtml}</div>
             <div class="dam-loc-sub">${dam.location}</div>
           </td>
           <td><span class="badge badge-muted">${dam.basin}</span></td>
@@ -351,6 +453,12 @@
       <div class="modal-specs-section">
         <table class="modal-specs-table">
           <tbody>
+            ${dam.distanceKm !== null ? `
+            <tr>
+              <td>내 위치와의 거리</td>
+              <td class="num" style="color: var(--primary); font-weight: 700;">약 ${dam.distanceKm} km</td>
+            </tr>
+            ` : ''}
             <tr>
               <td>계획홍수위</td>
               <td class="num">${dam.floodLevel} EL.m</td>
@@ -477,6 +585,18 @@
     }
     if (elements.btnExportCsv) {
       elements.btnExportCsv.addEventListener('click', exportCsv);
+    }
+    if (elements.btnGeoSearch) {
+      elements.btnGeoSearch.addEventListener('click', () => {
+        if (state.isGeoActive) {
+          resetGeoLocation();
+        } else {
+          requestUserLocation();
+        }
+      });
+    }
+    if (elements.btnGeoReset) {
+      elements.btnGeoReset.addEventListener('click', resetGeoLocation);
     }
     if (elements.searchInput) {
       elements.searchInput.addEventListener('input', (e) => {
