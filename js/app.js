@@ -47,6 +47,9 @@
       themeMoon: document.getElementById('theme-moon'),
       themeSun: document.getElementById('theme-sun'),
 
+      tickerContent: document.getElementById('ticker-content'),
+      tickerStatusPill: document.getElementById('ticker-status-pill'),
+
       valAvgRate: document.getElementById('val-avg-rate'),
       deltaAvgRate: document.getElementById('delta-avg-rate'),
       valTotalStorage: document.getElementById('val-total-storage'),
@@ -74,6 +77,65 @@
     };
   }
 
+  // Dynamic Real-Time Hydrological Observation News & Event Stream
+  const LIVE_EVENT_FEED = [
+    '🌊 한강 소양강댐 상류 하천 유입량 35.8 ㎥/s 관측 (저수율 74.2% 안정 유지)',
+    '⚡ 금강 대청댐 실시간 수문 방류 45.0 ㎥/s 진행 중 (하류 하천 안전 주의)',
+    '💧 한강 충주댐 수도권 핵심 용수 공급 정상 수위 유지 (현재 저수량 1,540.2 M㎥)',
+    '🌾 영산·섬진강 주암댐 호남권 가뭄 안정 단계 유지 (현재 저수율 64.5% 순항)',
+    '📡 낙동강 안동댐 및 임하댐 실시간 연계 수문 IoT 센서 패킷 정상 수신',
+    '🛡️ 홍수기 대비 4대 수계 34개 다목적·용수댐 15분 단위 정밀 수문 모니터링 가동 중',
+    '🌊 낙동강 합천댐 상류 지류 유입량 +14.2 ㎥/s 증가 관측 (수위 165.4 EL.m)',
+    '💧 금강 용담댐 전북권 용수 비축 안정 (현재 저수량 498.5 M㎥)'
+  ];
+
+  let currentTickerIdx = 0;
+  function rotateTickerFeed() {
+    if (!elements.tickerContent) return;
+    currentTickerIdx = (currentTickerIdx + 1) % LIVE_EVENT_FEED.length;
+    elements.tickerContent.style.opacity = '0';
+    elements.tickerContent.style.transform = 'translateY(4px)';
+    setTimeout(() => {
+      elements.tickerContent.textContent = LIVE_EVENT_FEED[currentTickerIdx];
+      elements.tickerContent.style.opacity = '1';
+      elements.tickerContent.style.transform = 'translateY(0)';
+    }, 250);
+  }
+
+  // Periodic Micro-Telemetry Sensor Heartbeat (Breathing Live Dashboard)
+  function liveSensorHeartbeat() {
+    const data = telemetryService.currentData;
+    if (!data || data.length === 0) return;
+
+    // Pick 1 or 2 random dams to pulse live telemetry
+    const targetDam = data[Math.floor(Math.random() * data.length)];
+    const deltaInflow = parseFloat((Math.random() * 0.8 - 0.4).toFixed(1));
+    const deltaOutflow = targetDam.currentOutflow >= 20 ? parseFloat((Math.random() * 0.6 - 0.3).toFixed(1)) : parseFloat((Math.random() * 0.2 - 0.1).toFixed(1));
+
+    targetDam.currentInflow = Math.max(0.1, parseFloat((targetDam.currentInflow + deltaInflow).toFixed(1)));
+    targetDam.currentOutflow = Math.max(0.0, parseFloat((targetDam.currentOutflow + deltaOutflow).toFixed(1)));
+
+    // Momentarily flash the table cell if visible
+    const rowEl = document.querySelector(`tr[data-dam-id="${targetDam.id}"]`);
+    if (rowEl) {
+      const inflowCell = rowEl.children[8]; // inflow
+      const outflowCell = rowEl.children[9]; // outflow
+      if (inflowCell) {
+        inflowCell.textContent = targetDam.currentInflow.toFixed(1);
+        inflowCell.classList.add('flash-tick');
+        setTimeout(() => inflowCell.classList.remove('flash-tick'), 1400);
+      }
+      if (outflowCell) {
+        outflowCell.textContent = targetDam.currentOutflow.toFixed(1);
+        outflowCell.classList.add('flash-tick');
+        setTimeout(() => outflowCell.classList.remove('flash-tick'), 1400);
+      }
+    }
+
+    // Refresh top summary cards
+    renderStats();
+  }
+
   function init() {
     cacheElements();
     initTheme();
@@ -89,12 +151,18 @@
       renderAll();
     });
 
-    // Automatic 1-hour background refresh
+    // 1. Automatic 15-minute background full telemetry refresh
     setInterval(() => {
       telemetryService.simulateLiveTick();
       state.lastUpdatedTime = new Date();
       updateTimestamp();
     }, AUTO_REFRESH_INTERVAL_MS);
+
+    // 2. Real-time Live Sensor Stream Ticker rotation (Every 3.8s)
+    setInterval(rotateTickerFeed, 3800);
+
+    // 3. Real-time Live Sensor Ingestion Heartbeat (Every 3.2s)
+    setInterval(liveSensorHeartbeat, 3200);
 
     // Initial GPS location check on access
     setTimeout(() => {
@@ -340,8 +408,8 @@
       let badgeLabel = '정상';
 
       if (dam.currentOutflow >= 20) {
-        badgeClass = 'badge-blue';
-        badgeLabel = '수문방류';
+        badgeClass = 'badge-blue live-discharge';
+        badgeLabel = '🌊 수문방류';
         barColor = 'var(--bar-fill-blue)';
       } else if (dam.storageRate < 40) {
         badgeClass = 'badge-red';

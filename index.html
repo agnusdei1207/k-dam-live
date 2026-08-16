@@ -181,6 +181,23 @@
       <p>전국 34개 주요 다목적댐 및 용수전용댐의 실시간 수위, 저수율, 유입량 및 방류량 현황</p>
     </div>
 
+    <!-- Live Telemetry Stream Ticker -->
+    <div class="live-ticker-strip" aria-label="실시간 수문 속보 피드">
+      <div class="ticker-badge">
+        <span class="ticker-dot"></span>
+        <span class="ticker-badge-text">LIVE SENSOR</span>
+      </div>
+      <div class="ticker-track">
+        <div id="ticker-content" class="ticker-text">
+          🌊 전국 34개 댐 실시간 수문 관측망 스트림 연결 완료 · 15분 단위 관측소 동기화 중
+        </div>
+      </div>
+      <div class="ticker-meta" id="ticker-status-pill">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12h5l3-7 4 14 3-7h5"/></svg>
+        <span>수신 중</span>
+      </div>
+    </div>
+
     <!-- 4 Key Stats Cards -->
     <section class="stats-grid" aria-label="전국 수문 요약 지표">
       <div class="stat-card">

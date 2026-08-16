@@ -250,6 +250,96 @@ body {
 }
 
 /* ==========================================================================
+   2.5 LIVE TELEMETRY STREAM TICKER
+   ========================================================================== */
+.live-ticker-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 14px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.ticker-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.28);
+  padding: 2px 8px;
+  border-radius: var(--radius);
+  font-size: 0.70rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+:root[data-theme='light'] .ticker-badge {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #fca5a5;
+}
+
+.ticker-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ef4444;
+  display: inline-block;
+  animation: radarBlink 1.4s infinite ease-in-out;
+}
+
+@keyframes radarBlink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.75); }
+}
+
+.ticker-track {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  height: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.ticker-text {
+  font-size: 0.80rem;
+  color: var(--text);
+  white-space: nowrap;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ticker-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  color: var(--badge-green-text);
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+
+.ticker-meta svg {
+  color: var(--badge-green-text);
+  animation: pulseBeat 1.8s infinite ease-in-out;
+}
+
+@keyframes pulseBeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* ==========================================================================
    3. 4 KEY STATS CARDS
    ========================================================================== */
 .stats-grid {
@@ -839,6 +929,46 @@ body {
 .rate-bar-fill {
   height: 100%;
   border-radius: 999px;
+  position: relative;
+  overflow: hidden;
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rate-bar-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 100%
+  );
+  animation: liquidShimmer 2.4s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-100%);
+}
+
+@keyframes liquidShimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Live Ingestion Cell Flash */
+.flash-tick {
+  animation: cellGlowPulse 1.4s ease-out;
+}
+
+@keyframes cellGlowPulse {
+  0% {
+    background: rgba(56, 189, 248, 0.25);
+    color: #38bdf8 !important;
+    text-shadow: 0 0 6px rgba(56, 189, 248, 0.4);
+  }
+  100% {
+    background: transparent;
+    color: inherit;
+    text-shadow: none;
+  }
 }
 
 /* Compact Badges */
@@ -864,6 +994,15 @@ body {
   background: var(--badge-blue-bg);
   color: var(--badge-blue-text);
   border-color: var(--badge-blue-border);
+}
+
+.badge-blue.live-discharge {
+  animation: dischargePulseGlow 2s infinite ease-in-out;
+}
+
+@keyframes dischargePulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.4); }
+  50% { box-shadow: 0 0 8px 1.5px rgba(56, 189, 248, 0.35); }
 }
 
 .badge-yellow {
@@ -1345,6 +1484,25 @@ body {
 
   .page-intro p {
     font-size: 0.80rem;
+  }
+
+  .live-ticker-strip {
+    padding: 6px 10px;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .ticker-badge {
+    padding: 2px 6px;
+    font-size: 0.65rem;
+  }
+
+  .ticker-text {
+    font-size: 0.74rem;
+  }
+
+  .ticker-meta {
+    display: none;
   }
 
   /* 2x2 Stats Grid on mobile */
