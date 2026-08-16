@@ -312,14 +312,6 @@
     if (elements.valDischargeCount) elements.valDischargeCount.textContent = `방류 중인 댐 ${m.dischargingCount}개소 / 가뭄주의 ${m.droughtCount}개소`;
   }
 
-  function getBasinBadgeClass(basin) {
-    if (basin.includes('한강')) return 'badge-basin-han';
-    if (basin.includes('낙동강')) return 'badge-basin-nakdong';
-    if (basin.includes('금강')) return 'badge-basin-geum';
-    if (basin.includes('영산') || basin.includes('섬진강')) return 'badge-basin-seomjin';
-    return 'badge-muted';
-  }
-
   function getTypeBadgeClass(type) {
     if (type.includes('다목적')) return 'badge-type-multi';
     if (type.includes('용수전용')) return 'badge-type-water';
@@ -371,7 +363,6 @@
         ? `<span class="distance-badge">${dam.distanceKm}km</span>`
         : '';
 
-      const basinClass = getBasinBadgeClass(dam.basin);
       const typeClass = getTypeBadgeClass(dam.type);
 
       return `
@@ -380,7 +371,7 @@
             <div class="dam-title-cell">${dam.name} ${distanceHtml}</div>
             <div class="dam-loc-sub">${dam.location}</div>
           </td>
-          <td><span class="basin-text ${basinClass}">${dam.basin}</span></td>
+          <td>${dam.basin}</td>
           <td><span class="badge ${typeClass}">${dam.type}</span></td>
           <td class="text-right">
             <div class="rate-cell-wrap">
