@@ -994,25 +994,34 @@ body {
 }
 
 .live-pulse-up {
-  animation: livePulseUp 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  animation: livePulseUp 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
 }
 
 .live-pulse-down {
-  animation: livePulseDown 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  animation: livePulseDown 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
 }
 
 @keyframes livePulseUp {
   0% {
-    background: rgba(16, 185, 129, 0.42);
+    background: transparent;
+    color: inherit;
+    box-shadow: none;
+    text-shadow: none;
+    transform: scale(0.98);
+  }
+  15% {
+    background: rgba(16, 185, 129, 0.45);
     color: #34d399 !important;
     font-weight: 800;
-    box-shadow: 0 0 12px rgba(52, 211, 153, 0.7);
-    text-shadow: 0 0 8px rgba(52, 211, 153, 0.8);
-    transform: scale(1.08);
+    box-shadow: 0 0 14px rgba(52, 211, 153, 0.75);
+    text-shadow: 0 0 10px rgba(52, 211, 153, 0.9);
+    transform: scale(1.09);
   }
-  35% {
-    background: rgba(16, 185, 129, 0.20);
+  45% {
+    background: rgba(16, 185, 129, 0.22);
     color: #34d399 !important;
+    box-shadow: 0 0 8px rgba(52, 211, 153, 0.4);
+    text-shadow: 0 0 6px rgba(52, 211, 153, 0.5);
     transform: scale(1.03);
   }
   100% {
@@ -1026,16 +1035,25 @@ body {
 
 @keyframes livePulseDown {
   0% {
-    background: rgba(56, 189, 248, 0.42);
+    background: transparent;
+    color: inherit;
+    box-shadow: none;
+    text-shadow: none;
+    transform: scale(0.98);
+  }
+  15% {
+    background: rgba(56, 189, 248, 0.45);
     color: #38bdf8 !important;
     font-weight: 800;
-    box-shadow: 0 0 12px rgba(56, 189, 248, 0.7);
-    text-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
-    transform: scale(1.08);
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.75);
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.9);
+    transform: scale(1.09);
   }
-  35% {
-    background: rgba(56, 189, 248, 0.20);
+  45% {
+    background: rgba(56, 189, 248, 0.22);
     color: #38bdf8 !important;
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+    text-shadow: 0 0 6px rgba(56, 189, 248, 0.5);
     transform: scale(1.03);
   }
   100% {
@@ -1054,16 +1072,22 @@ body {
 
 @keyframes livePulseUpLight {
   0% {
+    background: transparent;
+    color: inherit;
+    box-shadow: none;
+    transform: scale(0.98);
+  }
+  15% {
     background: #a7f3d0;
     color: #047857 !important;
-    font-weight: 700;
-    box-shadow: 0 0 8px rgba(5, 150, 105, 0.4);
-    transform: scale(1.14);
+    font-weight: 800;
+    box-shadow: 0 0 10px rgba(5, 150, 105, 0.5);
+    transform: scale(1.09);
   }
-  35% {
+  45% {
     background: #d1fae5;
     color: #047857 !important;
-    transform: scale(1.04);
+    transform: scale(1.03);
   }
   100% {
     background: transparent;
@@ -1079,16 +1103,22 @@ body {
 
 @keyframes livePulseDownLight {
   0% {
+    background: transparent;
+    color: inherit;
+    box-shadow: none;
+    transform: scale(0.98);
+  }
+  15% {
     background: #bae6fd;
     color: #0369a1 !important;
-    font-weight: 700;
-    box-shadow: 0 0 8px rgba(2, 132, 199, 0.4);
-    transform: scale(1.14);
+    font-weight: 800;
+    box-shadow: 0 0 10px rgba(2, 132, 199, 0.5);
+    transform: scale(1.09);
   }
-  35% {
+  45% {
     background: #e0f2fe;
     color: #0369a1 !important;
-    transform: scale(1.04);
+    transform: scale(1.03);
   }
   100% {
     background: transparent;

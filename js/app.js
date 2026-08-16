@@ -110,7 +110,7 @@
     el.classList.add(pulseClass);
     setTimeout(() => {
       el.classList.remove(pulseClass);
-    }, 1800);
+    }, 2200);
   }
 
   // Periodic Micro-Telemetry Sensor Heartbeat (Breathing Live Dashboard)
