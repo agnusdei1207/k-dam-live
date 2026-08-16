@@ -403,6 +403,103 @@
     }).join('');
   }
 
+  let activeModalDamId = null;
+  let activeModalPeriod = '24h';
+
+  function renderModalTrendChart(dam, period = '24h', barColor = 'var(--bar-fill-green)') {
+    const allTrends = dam.trends || { '24h': dam.hourlyTrend || [] };
+    const trend = allTrends[period] || allTrends['24h'] || [];
+
+    let minRate = 100, maxRate = 0;
+    trend.forEach((t) => {
+      if (t.rate < minRate) minRate = t.rate;
+      if (t.rate > maxRate) maxRate = t.rate;
+    });
+    if (minRate === maxRate) { minRate -= 1; maxRate += 1; }
+    const paddingY = (maxRate - minRate) * 0.2 || 1;
+    const yMin = Math.max(0, minRate - paddingY);
+    const yMax = Math.min(100, maxRate + paddingY);
+
+    const chartW = 500;
+    const chartH = 75;
+    const points = trend.map((t, idx) => {
+      const x = (idx / (trend.length - 1 || 1)) * (chartW - 24) + 12;
+      const y = chartH - ((t.rate - yMin) / (yMax - yMin || 1)) * (chartH - 20) - 10;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    });
+    const polylinePoints = points.join(' ');
+    const lastPoint = points.length > 0 ? points[points.length - 1].split(',') : ['12', '40'];
+    const areaPoints = `12,${chartH} ${polylinePoints} ${chartW - 12},${chartH}`;
+
+    let periodTitle = '최근 24시간 저수율(%) 변동 추이';
+    let startLabel = '24시간 전', midLabel = '12시간 전', endLabel = '현재';
+    if (period === '30d') {
+      periodTitle = '최근 30일 일별 저수율(%) 변동 추이';
+      startLabel = '30일 전'; midLabel = '15일 전'; endLabel = '오늘';
+    } else if (period === '1y') {
+      periodTitle = '최근 1년 월별 저수율(%) 변동 추이';
+      startLabel = trend[0]?.label || '1년 전'; midLabel = trend[Math.floor(trend.length / 2)]?.label || '6개월 전'; endLabel = '현재';
+    } else if (period === '3y') {
+      periodTitle = '최근 3개년 저수율(%) 변동 추이';
+      startLabel = trend[0]?.label || '3년 전'; midLabel = trend[Math.floor(trend.length / 2)]?.label || '1.5년 전'; endLabel = '현재';
+    } else if (period === '5y') {
+      periodTitle = '최근 5개년(2022~2026) 연간 저수율(%) 변동 추이';
+      startLabel = trend[0]?.label || '2022년'; midLabel = trend[Math.floor(trend.length / 2)]?.label || '2024년'; endLabel = '2026년 현재';
+    }
+
+    return `
+      <div class="modal-chart-header">
+        <div class="modal-chart-title-wrap">
+          <span class="modal-chart-title">${periodTitle}</span>
+          <span class="modal-chart-range">${minRate.toFixed(1)}% ~ ${maxRate.toFixed(1)}% (변동폭 ${(maxRate - minRate).toFixed(1)}%p)</span>
+        </div>
+        <div class="modal-period-tabs" role="tablist" aria-label="추이 기간 선택">
+          <button class="btn-period-tab ${period === '24h' ? 'active' : ''}" onclick="window.appSwitchTrendPeriod('${dam.id}', '24h')" type="button">24시간</button>
+          <button class="btn-period-tab ${period === '30d' ? 'active' : ''}" onclick="window.appSwitchTrendPeriod('${dam.id}', '30d')" type="button">30일</button>
+          <button class="btn-period-tab ${period === '1y' ? 'active' : ''}" onclick="window.appSwitchTrendPeriod('${dam.id}', '1y')" type="button">1년</button>
+          <button class="btn-period-tab ${period === '3y' ? 'active' : ''}" onclick="window.appSwitchTrendPeriod('${dam.id}', '3y')" type="button">3년</button>
+          <button class="btn-period-tab ${period === '5y' ? 'active' : ''}" onclick="window.appSwitchTrendPeriod('${dam.id}', '5y')" type="button">5년</button>
+        </div>
+      </div>
+      <svg class="modal-svg-chart" viewBox="0 0 ${chartW} ${chartH + 18}" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="chart-grad-${dam.id}-${period}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${barColor}" stop-opacity="0.32"/>
+            <stop offset="100%" stop-color="${barColor}" stop-opacity="0.0"/>
+          </linearGradient>
+        </defs>
+        <line x1="12" y1="12" x2="${chartW - 12}" y2="12" stroke="var(--border-subtle)" stroke-dasharray="2 3" stroke-width="1" />
+        <line x1="12" y1="${chartH - 10}" x2="${chartW - 12}" y2="${chartH - 10}" stroke="var(--border-subtle)" stroke-dasharray="2 3" stroke-width="1" />
+        
+        <polygon points="${areaPoints}" fill="url(#chart-grad-${dam.id}-${period})" />
+        <polyline points="${polylinePoints}" fill="none" stroke="${barColor}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="${lastPoint[0]}" cy="${lastPoint[1]}" r="4" fill="${barColor}" stroke="var(--surface)" stroke-width="2" />
+        
+        <text x="14" y="${chartH + 13}" fill="var(--text-subtle)" font-size="9" font-family="var(--font-mono)">${startLabel}</text>
+        <text x="${chartW / 2}" y="${chartH + 13}" fill="var(--text-subtle)" font-size="9" font-family="var(--font-mono)" text-anchor="middle">${midLabel}</text>
+        <text x="${chartW - 14}" y="${chartH + 13}" fill="var(--text-subtle)" font-size="9" font-family="var(--font-mono)" text-anchor="end">${endLabel}</text>
+      </svg>
+    `;
+  }
+
+  function switchTrendPeriod(damId, period) {
+    activeModalPeriod = period;
+    const dam = telemetryService.currentData.find((d) => d.id === damId);
+    if (!dam) return;
+
+    let barColor = 'var(--bar-fill-green)';
+    if (dam.currentOutflow >= 20) barColor = 'var(--bar-fill-blue)';
+    else if (dam.storageRate < 40) barColor = 'var(--bar-fill-red)';
+    else if (dam.storageRate < 60) barColor = 'var(--bar-fill-yellow)';
+
+    const container = document.getElementById(`modal-trend-card-${dam.id}`);
+    if (container) {
+      container.innerHTML = renderModalTrendChart(dam, period, barColor);
+    }
+  }
+
+  window.appSwitchTrendPeriod = switchTrendPeriod;
+
   function openInspector(damId) {
     const dam = telemetryService.currentData.find((d) => d.id === damId);
     if (!dam) return;
@@ -432,27 +529,10 @@
       barColor = 'var(--bar-fill-yellow)';
     }
 
-    const trend = dam.hourlyTrend || [];
-    let minRate = 100, maxRate = 0;
-    trend.forEach((t) => {
-      if (t.rate < minRate) minRate = t.rate;
-      if (t.rate > maxRate) maxRate = t.rate;
-    });
-    if (minRate === maxRate) { minRate -= 1; maxRate += 1; }
-    const paddingY = (maxRate - minRate) * 0.2 || 1;
-    const yMin = Math.max(0, minRate - paddingY);
-    const yMax = Math.min(100, maxRate + paddingY);
+    activeModalDamId = dam.id;
+    activeModalPeriod = '24h';
 
-    const chartW = 500;
-    const chartH = 75;
-    const points = trend.map((t, idx) => {
-      const x = (idx / (trend.length - 1 || 1)) * (chartW - 24) + 12;
-      const y = chartH - ((t.rate - yMin) / (yMax - yMin || 1)) * (chartH - 20) - 10;
-      return `${x.toFixed(1)},${y.toFixed(1)}`;
-    });
-    const polylinePoints = points.join(' ');
-    const lastPoint = points.length > 0 ? points[points.length - 1].split(',') : ['12', '40'];
-    const areaPoints = `12,${chartH} ${polylinePoints} ${chartW - 12},${chartH}`;
+    const chartHtml = renderModalTrendChart(dam, activeModalPeriod, barColor);
 
     elements.modalDamContent.innerHTML = `
       <!-- Big Rate Hero -->
@@ -469,30 +549,9 @@
         </div>
       </div>
 
-      <!-- 24-Hour Trend Chart -->
-      <div class="modal-chart-card">
-        <div class="modal-chart-header">
-          <span>최근 24시간 저수율(%) 변동 추이</span>
-          <span class="modal-chart-range">${minRate.toFixed(1)}% ~ ${maxRate.toFixed(1)}%</span>
-        </div>
-        <svg class="modal-svg-chart" viewBox="0 0 ${chartW} ${chartH + 18}" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="chart-grad-${dam.id}" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="${barColor}" stop-opacity="0.28"/>
-              <stop offset="100%" stop-color="${barColor}" stop-opacity="0.0"/>
-            </linearGradient>
-          </defs>
-          <line x1="12" y1="12" x2="${chartW - 12}" y2="12" stroke="var(--border-subtle)" stroke-dasharray="2 3" stroke-width="1" />
-          <line x1="12" y1="${chartH - 10}" x2="${chartW - 12}" y2="${chartH - 10}" stroke="var(--border-subtle)" stroke-dasharray="2 3" stroke-width="1" />
-          
-          <polygon points="${areaPoints}" fill="url(#chart-grad-${dam.id})" />
-          <polyline points="${polylinePoints}" fill="none" stroke="${barColor}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
-          <circle cx="${lastPoint[0]}" cy="${lastPoint[1]}" r="4" fill="${barColor}" stroke="var(--surface)" stroke-width="2" />
-          
-          <text x="14" y="${chartH + 13}" fill="var(--text-subtle)" font-size="9" font-family="var(--font-mono)">24시간 전</text>
-          <text x="${chartW / 2}" y="${chartH + 13}" fill="var(--text-subtle)" font-size="9" font-family="var(--font-mono)" text-anchor="middle">12시간 전</text>
-          <text x="${chartW - 14}" y="${chartH + 13}" fill="var(--text-subtle)" font-size="9" font-family="var(--font-mono)" text-anchor="end">현재</text>
-        </svg>
+      <!-- Multi-Period Trend Chart (24h, 30d, 1y, 3y, 5y) -->
+      <div id="modal-trend-card-${dam.id}" class="modal-chart-card">
+        ${chartHtml}
       </div>
 
       <!-- 4-Box Telemetry Grid -->

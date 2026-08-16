@@ -898,6 +898,8 @@
         ).toFixed(2);
         const storageVolume = ((dam.totalStorage * rate) / 100).toFixed(1);
 
+        const trends = this.generateMultiPeriodTrends(rate, dam.normalFullLevel, dam.lowWaterLevel, dam.id);
+
         return {
           ...dam,
           storageRate: rate,
@@ -907,7 +909,8 @@
           currentOutflow: dam.baseOutflow,
           distanceKm: null,
           status: this.classifyStatus(rate, dam.baseOutflow, parseFloat(waterLevel), dam.floodLevel),
-          hourlyTrend: this.generateHourlyTrend(rate, dam.normalFullLevel, dam.lowWaterLevel)
+          trends: trends,
+          hourlyTrend: trends['24h']
         };
       });
     }
@@ -931,21 +934,100 @@
       return { code: 'NORMAL', label: '정상', class: 'status-tag-normal' };
     }
 
-    generateHourlyTrend(currentRate, normalLevel, lowLevel) {
-      const trend = [];
+    generateMultiPeriodTrends(currentRate, normalLevel, lowLevel, damId) {
       const now = new Date();
+      const seed = (damId || '').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+
+      // 1. 24 Hours (Hourly)
+      const trend24h = [];
       for (let i = 24; i >= 0; i--) {
         const time = new Date(now.getTime() - i * 3600 * 1000);
-        const delta = (Math.sin(i / 3) * 0.4 + (Math.random() * 0.2 - 0.1)).toFixed(2);
-        const rate = Math.max(10, Math.min(99, currentRate - parseFloat(delta)));
-        const level = (lowLevel + ((normalLevel - lowLevel) * (rate / 100))).toFixed(2);
-        trend.push({
-          hour: `${time.getHours().toString().padStart(2, '0')}:00`,
+        const delta = Math.sin((i + seed) / 3.5) * 0.45 + (Math.sin(i * 1.7) * 0.15);
+        const rate = Math.max(10, Math.min(99, currentRate - delta));
+        const level = lowLevel + ((normalLevel - lowLevel) * (rate / 100));
+        trend24h.push({
+          label: `${time.getHours().toString().padStart(2, '0')}:00`,
           rate: parseFloat(rate.toFixed(1)),
-          waterLevel: parseFloat(level)
+          waterLevel: parseFloat(level.toFixed(2))
         });
       }
-      return trend;
+
+      // 2. 30 Days (Daily)
+      const trend30d = [];
+      for (let i = 30; i >= 0; i--) {
+        const time = new Date(now.getTime() - i * 86400 * 1000);
+        const mm = time.getMonth() + 1;
+        const dd = time.getDate();
+        const wave = Math.sin((i + seed * 0.5) / 5) * 2.8 + Math.cos(i / 3) * 1.2;
+        const rate = Math.max(15, Math.min(98, currentRate - wave));
+        const level = lowLevel + ((normalLevel - lowLevel) * (rate / 100));
+        trend30d.push({
+          label: `${mm}/${dd}`,
+          rate: parseFloat(rate.toFixed(1)),
+          waterLevel: parseFloat(level.toFixed(2))
+        });
+      }
+
+      // 3. 1 Year (Monthly - 12 months)
+      const trend1y = [];
+      for (let i = 12; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 15);
+        const month = d.getMonth() + 1;
+        const year = String(d.getFullYear()).slice(2);
+        // Seasonal flood summer peak (July~Sep) & spring drop
+        const seasonalFactor = Math.sin(((month - 3) / 12) * Math.PI * 2) * 14;
+        const rate = Math.max(20, Math.min(95, currentRate - (i === 0 ? 0 : seasonalFactor)));
+        const level = lowLevel + ((normalLevel - lowLevel) * (rate / 100));
+        trend1y.push({
+          label: `${year}.${String(month).padStart(2, '0')}`,
+          rate: parseFloat(rate.toFixed(1)),
+          waterLevel: parseFloat(level.toFixed(2))
+        });
+      }
+
+      // 4. 3 Years (Quarterly/Monthly - 36 months)
+      const trend3y = [];
+      for (let i = 36; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 15);
+        const month = d.getMonth() + 1;
+        const year = String(d.getFullYear()).slice(2);
+        const seasonal = Math.sin(((month - 3) / 12) * Math.PI * 2) * 15;
+        // 2023 Southern drought dip
+        const droughtDip = (d.getFullYear() === 2023 && month <= 5) ? -18 : 0;
+        const rate = Math.max(18, Math.min(97, currentRate - (i === 0 ? 0 : (seasonal + droughtDip))));
+        const level = lowLevel + ((normalLevel - lowLevel) * (rate / 100));
+        trend3y.push({
+          label: `${year}.${String(month).padStart(2, '0')}`,
+          rate: parseFloat(rate.toFixed(1)),
+          waterLevel: parseFloat(level.toFixed(2))
+        });
+      }
+
+      // 5. 5 Years (2022 ~ 2026 Historical Multi-Year Trend - 60 points)
+      const trend5y = [];
+      for (let i = 60; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 15);
+        const month = d.getMonth() + 1;
+        const year = d.getFullYear();
+        const seasonal = Math.sin(((month - 3) / 12) * Math.PI * 2) * 16;
+        // 2022 autumn ~ 2023 spring severe dry season in Korea
+        const multiYearTrend = (year === 2022 && month >= 9) || (year === 2023 && month <= 6) ? -16 : 0;
+        const rate = Math.max(15, Math.min(98, currentRate - (i === 0 ? 0 : (seasonal + multiYearTrend))));
+        const level = lowLevel + ((normalLevel - lowLevel) * (rate / 100));
+        trend5y.push({
+          label: `${year}.${String(month).padStart(2, '0')}`,
+          rate: parseFloat(rate.toFixed(1)),
+          waterLevel: parseFloat(level.toFixed(2))
+        });
+      }
+
+      return {
+        '24h': trend24h,
+        '30d': trend30d,
+        '1y': trend1y,
+        '3y': trend3y,
+        '5y': trend5y
+      };
     }
 
     updateUserLocation(userLat, userLng) {
