@@ -1,7 +1,7 @@
 /**
  * ============================================================================
  * K-DAM LIVE — Minimalist Application Controller
- * Clean, automatic 5-minute background refresh & timestamp tracking
+ * Clean, automatic 5-minute background refresh & smooth modal inspection
  * ============================================================================
  */
 
@@ -62,6 +62,7 @@
 
       dialogInspector: document.getElementById('dam-inspector-dialog'),
       modalDamTitle: document.getElementById('modal-dam-title'),
+      modalDamSub: document.getElementById('modal-dam-sub'),
       modalDamContent: document.getElementById('modal-dam-content'),
       btnModalClose: document.getElementById('btn-modal-close')
     };
@@ -237,63 +238,104 @@
     const dam = telemetryService.currentData.find((d) => d.id === damId);
     if (!dam) return;
 
-    elements.modalDamTitle.textContent = `${dam.name} (${dam.basin} · ${dam.agency})`;
+    if (elements.modalDamTitle) elements.modalDamTitle.textContent = dam.name;
+    if (elements.modalDamSub) elements.modalDamSub.textContent = `${dam.basin} · ${dam.type} · ${dam.agency}`;
+
+    let badgeClass = 'badge-green';
+    let badgeLabel = '정상 수위';
+    let barColor = 'var(--badge-green-text)';
+
+    if (dam.currentOutflow >= 20) {
+      badgeClass = 'badge-blue';
+      badgeLabel = '수문 방류중';
+      barColor = 'var(--badge-blue-text)';
+    } else if (dam.storageRate < 40) {
+      badgeClass = 'badge-red';
+      badgeLabel = '가뭄 경계';
+      barColor = 'var(--badge-red-text)';
+    } else if (dam.storageRate < 50) {
+      badgeClass = 'badge-yellow';
+      badgeLabel = '가뭄 주의';
+      barColor = 'var(--badge-yellow-text)';
+    } else if (dam.storageRate < 60) {
+      badgeClass = 'badge-yellow';
+      badgeLabel = '가뭄 관심';
+      barColor = 'var(--badge-yellow-text)';
+    }
 
     elements.modalDamContent.innerHTML = `
-      <div class="modal-grid-2">
-        <div class="modal-card-item">
-          <span>현재 저수율</span>
-          <strong>${dam.storageRate}%</strong>
+      <!-- Big Rate Hero -->
+      <div class="modal-rate-hero">
+        <div class="modal-rate-top">
+          <div>
+            <span class="modal-rate-label">현재 저수율</span>
+            <div class="modal-rate-big">${dam.storageRate}%</div>
+          </div>
+          <span class="badge ${badgeClass}">${badgeLabel}</span>
         </div>
-        <div class="modal-card-item">
-          <span>현재 저수량</span>
-          <strong>${dam.currentStorageVolume.toLocaleString()} M㎥</strong>
-        </div>
-        <div class="modal-card-item">
-          <span>현재 수위</span>
-          <strong>${dam.currentWaterLevel} EL.m</strong>
-        </div>
-        <div class="modal-card-item">
-          <span>실시간 유입 / 방류</span>
-          <strong>${dam.currentInflow} / ${dam.currentOutflow} ㎥/s</strong>
+        <div class="modal-rate-bar-track">
+          <div class="modal-rate-bar-fill" style="width: ${Math.min(100, dam.storageRate)}%; background: ${barColor};"></div>
         </div>
       </div>
 
-      <table class="modal-specs-table">
-        <tbody>
-          <tr>
-            <td>상시만수위</td>
-            <td>${dam.normalFullLevel} EL.m</td>
-          </tr>
-          <tr>
-            <td>계획홍수위</td>
-            <td>${dam.floodLevel} EL.m</td>
-          </tr>
-          <tr>
-            <td>총 저수용량</td>
-            <td>${dam.totalStorage.toLocaleString()} M㎥</td>
-          </tr>
-          <tr>
-            <td>유역면적</td>
-            <td>${dam.catchmentArea.toLocaleString()} km²</td>
-          </tr>
-          <tr>
-            <td>댐 높이 / 길이</td>
-            <td>${dam.damHeight}m / ${dam.damLength}m</td>
-          </tr>
-          <tr>
-            <td>소재지</td>
-            <td>${dam.location}</td>
-          </tr>
-          <tr>
-            <td>준공연도</td>
-            <td>${dam.builtYear}년</td>
-          </tr>
-        </tbody>
-      </table>
+      <!-- 4-Box Telemetry Grid -->
+      <div class="modal-grid-4">
+        <div class="modal-stat-box">
+          <span>현재 수위</span>
+          <strong>${dam.currentWaterLevel} EL.m</strong>
+          <small>상시만수위 ${dam.normalFullLevel}m</small>
+        </div>
+        <div class="modal-stat-box">
+          <span>현재 저수량</span>
+          <strong>${dam.currentStorageVolume.toLocaleString()} M㎥</strong>
+          <small>총 저수용량 ${dam.totalStorage.toLocaleString()} M㎥</small>
+        </div>
+        <div class="modal-stat-box">
+          <span>실시간 유입량</span>
+          <strong style="color: var(--badge-blue-text)">${dam.currentInflow} ㎥/s</strong>
+          <small>상류 하천 유입</small>
+        </div>
+        <div class="modal-stat-box">
+          <span>실시간 방류량</span>
+          <strong style="color: ${dam.currentOutflow >= 20 ? 'var(--badge-blue-text)' : 'inherit'}">${dam.currentOutflow} ㎥/s</strong>
+          <small>발전 및 하천유지방류</small>
+        </div>
+      </div>
+
+      <!-- Technical Specs Table -->
+      <div class="modal-specs-section">
+        <table class="modal-specs-table">
+          <tbody>
+            <tr>
+              <td>계획홍수위</td>
+              <td class="num">${dam.floodLevel} EL.m</td>
+            </tr>
+            <tr>
+              <td>유역면적</td>
+              <td class="num">${dam.catchmentArea.toLocaleString()} km²</td>
+            </tr>
+            <tr>
+              <td>댐 높이 / 길이</td>
+              <td class="num">${dam.damHeight}m / ${dam.damLength}m</td>
+            </tr>
+            <tr>
+              <td>소재지</td>
+              <td>${dam.location}</td>
+            </tr>
+            <tr>
+              <td>준공연도</td>
+              <td class="num">${dam.builtYear}년</td>
+            </tr>
+            <tr>
+              <td>관리기관</td>
+              <td>${dam.agency}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     `;
 
-    elements.dialogInspector.showModal();
+    if (elements.dialogInspector) elements.dialogInspector.showModal();
   }
 
   function closeInspector() {
@@ -386,7 +428,15 @@
     }
     if (elements.dialogInspector) {
       elements.dialogInspector.addEventListener('click', (e) => {
-        if (e.target === elements.dialogInspector) closeInspector();
+        const panel = elements.dialogInspector.querySelector('.inspector-modal-panel');
+        if (panel) {
+          const rect = panel.getBoundingClientRect();
+          const isInside = (
+            rect.top <= e.clientY && e.clientY <= rect.bottom &&
+            rect.left <= e.clientX && e.clientX <= rect.right
+          );
+          if (!isInside) closeInspector();
+        }
       });
     }
   }
