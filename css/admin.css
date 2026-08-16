@@ -953,21 +953,99 @@ body {
   100% { transform: translateX(100%); }
 }
 
-/* Live Ingestion Cell Flash */
-.flash-tick {
-  animation: cellGlowPulse 1.4s ease-out;
+/* Live Ingestion Directional Smooth Color Fades */
+.cell-flash-up {
+  animation: flashUpPulse 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes cellGlowPulse {
+.cell-flash-down {
+  animation: flashDownPulse 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes flashUpPulse {
   0% {
-    background: rgba(56, 189, 248, 0.25);
-    color: #38bdf8 !important;
-    text-shadow: 0 0 6px rgba(56, 189, 248, 0.4);
+    background: rgba(16, 185, 129, 0.28);
+    color: #34d399 !important;
+    border-radius: 4px;
+    text-shadow: 0 0 8px rgba(52, 211, 153, 0.65);
+    transform: scale(1.04);
+  }
+  35% {
+    background: rgba(16, 185, 129, 0.14);
+    color: #34d399 !important;
+    text-shadow: 0 0 4px rgba(52, 211, 153, 0.3);
+    transform: scale(1);
   }
   100% {
     background: transparent;
     color: inherit;
     text-shadow: none;
+    transform: scale(1);
+  }
+}
+
+@keyframes flashDownPulse {
+  0% {
+    background: rgba(56, 189, 248, 0.28);
+    color: #38bdf8 !important;
+    border-radius: 4px;
+    text-shadow: 0 0 8px rgba(56, 189, 248, 0.65);
+    transform: scale(1.04);
+  }
+  35% {
+    background: rgba(56, 189, 248, 0.14);
+    color: #38bdf8 !important;
+    text-shadow: 0 0 4px rgba(56, 189, 248, 0.3);
+    transform: scale(1);
+  }
+  100% {
+    background: transparent;
+    color: inherit;
+    text-shadow: none;
+    transform: scale(1);
+  }
+}
+
+/* Light Theme Fades */
+:root[data-theme='light'] .cell-flash-up {
+  animation-name: flashUpPulseLight;
+}
+
+@keyframes flashUpPulseLight {
+  0% {
+    background: #d1fae5;
+    color: #059669 !important;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+  40% {
+    background: #ecfdf5;
+    color: #059669 !important;
+  }
+  100% {
+    background: transparent;
+    color: inherit;
+  }
+}
+
+:root[data-theme='light'] .cell-flash-down {
+  animation-name: flashDownPulseLight;
+}
+
+@keyframes flashDownPulseLight {
+  0% {
+    background: #e0f2fe;
+    color: #0284c7 !important;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+  40% {
+    background: #f0f9ff;
+    color: #0284c7 !important;
+  }
+  100% {
+    background: transparent;
+    color: inherit;
   }
 }
 

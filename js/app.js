@@ -122,13 +122,19 @@
       const outflowCell = rowEl.children[9]; // outflow
       if (inflowCell) {
         inflowCell.textContent = targetDam.currentInflow.toFixed(1);
-        inflowCell.classList.add('flash-tick');
-        setTimeout(() => inflowCell.classList.remove('flash-tick'), 1400);
+        const flashClass = deltaInflow >= 0 ? 'cell-flash-up' : 'cell-flash-down';
+        inflowCell.classList.remove('cell-flash-up', 'cell-flash-down');
+        void inflowCell.offsetWidth;
+        inflowCell.classList.add(flashClass);
+        setTimeout(() => inflowCell.classList.remove(flashClass), 1600);
       }
       if (outflowCell) {
         outflowCell.textContent = targetDam.currentOutflow.toFixed(1);
-        outflowCell.classList.add('flash-tick');
-        setTimeout(() => outflowCell.classList.remove('flash-tick'), 1400);
+        const flashClass = deltaOutflow >= 0 ? 'cell-flash-up' : 'cell-flash-down';
+        outflowCell.classList.remove('cell-flash-up', 'cell-flash-down');
+        void outflowCell.offsetWidth;
+        outflowCell.classList.add(flashClass);
+        setTimeout(() => outflowCell.classList.remove(flashClass), 1600);
       }
     }
 
