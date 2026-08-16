@@ -753,9 +753,10 @@ body {
 }
 
 .rate-bar-track {
-  width: 32px;
-  height: 4px;
-  background: var(--border);
+  width: 36px;
+  height: 6px;
+  background: var(--bar-track);
+  border: 1px solid var(--bar-track-border);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -769,21 +770,13 @@ body {
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  padding: 1.5px 5px;
+  justify-content: center;
+  padding: 2px 6px;
   border-radius: var(--radius);
-  font-size: 0.70rem;
+  font-size: 0.72rem;
   font-weight: 600;
   border: 1px solid transparent;
-}
-
-.badge-dot {
-  width: 3.5px;
-  height: 3.5px;
-  border-radius: 50%;
-  background: currentColor;
-  display: inline-block;
-  opacity: 0.85;
+  line-height: 1.2;
 }
 
 .badge-green {
@@ -956,7 +949,8 @@ body {
 
 .modal-rate-bar-track {
   height: 8px;
-  background: var(--bg);
+  background: var(--bar-track);
+  border: 1px solid var(--bar-track-border);
   border-radius: 999px;
   overflow: hidden;
 }

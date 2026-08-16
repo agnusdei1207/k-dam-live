@@ -328,26 +328,26 @@
     }
 
     elements.damsTbody.innerHTML = dams.map((dam) => {
-      let barColor = 'var(--badge-green-text)';
+      let barColor = 'var(--bar-fill-green)';
       let badgeClass = 'badge-green';
       let badgeLabel = '정상';
 
       if (dam.currentOutflow >= 20) {
         badgeClass = 'badge-blue';
         badgeLabel = '수문방류';
-        barColor = 'var(--badge-blue-text)';
+        barColor = 'var(--bar-fill-blue)';
       } else if (dam.storageRate < 40) {
         badgeClass = 'badge-red';
         badgeLabel = '가뭄경계';
-        barColor = 'var(--badge-red-text)';
+        barColor = 'var(--bar-fill-red)';
       } else if (dam.storageRate < 50) {
         badgeClass = 'badge-yellow';
         badgeLabel = '가뭄주의';
-        barColor = 'var(--badge-yellow-text)';
+        barColor = 'var(--bar-fill-yellow)';
       } else if (dam.storageRate < 60) {
         badgeClass = 'badge-yellow';
         badgeLabel = '가뭄관심';
-        barColor = 'var(--badge-yellow-text)';
+        barColor = 'var(--bar-fill-yellow)';
       }
 
       const diffSign = dam.diffPrevYear > 0 ? '+' : '';
@@ -372,7 +372,7 @@
               </div>
             </div>
           </td>
-          <td><span class="badge ${badgeClass}"><span class="badge-dot"></span>${badgeLabel}</span></td>
+          <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
           <td class="text-right num" style="color: ${diffColor}">${diffSign}${dam.diffPrevYear}%p</td>
           <td class="text-right num">
             <strong>${dam.currentWaterLevel.toFixed(1)}</strong> <small style="color:var(--text-subtle)">/ ${dam.normalFullLevel}m</small>
@@ -394,24 +394,24 @@
 
     let badgeClass = 'badge-green';
     let badgeLabel = '정상 수위';
-    let barColor = 'var(--badge-green-text)';
+    let barColor = 'var(--bar-fill-green)';
 
     if (dam.currentOutflow >= 20) {
       badgeClass = 'badge-blue';
       badgeLabel = '수문 방류중';
-      barColor = 'var(--badge-blue-text)';
+      barColor = 'var(--bar-fill-blue)';
     } else if (dam.storageRate < 40) {
       badgeClass = 'badge-red';
       badgeLabel = '가뭄 경계';
-      barColor = 'var(--badge-red-text)';
+      barColor = 'var(--bar-fill-red)';
     } else if (dam.storageRate < 50) {
       badgeClass = 'badge-yellow';
       badgeLabel = '가뭄 주의';
-      barColor = 'var(--badge-yellow-text)';
+      barColor = 'var(--bar-fill-yellow)';
     } else if (dam.storageRate < 60) {
       badgeClass = 'badge-yellow';
       badgeLabel = '가뭄 관심';
-      barColor = 'var(--badge-yellow-text)';
+      barColor = 'var(--bar-fill-yellow)';
     }
 
     const trend = dam.hourlyTrend || [];
@@ -444,7 +444,7 @@
             <span class="modal-rate-label">현재 저수율</span>
             <div class="modal-rate-big">${dam.storageRate}%</div>
           </div>
-          <span class="badge ${badgeClass}"><span class="badge-dot"></span>${badgeLabel}</span>
+          <span class="badge ${badgeClass}">${badgeLabel}</span>
         </div>
         <div class="modal-rate-bar-track">
           <div class="modal-rate-bar-fill" style="width: ${Math.min(100, dam.storageRate)}%; background: ${barColor};"></div>

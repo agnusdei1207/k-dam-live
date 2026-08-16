@@ -48,6 +48,14 @@
   --badge-red-text: #f87171;
   --badge-red-border: rgba(248, 113, 113, 0.25);
 
+  /* High-Contrast Progress Bar Tokens */
+  --bar-track: #3d3731;
+  --bar-track-border: rgba(255, 255, 255, 0.12);
+  --bar-fill-green: #10b981;
+  --bar-fill-blue: #38bdf8;
+  --bar-fill-yellow: #f59e0b;
+  --bar-fill-red: #ef4444;
+
   --radius: 6px;
   --radius-lg: 8px;
 }
@@ -93,4 +101,12 @@
   --badge-red-bg: #fee2e2;
   --badge-red-text: #991b1b;
   --badge-red-border: #fecaca;
+
+  /* High-Contrast Progress Bar Tokens (Light Theme) */
+  --bar-track: #e2dac8;
+  --bar-track-border: rgba(0, 0, 0, 0.1);
+  --bar-fill-green: #10b981;
+  --bar-fill-blue: #0284c7;
+  --bar-fill-yellow: #d97706;
+  --bar-fill-red: #dc2626;
 }
