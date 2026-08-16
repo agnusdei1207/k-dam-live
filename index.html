@@ -136,15 +136,20 @@
 
     <!-- Filter & Search Bar -->
     <div class="filter-bar" role="search" aria-label="댐 관측소 검색 및 필터">
-      <div class="basin-tabs" role="tablist" aria-label="수계별 탭">
-        <button class="tab-btn active" data-basin="ALL" role="tab" aria-selected="true" type="button">전체 (34)</button>
-        <button class="tab-btn" data-basin="한강" role="tab" aria-selected="false" type="button">한강 (6)</button>
-        <button class="tab-btn" data-basin="낙동강" role="tab" aria-selected="false" type="button">낙동강 (14)</button>
-        <button class="tab-btn" data-basin="금강" role="tab" aria-selected="false" type="button">금강 (4)</button>
-        <button class="tab-btn" data-basin="영산·섬진강" role="tab" aria-selected="false" type="button">영산·섬진강 (10)</button>
-      </div>
+      <div class="filter-left">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input
+            id="search-input"
+            type="text"
+            placeholder="댐 이름 또는 지역 검색..."
+            autocomplete="off"
+            aria-label="댐 이름 또는 소재지 검색"
+          />
+        </div>
 
-      <div class="filter-right">
         <select id="select-status-filter" class="filter-select" aria-label="수문 상태별 필터">
           <option value="ALL">전체 상태</option>
           <option value="DISCHARGING">방류 중인 댐</option>
@@ -158,19 +163,14 @@
           <option value="용수전용댐">용수전용댐</option>
           <option value="홍수조절용">홍수조절용</option>
         </select>
+      </div>
 
-        <div class="search-box">
-          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2" aria-hidden="true">
-            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
-          <input
-            id="search-input"
-            type="text"
-            placeholder="댐 이름 또는 지역 검색..."
-            autocomplete="off"
-            aria-label="댐 이름 또는 소재지 검색"
-          />
-        </div>
+      <div class="basin-tabs" role="tablist" aria-label="수계별 탭">
+        <button class="tab-btn active" data-basin="ALL" role="tab" aria-selected="true" type="button">전체 (34)</button>
+        <button class="tab-btn" data-basin="한강" role="tab" aria-selected="false" type="button">한강 (6)</button>
+        <button class="tab-btn" data-basin="낙동강" role="tab" aria-selected="false" type="button">낙동강 (14)</button>
+        <button class="tab-btn" data-basin="금강" role="tab" aria-selected="false" type="button">금강 (4)</button>
+        <button class="tab-btn" data-basin="영산·섬진강" role="tab" aria-selected="false" type="button">영산·섬진강 (10)</button>
       </div>
     </div>
 
