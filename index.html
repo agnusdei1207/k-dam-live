@@ -3,424 +3,204 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>K-DAM LIVE 💧 | 대한민국 댐별 저수율 실시간 종합 관제 시스템</title>
-  <meta name="description" content="전국 34개 주요 다목적댐 및 용수전용댐의 실시간 수위, 저수율(%), 저수용량, 유입량 및 방류량 현황을 실시간으로 수집·시각화하는 국가 수문 통합 관제 플랫폼입니다." />
-  <meta name="keywords" content="댐 저수율, 실시간 댐 수위, 소양강댐 저수율, 충주댐 저수율, 대청댐, 안동댐, 가뭄 현황, 방류량, 수문 관제, K-water, 한국수자원공사" />
+  <title>K-DAM LIVE | 대한민국 댐별 저수율 실시간 현황</title>
+  <meta name="description" content="전국 34개 주요 다목적댐 및 용수전용댐의 실시간 저수율, 수위, 유입량 및 방류량 현황 모니터링" />
+  <meta name="keywords" content="댐 저수율, 소양강댐, 충주댐, 대청댐, 안동댐, 실시간 수위, 방류량, 가뭄 현황, K-water" />
   <meta name="author" content="agnusdei1207" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://agnusdei1207.github.io/k-dam-live/" />
 
-  <!-- Open Graph / Facebook -->
+  <!-- Open Graph / Favicon -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://agnusdei1207.github.io/k-dam-live/" />
-  <meta property="og:title" content="K-DAM LIVE | 대한민국 댐별 저수율 실시간 종합 관제 시스템" />
-  <meta property="og:description" content="전국 34개 다목적댐/용수댐의 실시간 저수율, 수위, 유입량, 방류량 현황 모니터링." />
-  <meta property="og:image" content="https://agnusdei1207.github.io/k-dam-live/favicon.svg" />
-
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://agnusdei1207.github.io/k-dam-live/" />
-  <meta property="twitter:title" content="K-DAM LIVE | 대한민국 댐별 저수율 실시간 종합 관제 시스템" />
-  <meta property="twitter:description" content="전국 34개 다목적댐/용수댐의 실시간 저수율, 수위, 유입량, 방류량 현황 모니터링." />
-  <meta property="twitter:image" content="https://agnusdei1207.github.io/k-dam-live/favicon.svg" />
-
-  <!-- Favicon -->
+  <meta property="og:title" content="K-DAM LIVE | 대한민국 댐별 저수율 실시간 현황" />
+  <meta property="og:description" content="전국 34개 다목적댐 및 용수댐의 실시간 저수율, 수위, 유입량, 방류량 모니터링" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-  <!-- Google Fonts: Inter & Pretendard fallback -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
-
-  <!-- Stylesheets -->
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="css/admin.css" />
 
-  <!-- JSON-LD Structured Data -->
+  <!-- JSON-LD -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "K-DAM LIVE",
     "url": "https://agnusdei1207.github.io/k-dam-live/",
-    "description": "대한민국 34개 주요 댐의 실시간 저수율, 수위, 유입량 및 방류량 현황 모니터링 포털",
-    "applicationCategory": "PublicSafetyApplication",
-    "operatingSystem": "All",
-    "author": {
-      "@type": "Person",
-      "name": "agnusdei1207",
-      "url": "https://github.com/agnusdei1207"
-    }
+    "description": "대한민국 34개 주요 댐의 실시간 저수율 및 수문 관측 대시보드"
   }
   </script>
 </head>
-<body class="platform-admin-shell">
-  <!-- Sticky Admin Header -->
-  <header class="platform-admin-header" role="banner">
-    <div class="admin-brand">
-      <div class="brand-badge">
-        <svg class="brand-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="currentColor" fill-opacity="0.2"/>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="./" class="brand-wrap">
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="currentColor" fill-opacity="0.15"/>
           <path d="M2 13h20M4 17h16M7 21h10"/>
         </svg>
+        <span class="brand-title">K-DAM LIVE</span>
+        <span class="brand-tag">실시간 수문 현황</span>
+      </a>
+
+      <div class="header-actions">
+        <div class="live-badge">
+          <span class="status-dot"></span>
+          <span id="live-clock">00:00:00 KST</span>
+        </div>
+
+        <button id="btn-manual-refresh" class="btn-action" type="button" title="실시간 데이터 갱신">
+          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+          </svg>
+          <span>새로고침</span>
+        </button>
+
+        <button id="btn-export-csv" class="btn-action" type="button" title="CSV 다운로드">
+          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+          </svg>
+          <span>CSV</span>
+        </button>
+
+        <button id="btn-theme-toggle" class="btn-icon" type="button" aria-label="테마 전환">
+          <svg id="theme-moon" viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <svg id="theme-sun" class="hidden" viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </button>
       </div>
-      <div class="brand-text">
-        <span class="platform-admin-product">K-DAM WATER CONSOLE</span>
-        <span class="brand-sub">국가 수문 실시간 통합 관제</span>
-      </div>
-    </div>
-
-    <!-- Live Telemetry Status & Clock -->
-    <div class="header-telemetry-badge">
-      <span class="live-pulse-dot" aria-hidden="true"></span>
-      <span class="live-status-text">LIVE SENSOR STREAM</span>
-      <span class="divider">|</span>
-      <span id="live-clock" class="mono-time">00:00:00 KST</span>
-    </div>
-
-    <!-- Header Actions -->
-    <div class="admin-account-actions">
-      <!-- Auto refresh countdown -->
-      <div class="refresh-pill" title="자동 갱신 주기">
-        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-        </svg>
-        <span id="refresh-timer">15s</span>
-      </div>
-
-      <button id="btn-manual-refresh" class="secondary-button" type="button" title="지금 실시간 데이터 갱신">
-        <svg class="spin-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
-          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
-        </svg>
-        <span>실시간 갱신</span>
-      </button>
-
-      <button id="btn-export-csv" class="ghost-button" type="button" title="수문 데이터 CSV 다운로드">
-        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-        </svg>
-        <span class="hide-mobile">CSV</span>
-      </button>
-
-      <button id="btn-theme-toggle" class="ghost-button icon-only" type="button" aria-label="테마 전환" title="다크/라이트 테마 전환">
-        <svg id="theme-moon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        </svg>
-        <svg id="theme-sun" class="hidden" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
-          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </svg>
-      </button>
     </div>
   </header>
 
-  <!-- Main Container -->
-  <main class="platform-admin-content" role="main">
-    <!-- Intro Section -->
-    <header class="platform-admin-intro">
-      <div class="intro-left">
-        <p class="eyebrow">NATIONAL HYDROLOGICAL OBSERVATION & TELEMETRY</p>
-        <h1>대한민국 댐별 저수율 실시간 관제</h1>
-        <p class="intro-desc">
-          한강·낙동강·금강·영산강 및 섬진강 등 전국 <strong>34개 주요 다목적댐 및 용수댐</strong>의 수위, 저수율(%), 저수용량, 유입량 및 방류량을 실시간으로 분석합니다.
-        </p>
+  <!-- Main Content -->
+  <main class="main-container">
+    <div class="page-intro">
+      <h1>전국 댐 저수율 실시간 모니터링</h1>
+      <p>전국 34개 다목적댐 및 용수전용댐의 실시간 수위, 저수율, 유입량, 방류량 현황입니다.</p>
+    </div>
+
+    <!-- 4 Key Stats Cards -->
+    <section class="stats-grid" aria-label="수문 요약 지표">
+      <div class="stat-card">
+        <div class="stat-card-label">전국 평균 저수율</div>
+        <div class="stat-card-value" id="val-avg-rate">--%</div>
+        <div class="stat-card-desc" id="delta-avg-rate">예년 대비 --</div>
       </div>
 
-      <!-- Quick Search Bar -->
-      <div class="intro-search-wrap">
-        <div class="search-input-box">
-          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2">
+      <div class="stat-card">
+        <div class="stat-card-label">전국 총 저수량</div>
+        <div class="stat-card-value" id="val-total-storage">-- M㎥</div>
+        <div class="stat-card-desc">총 유효저수용량 12,650 M㎥</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-label">실시간 총 유입량</div>
+        <div class="stat-card-value" id="val-total-inflow">-- ㎥/s</div>
+        <div class="stat-card-desc">전국 하천 상류 유입 합산</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-label">실시간 총 방류량</div>
+        <div class="stat-card-value" id="val-total-outflow">-- ㎥/s</div>
+        <div class="stat-card-desc" id="val-discharge-count">방류 중인 댐 --개소</div>
+      </div>
+    </section>
+
+    <!-- Filter & Search Bar -->
+    <div class="filter-bar">
+      <div class="basin-tabs" role="tablist">
+        <button class="tab-btn active" data-basin="ALL" type="button">전체 (34)</button>
+        <button class="tab-btn" data-basin="한강" type="button">한강 (6)</button>
+        <button class="tab-btn" data-basin="낙동강" type="button">낙동강 (14)</button>
+        <button class="tab-btn" data-basin="금강" type="button">금강 (4)</button>
+        <button class="tab-btn" data-basin="영산·섬진강" type="button">영산·섬진강 (10)</button>
+      </div>
+
+      <div class="filter-right">
+        <select id="select-status-filter" class="filter-select" aria-label="상태 필터">
+          <option value="ALL">전체 상태</option>
+          <option value="DISCHARGING">방류 중인 댐</option>
+          <option value="DROUGHT">가뭄 주의 (50% 미만)</option>
+          <option value="NORMAL">정상 수위 (60% 이상)</option>
+        </select>
+
+        <select id="select-dam-type" class="filter-select" aria-label="댐 구분">
+          <option value="ALL">모든 구분</option>
+          <option value="다목적댐">다목적댐</option>
+          <option value="용수전용댐">용수전용댐</option>
+          <option value="홍수조절용">홍수조절용</option>
+        </select>
+
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2">
             <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
           </svg>
           <input
             id="search-input"
             type="text"
-            placeholder="댐 이름 또는 지역 검색 (예: 소양강, 충주, 춘천...)"
-            aria-label="댐 이름 또는 위치 검색"
+            placeholder="댐 이름 또는 지역 검색..."
             autocomplete="off"
           />
-          <kbd class="shortcut-key">/</kbd>
         </div>
       </div>
-    </header>
+    </div>
 
-    <!-- Key Metrics Grid (8 Cards) -->
-    <section class="platform-metrics" aria-label="전국 수문 종합 요약 지표">
-      <article class="metric-card" id="metric-avg-rate">
-        <span>전국 평균 저수율</span>
-        <strong class="text-accent" id="val-avg-rate">--%</strong>
-        <small id="delta-avg-rate">예년 대비 --</small>
-      </article>
-
-      <article class="metric-card" id="metric-total-storage">
-        <span>전국 총 저수량</span>
-        <strong id="val-total-storage">-- M㎥</strong>
-        <small id="sub-total-cap">총 용량 12,650 M㎥</small>
-      </article>
-
-      <article class="metric-card" id="metric-total-inflow">
-        <span>실시간 총 유입량</span>
-        <strong class="text-info" id="val-total-inflow">-- ㎥/s</strong>
-        <small id="sub-inflow-status">전국 하천 유입 합산</small>
-      </article>
-
-      <article class="metric-card" id="metric-total-outflow">
-        <span>실시간 총 방류량</span>
-        <strong class="text-warning" id="val-total-outflow">-- ㎥/s</strong>
-        <small id="sub-discharge-status">수문 및 발전 방류</small>
-      </article>
-
-      <article class="metric-card" id="metric-discharging-dams">
-        <span>방류 중인 댐</span>
-        <strong class="text-success" id="val-discharge-count">-- 개소</strong>
-        <small id="sub-discharge-pct">전체 34개소 중</small>
-      </article>
-
-      <article class="metric-card" id="metric-drought-alert">
-        <span>가뭄 대응 단계</span>
-        <strong class="text-orange" id="val-drought-count">-- 개소</strong>
-        <small id="sub-drought-detail">관심/주의/경계 댐</small>
-      </article>
-
-      <article class="metric-card" id="metric-flood-risk">
-        <span>홍수위 근접 주의</span>
-        <strong class="text-danger" id="val-flood-count">0 개소</strong>
-        <small id="sub-flood-status">계획홍수위 85% 이상</small>
-      </article>
-
-      <article class="metric-card" id="metric-sensor-health">
-        <span>센서 연결 상태</span>
-        <strong class="text-success" id="val-sensor-health">100%</strong>
-        <small>34/34 관측소 정상</small>
-      </article>
-    </section>
-
-    <!-- Interactive Basin Filter Tabs -->
-    <nav class="basin-filter-nav" aria-label="수계별 필터">
-      <div class="filter-group">
-        <button class="basin-tab active" data-basin="ALL" type="button">
-          <span>전국 전체</span>
-          <span class="tab-count" id="count-all">34</span>
-        </button>
-        <button class="basin-tab" data-basin="한강" type="button">
-          <span>한강 수계</span>
-          <span class="tab-count" id="count-han">6</span>
-        </button>
-        <button class="basin-tab" data-basin="낙동강" type="button">
-          <span>낙동강 수계</span>
-          <span class="tab-count" id="count-nakdong">14</span>
-        </button>
-        <button class="basin-tab" data-basin="금강" type="button">
-          <span>금강 수계</span>
-          <span class="tab-count" id="count-geum">4</span>
-        </button>
-        <button class="basin-tab" data-basin="영산·섬진강" type="button">
-          <span>영산강·섬진강</span>
-          <span class="tab-count" id="count-seomjin">10</span>
-        </button>
-      </div>
-
-      <div class="filter-controls-right">
-        <!-- Dam Type Select -->
-        <select id="select-dam-type" class="filter-select" aria-label="댐 구분 필터">
-          <option value="ALL">모든 댐 구분</option>
-          <option value="다목적댐">다목적댐 (20)</option>
-          <option value="용수전용댐">용수전용댐 (13)</option>
-          <option value="홍수조절용">홍수조절용 (1)</option>
-        </select>
-
-        <!-- Status Filter Select -->
-        <select id="select-status-filter" class="filter-select" aria-label="상태 필터">
-          <option value="ALL">전체 상태</option>
-          <option value="DISCHARGING">방류 중인 댐</option>
-          <option value="DROUGHT">가뭄 우려 (관심/주의/경계)</option>
-          <option value="NORMAL">정상 수위</option>
-          <option value="LOW_STORAGE">저수율 50% 미만</option>
-        </select>
-      </div>
-    </nav>
-
-    <!-- Top Layout: Interactive Map + Basin Capacity Chart Grid -->
-    <section class="platform-map-overview-grid">
-      <!-- Interactive SVG Korea Basin Map -->
-      <article class="platform-panel map-panel" id="korea-map-panel">
-        <div class="panel-header">
-          <div>
-            <h2>대한민국 4대 수계 실시간 댐 분포도</h2>
-            <p class="panel-sub">핀을 클릭하면 해당 댐의 상세 수문 제원을 실시간으로 조회합니다.</p>
-          </div>
-          <div class="map-legend">
-            <span class="legend-item"><i class="dot dot-high"></i> 70% 이상 (풍부)</span>
-            <span class="legend-item"><i class="dot dot-mid"></i> 50~70% (보통)</span>
-            <span class="legend-item"><i class="dot dot-low"></i> 50% 미만 (주의)</span>
-            <span class="legend-item"><i class="dot dot-discharge"></i> 수문방류중</span>
-          </div>
-        </div>
-        <div class="map-svg-container" id="map-container">
-          <!-- Dynamic SVG Map populated by JS -->
-          <svg id="korea-svg-map" viewBox="0 0 540 680" preserveAspectRatio="xMidYMid meet" aria-label="대한민국 수계 및 댐 지도">
-            <!-- Map Paths & Basin Outlines rendered by app.js -->
-          </svg>
-        </div>
-      </article>
-
-      <!-- Basin Capacity & Drought Stage Summary -->
-      <article class="platform-panel basin-summary-panel">
-        <div class="panel-header">
-          <div>
-            <h2>수계별 실시간 저수 현황</h2>
-            <p class="panel-sub">4대 수계별 유효저수량 대비 현재 저수율 밸런스</p>
-          </div>
-        </div>
-        <div class="basin-bars-list" id="basin-bars-container">
-          <!-- Populated by JS -->
-        </div>
-
-        <div class="drought-status-box">
-          <div class="drought-box-header">
-            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
-              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-            </svg>
-            <strong>가뭄 및 수문 안전 대응 체계</strong>
-          </div>
-          <p class="drought-desc">
-            환경부 댐 용수공급 조정기준(관심 ➔ 주의 ➔ 경계 ➔ 심각)에 따라 하천유지용수 및 농업·공업용수를 단계별로 감량 공급 관리합니다.
-          </p>
-          <div class="drought-pills" id="drought-pills-list">
-            <!-- Populated by JS -->
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <!-- Main Data Table Panel -->
-    <article class="platform-panel main-table-panel" id="dams-table-section">
-      <div class="panel-header table-header-flex">
-        <div>
-          <h2>전국 댐별 실시간 수문 데이터 원장</h2>
-          <p class="panel-sub" id="table-record-count">총 34개 댐 관측소 실시간 수집 중</p>
-        </div>
-        <div class="table-actions">
-          <span class="table-sort-hint">※ 열 제목을 클릭하여 저수율, 수위, 유입·방류량 정렬</span>
-        </div>
-      </div>
-
-      <div class="platform-table-wrap">
-        <table id="dams-table" aria-label="댐별 실시간 수문 관측 테이블">
-          <thead>
-            <tr>
-              <th data-sort="name" class="sortable">댐 이름 <span class="sort-arrow">↕</span></th>
-              <th data-sort="basin" class="sortable">수계 <span class="sort-arrow">↕</span></th>
-              <th data-sort="type" class="sortable">구분 <span class="sort-arrow">↕</span></th>
-              <th data-sort="waterLevel" class="sortable text-right">현재 수위 (EL.m) <span class="sort-arrow">↕</span></th>
-              <th data-sort="storageRate" class="sortable text-right">저수율 (%) <span class="sort-arrow">↕</span></th>
-              <th data-sort="storageVolume" class="sortable text-right">현재 저수량 (M㎥) <span class="sort-arrow">↕</span></th>
-              <th data-sort="inflow" class="sortable text-right">유입량 (㎥/s) <span class="sort-arrow">↕</span></th>
-              <th data-sort="outflow" class="sortable text-right">방류량 (㎥/s) <span class="sort-arrow">↕</span></th>
-              <th data-sort="diffPrevYear" class="sortable text-right">예년 대비 <span class="sort-arrow">↕</span></th>
-              <th>수문 상태</th>
-              <th class="text-center">상세</th>
-            </tr>
-          </thead>
-          <tbody id="dams-tbody">
-            <!-- Dynamically populated by app.js -->
-          </tbody>
-        </table>
-      </div>
-    </article>
-
-    <!-- Bottom Grids: Realtime Telemetry Feed & Operation Log -->
-    <section class="platform-data-grid">
-      <!-- Live Hydrological Event Feed -->
-      <article class="platform-panel" id="events-panel">
-        <div class="panel-header">
-          <h2>실시간 수문 이벤트 피드</h2>
-          <span class="badge-live">LIVE</span>
-        </div>
-        <ul class="platform-event-list" id="events-feed-list">
-          <!-- Populated by JS -->
-        </ul>
-      </article>
-
-      <!-- Dam Management Authority & Sensor Nodes -->
-      <article class="platform-panel" id="audit-panel">
-        <div class="panel-header">
-          <h2>국가 수문 관제 네트워크</h2>
-          <span class="badge-verified">K-water / 환경부 WAMIS</span>
-        </div>
-        <div class="agency-audit-content">
-          <div class="agency-node">
-            <div class="node-icon">🏢</div>
-            <div class="node-details">
-              <strong>한국수자원공사 (K-water)</strong>
-              <small>전국 20개 다목적댐 및 13개 용수전용댐 원격 수문 관제</small>
-            </div>
-            <span class="status-pill status-active">ACTIVE</span>
-          </div>
-          <div class="agency-node">
-            <div class="node-icon">🛰️</div>
-            <div class="node-details">
-              <strong>국가수자원종합정보시스템 (WAMIS)</strong>
-              <small>환경부 국립환경과학원 홍수통제소 실시간 유입/방류 동기화</small>
-            </div>
-            <span class="status-pill status-active">SYNCED</span>
-          </div>
-          <div class="agency-node">
-            <div class="node-icon">📡</div>
-            <div class="node-details">
-              <strong>K-DAM Edge IoT Telemetry</strong>
-              <small>15초 주기 실시간 센서 스트림 및 예년 비교 데이터 파이프라인</small>
-            </div>
-            <span class="status-pill status-active">ONLINE</span>
-          </div>
-        </div>
-      </article>
-    </section>
+    <!-- Main Data Table -->
+    <div class="table-wrapper">
+      <table class="data-table" id="dams-table">
+        <thead>
+          <tr>
+            <th data-sort="name" class="sortable">댐 이름 ↕</th>
+            <th data-sort="basin" class="sortable">수계 ↕</th>
+            <th data-sort="type" class="sortable">구분 ↕</th>
+            <th data-sort="storageRate" class="sortable text-right">저수율 (%) ↕</th>
+            <th data-sort="waterLevel" class="sortable text-right">현재 수위 (EL.m) ↕</th>
+            <th data-sort="storageVolume" class="sortable text-right">저수량 (M㎥) ↕</th>
+            <th data-sort="inflow" class="sortable text-right">유입량 (㎥/s) ↕</th>
+            <th data-sort="outflow" class="sortable text-right">방류량 (㎥/s) ↕</th>
+            <th data-sort="diffPrevYear" class="sortable text-right">예년 대비 ↕</th>
+            <th>상태</th>
+            <th class="text-center">상세</th>
+          </tr>
+        </thead>
+        <tbody id="dams-tbody">
+          <!-- Populated by js/app.js -->
+        </tbody>
+      </table>
+    </div>
   </main>
 
-  <!-- Dam Detail Inspector Modal / Drawer -->
-  <dialog id="dam-inspector-dialog" class="dam-inspector-modal" aria-labelledby="modal-dam-title">
-    <div class="modal-backdrop" id="modal-backdrop-close"></div>
-    <div class="modal-panel">
+  <!-- Dam Detail Modal Dialog -->
+  <dialog id="dam-inspector-dialog" class="modal-overlay">
+    <div class="modal-box">
       <header class="modal-header">
-        <div>
-          <span class="modal-eyebrow" id="modal-dam-basin">수계 정보</span>
-          <h2 id="modal-dam-title">댐 상세 제원</h2>
-        </div>
-        <button id="btn-modal-close" class="modal-close-btn" type="button" aria-label="닫기">
-          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2">
+        <h2 id="modal-dam-title">댐 상세 정보</h2>
+        <button id="btn-modal-close" class="modal-close" type="button" aria-label="닫기">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2">
             <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         </button>
       </header>
-
       <div class="modal-body" id="modal-dam-content">
-        <!-- Populated by app.js on click -->
+        <!-- Populated on click -->
       </div>
     </div>
   </dialog>
 
   <!-- Footer -->
-  <footer class="platform-admin-footer">
-    <div class="footer-content">
-      <div class="footer-left">
-        <p><strong>K-DAM LIVE</strong> · 대한민국 댐별 저수율 실시간 종합 관제 시스템</p>
-        <p class="footer-sub">데이터 출처: 환경부 국립환경과학원 WAMIS & 한국수자원공사(K-water) 공공 수문 데이터</p>
-      </div>
-      <div class="footer-right">
-        <a href="https://github.com/agnusdei1207/k-dam-live" target="_blank" rel="noopener noreferrer" class="footer-link">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
-          </svg>
-          GitHub Repository
-        </a>
-        <span class="footer-divider">·</span>
-        <span class="footer-ver">v1.0.0 (Static Live Edge)</span>
-      </div>
+  <footer class="site-footer">
+    <div class="footer-container">
+      <span>K-DAM LIVE · 대한민국 댐별 저수율 실시간 현황판 (데이터 출처: K-water / 환경부 WAMIS)</span>
+      <a href="https://github.com/agnusdei1207/k-dam-live" target="_blank" rel="noopener noreferrer" class="footer-link">
+        GitHub Repository
+      </a>
     </div>
   </footer>
 
-  <!-- Core Scripts -->
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
 </body>

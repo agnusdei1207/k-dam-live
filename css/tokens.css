@@ -1,130 +1,90 @@
 /* ==========================================================================
-   K-DAM LIVE — Design System Tokens (Inspired by Codey Platform Admin)
+   K-DAM LIVE — Minimalist Design Tokens (Geist / shadcn style)
+   Clean, neutral, high-contrast, zero AI-gimmick palette
    ========================================================================== */
 
 :root {
   color-scheme: dark;
 
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Inter', 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Surfaces (Zinc / Neutral) */
+  --bg: #09090b;
+  --bg-subtle: #121215;
+  --surface: #18181b;
+  --surface-hover: #27272a;
+  --surface-active: #3f3f46;
+
+  /* Borders */
+  --border: #27272a;
+  --border-subtle: #1f1f23;
+  --border-strong: #3f3f46;
+
   /* Typography */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Pretendard', 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, Menlo, monospace;
+  --text: #f4f4f5;
+  --text-muted: #a1a1aa;
+  --text-subtle: #71717a;
 
-  /* Theme Surfaces (Dark Default) */
-  --bg: #090d13;
-  --bg-elevated: #0e141e;
-  --surface: #141c28;
-  --surface-raised: #1a2536;
-  --surface-soft: #202d42;
-  --surface-hover: #26364e;
+  /* Functional Accents (Subdued & Professional) */
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --primary-subtle: rgba(59, 130, 246, 0.12);
 
-  /* Text & Foreground */
-  --text: #e2e8f0;
-  --text-strong: #ffffff;
-  --muted: #8b9bb4;
-  --muted-strong: #cbd5e1;
-  --muted-soft: #64748b;
+  --badge-green-bg: rgba(16, 185, 129, 0.12);
+  --badge-green-text: #34d399;
+  --badge-green-border: rgba(16, 185, 129, 0.25);
 
-  /* Borders & Dividers */
-  --line: rgba(148, 163, 184, 0.14);
-  --line-strong: rgba(148, 163, 184, 0.26);
-  --line-focus: #38bdf8;
+  --badge-blue-bg: rgba(59, 130, 246, 0.12);
+  --badge-blue-text: #60a5fa;
+  --badge-blue-border: rgba(59, 130, 246, 0.25);
 
-  /* Brand & Status Colors */
-  --primary: #0284c7;
-  --primary-soft: #38bdf8;
-  --primary-hover: #0369a1;
-  --primary-wash: rgba(56, 189, 248, 0.12);
-  --primary-border: rgba(56, 189, 248, 0.28);
+  --badge-yellow-bg: rgba(245, 158, 11, 0.12);
+  --badge-yellow-text: #fbbf24;
+  --badge-yellow-border: rgba(245, 158, 11, 0.25);
 
-  --accent: #38bdf8;
-  --accent-cyan: #06b6d4;
-  --accent-blue: #3b82f6;
+  --badge-red-bg: rgba(239, 68, 68, 0.12);
+  --badge-red-text: #f87171;
+  --badge-red-border: rgba(239, 68, 68, 0.25);
 
-  --success: #10b981;
-  --success-soft: #34d399;
-  --success-wash: rgba(16, 185, 129, 0.12);
-  --success-border: rgba(16, 185, 129, 0.3);
-
-  --warning: #f59e0b;
-  --warning-soft: #fbbf24;
-  --warning-wash: rgba(245, 158, 11, 0.14);
-  --warning-border: rgba(245, 158, 11, 0.32);
-
-  --danger: #ef4444;
-  --danger-soft: #f87171;
-  --danger-wash: rgba(239, 68, 68, 0.14);
-  --danger-border: rgba(239, 68, 68, 0.32);
-
-  --orange: #f97316;
-  --orange-wash: rgba(249, 115, 22, 0.14);
-
-  /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 18px 55px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 20px rgba(56, 189, 248, 0.25);
-
-  /* Radii */
-  --radius-xs: 6px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 22px;
-  --radius-full: 9999px;
-
-  /* Layout Dimensions */
-  --header-height: 58px;
-  --max-content-width: 1440px;
+  --radius: 6px;
+  --radius-lg: 8px;
 }
 
-/* Light Theme Variables */
 :root[data-theme='light'] {
   color-scheme: light;
 
-  --bg: #f8fafc;
-  --bg-elevated: #ffffff;
+  --bg: #ffffff;
+  --bg-subtle: #f8fafc;
   --surface: #ffffff;
-  --surface-raised: #f1f5f9;
-  --surface-soft: #e2e8f0;
-  --surface-hover: #e2e8f0;
+  --surface-hover: #f1f5f9;
+  --surface-active: #e2e8f0;
 
-  --text: #1e293b;
-  --text-strong: #0f172a;
-  --muted: #64748b;
-  --muted-strong: #334155;
-  --muted-soft: #94a3b8;
+  --border: #e2e8f0;
+  --border-subtle: #f1f5f9;
+  --border-strong: #cbd5e1;
 
-  --line: rgba(51, 65, 85, 0.12);
-  --line-strong: rgba(51, 65, 85, 0.22);
-  --line-focus: #0284c7;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --text-subtle: #94a3b8;
 
-  --primary: #0284c7;
-  --primary-soft: #0369a1;
-  --primary-hover: #075985;
-  --primary-wash: rgba(2, 132, 199, 0.08);
-  --primary-border: rgba(2, 132, 199, 0.22);
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-subtle: rgba(37, 99, 235, 0.08);
 
-  --accent: #0284c7;
-  --accent-cyan: #0891b2;
-  --accent-blue: #2563eb;
+  --badge-green-bg: #ecfdf5;
+  --badge-green-text: #059669;
+  --badge-green-border: #a7f3d0;
 
-  --success: #059669;
-  --success-soft: #10b981;
-  --success-wash: rgba(5, 150, 105, 0.1);
-  --success-border: rgba(5, 150, 105, 0.25);
+  --badge-blue-bg: #eff6ff;
+  --badge-blue-text: #2563eb;
+  --badge-blue-border: #bfdbfe;
 
-  --warning: #d97706;
-  --warning-soft: #f59e0b;
-  --warning-wash: rgba(217, 119, 6, 0.1);
-  --warning-border: rgba(217, 119, 6, 0.25);
+  --badge-yellow-bg: #fffbeb;
+  --badge-yellow-text: #d97706;
+  --badge-yellow-border: #fde68a;
 
-  --danger: #dc2626;
-  --danger-soft: #ef4444;
-  --danger-wash: rgba(220, 38, 38, 0.1);
-  --danger-border: rgba(220, 38, 38, 0.25);
-
-  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 18px 50px rgba(15, 23, 42, 0.12);
-  --shadow-glow: 0 0 20px rgba(2, 132, 199, 0.15);
+  --badge-red-bg: #fef2f2;
+  --badge-red-text: #dc2626;
+  --badge-red-border: #fecaca;
 }
