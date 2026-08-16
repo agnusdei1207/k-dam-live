@@ -1180,11 +1180,17 @@ body {
 }
 
 /* ==========================================================================
-   8. RESPONSIVE BREAKPOINTS (PERFECT MOBILE EXPERIENCE)
+   8. COMPREHENSIVE RESPONSIVE BREAKPOINTS (FLAWLESS MOBILE & TABLET UX)
    ========================================================================== */
+
 @media (max-width: 1024px) {
+  .main-container {
+    padding: 20px 18px 48px;
+  }
+
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 
   .filter-bar {
@@ -1198,10 +1204,10 @@ body {
   }
 
   .basin-tabs {
-    align-self: flex-start;
+    width: 100%;
     overflow-x: auto;
-    max-width: 100%;
     scrollbar-width: none;
+    justify-content: flex-start;
   }
 
   .basin-tabs::-webkit-scrollbar {
@@ -1216,75 +1222,309 @@ body {
 
   .header-container {
     padding: 0 12px;
+    gap: 8px;
+  }
+
+  .brand-wrap {
+    gap: 6px;
   }
 
   .brand-tag {
     display: none;
   }
 
-  .main-container {
-    padding: 16px 12px 36px;
+  .brand-title {
+    font-size: 0.98rem;
   }
 
-  .page-intro h1 {
-    font-size: 1.35rem;
+  .header-actions {
+    gap: 6px;
   }
 
-  .page-intro p {
-    font-size: 0.84rem;
-  }
-
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-  }
-
-  .stat-card {
-    padding: 12px 14px;
-  }
-
-  .stat-card-value {
-    font-size: 1.25rem;
-  }
-
-  .filter-left {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: stretch;
-  }
-
-  .search-box {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .filter-select {
-    flex: 1;
-    min-width: 120px;
-  }
-
-  .basin-tabs {
-    width: 100%;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .modal-grid-4 {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 480px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
+  .live-badge {
+    padding: 4px 7px;
+    font-size: 0.72rem;
   }
 
   .btn-action span {
     display: none;
   }
 
-  .live-badge {
+  .btn-action {
+    padding: 0 8px;
+    height: 32px;
+  }
+
+  .btn-icon {
+    height: 32px;
+    padding: 0 8px;
+  }
+
+  .main-container {
+    padding: 14px 12px 40px;
+  }
+
+  .page-intro {
+    margin-bottom: 14px;
+  }
+
+  .page-intro h1 {
+    font-size: 1.28rem;
+  }
+
+  .page-intro p {
+    font-size: 0.80rem;
+  }
+
+  /* 2x2 Stats Grid on mobile */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .stat-card {
+    padding: 11px 12px;
+  }
+
+  .stat-card-label {
     font-size: 0.72rem;
-    padding: 4px 6px;
+  }
+
+  .stat-icon-wrap {
+    width: 26px;
+    height: 26px;
+  }
+
+  .stat-icon-wrap svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .stat-card-value {
+    font-size: 1.2rem;
+  }
+
+  .stat-card-desc {
+    font-size: 0.68rem;
+  }
+
+  /* Filter Controls */
+  .filter-bar {
+    margin-bottom: 12px;
+    gap: 8px;
+  }
+
+  .filter-left {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .search-box {
+    grid-column: span 2;
+    width: 100%;
+    min-width: 100%;
+    height: 36px;
+  }
+
+  .filter-select {
+    width: 100%;
+    height: 34px;
+    font-size: 0.78rem;
+    padding: 0 6px;
+  }
+
+  .basin-tabs {
+    display: flex;
+    width: 100%;
+    padding: 2px;
+    gap: 2px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    text-align: center;
+    padding: 5px 2px;
+    font-size: 0.74rem;
+  }
+
+  .geo-info-bar {
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    gap: 6px;
+  }
+
+  .geo-city-presets {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 0 2px;
+    gap: 4px;
+    scrollbar-width: none;
+  }
+
+  .geo-city-presets::-webkit-scrollbar {
+    display: none;
+  }
+
+  .btn-city-preset {
+    font-size: 0.70rem;
+    padding: 2px 7px;
+    flex-shrink: 0;
+  }
+
+  /* Table: Flawless Horizontal Scrolling */
+  .table-wrapper {
+    border-radius: var(--radius);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  .data-table {
+    min-width: 780px;
+    width: 100%;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 8px 6px;
+  }
+
+  /* Modal Inspector: Perfect Mobile Overlay */
+  .inspector-modal-panel {
+    width: 95%;
+    max-width: 95%;
+    max-height: 90vh;
+    border-radius: 12px;
+    margin: 12px auto;
+  }
+
+  .modal-header {
+    padding: 14px 16px;
+  }
+
+  .modal-header h2 {
+    font-size: 1.05rem;
+  }
+
+  .modal-body {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .modal-rate-hero {
+    padding: 12px 14px;
+  }
+
+  .modal-rate-big {
+    font-size: 1.65rem;
+  }
+
+  .modal-chart-card {
+    padding: 10px 12px;
+  }
+
+  .modal-chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .modal-period-tabs {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .btn-period-tab {
+    flex: 1;
+    text-align: center;
+    padding: 3px 2px;
+    font-size: 0.69rem;
+  }
+
+  .modal-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .modal-stat-box {
+    padding: 8px 10px;
+  }
+
+  .modal-stat-box span {
+    font-size: 0.68rem;
+    margin-bottom: 2px;
+  }
+
+  .modal-stat-box strong {
+    font-size: 0.90rem;
+  }
+
+  .modal-stat-box small {
+    font-size: 0.64rem;
+  }
+
+  .modal-specs-table td {
+    padding: 6px 8px;
+    font-size: 0.74rem;
+  }
+
+  .site-footer {
+    padding: 18px 12px;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+    font-size: 0.72rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .kr-badge {
+    display: none;
+  }
+
+  .brand-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .brand-title {
+    font-size: 0.92rem;
+  }
+
+  .live-badge {
+    padding: 3px 5px;
+    font-size: 0.68rem;
+  }
+
+  .live-badge .status-dot {
+    width: 5px;
+    height: 5px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .stat-card {
+    padding: 9px 10px;
+  }
+
+  .stat-card-value {
+    font-size: 1.12rem;
+  }
+
+  .modal-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
   }
 }
