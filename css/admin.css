@@ -909,9 +909,11 @@ body {
 
 .rate-val,
 .live-num {
-  transition: color 0.4s ease, transform 0.4s ease;
   display: inline-block;
-  background: transparent;
+  background: transparent !important;
+  box-shadow: none !important;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
+  will-change: transform, color, text-shadow;
 }
 
 .text-right { text-align: right; }
@@ -983,14 +985,7 @@ body {
   100% { transform: translateX(100%); }
 }
 
-/* Live Number Pure Text Glow & Scale Pulses (No background / Text Only) */
-.live-num {
-  display: inline-block;
-  background: transparent !important;
-  box-shadow: none !important;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
-  will-change: transform, color, text-shadow;
-}
+/* Live Number Pure Text Color Pulses (No background / Text Only) */
 
 .live-pulse-up {
   animation: livePulseUp 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
