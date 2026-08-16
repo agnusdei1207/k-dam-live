@@ -258,18 +258,89 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .stat-card:hover {
   border-color: var(--border-strong);
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.stat-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
 }
 
 .stat-card-label {
   font-size: 0.8rem;
   font-weight: 500;
   color: var(--text-muted);
-  margin-bottom: 5px;
+}
+
+.stat-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stat-card:hover .stat-icon-wrap {
+  transform: scale(1.1);
+}
+
+/* Icon Badges (Eye-comfortable warm & vibrant accents) */
+.icon-cyan {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.24);
+}
+
+.icon-blue {
+  background: rgba(129, 140, 248, 0.12);
+  color: #818cf8;
+  border: 1px solid rgba(129, 140, 248, 0.24);
+}
+
+.icon-emerald {
+  background: rgba(52, 211, 153, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.24);
+}
+
+.icon-amber {
+  background: rgba(251, 146, 60, 0.12);
+  color: #fb923c;
+  border: 1px solid rgba(251, 146, 60, 0.24);
+}
+
+:root[data-theme='light'] .icon-cyan {
+  background: #e0f2fe;
+  color: #0284c7;
+  border-color: #bae6fd;
+}
+
+:root[data-theme='light'] .icon-blue {
+  background: #ede9fe;
+  color: #6366f1;
+  border-color: #ddd6fe;
+}
+
+:root[data-theme='light'] .icon-emerald {
+  background: #d1fae5;
+  color: #059669;
+  border-color: #a7f3d0;
+}
+
+:root[data-theme='light'] .icon-amber {
+  background: #ffedd5;
+  color: #ea580c;
+  border-color: #fed7aa;
 }
 
 .stat-card-value {
@@ -283,7 +354,7 @@ body {
 .stat-card-desc {
   font-size: 0.76rem;
   color: var(--text-subtle);
-  margin-top: 5px;
+  margin-top: 4px;
 }
 
 /* ==========================================================================
