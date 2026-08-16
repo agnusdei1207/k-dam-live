@@ -4,24 +4,38 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>K-DAM LIVE | 대한민국 댐별 실시간 저수율 · 전국 댐 라이브 모니터링</title>
-  <meta name="description" content="대한민국 34개 주요 다목적댐 및 용수전용댐의 실시간 저수율, 전국 저수율, 수위, 유입량, 방류량 라이브 모니터링 및 24시간 변동 추이 현황" />
-  <meta name="keywords" content="실시간 저수율, 전국 저수율, 댐 라이브 모니터링, 댐 저수율 실시간, 전국 댐 현황, 소양강댐 저수율, 충주댐 수위, 대청댐 방류량, 안동댐 저수량, 가뭄 모니터링, K-water 실시간 수문, 환경부 WAMIS, 댐 방류 현황" />
+  <meta name="description" content="대한민국 34개 주요 다목적댐 및 용수전용댐의 실시간 저수율, 전국 저수율, 수위, 유입량, 방류량 라이브 모니터링 및 최대 5개년(2022~2026) 변동 추이 현황" />
+  <meta name="keywords" content="실시간 저수율, 전국 댐 저수율, 전국 저수율, 댐 라이브 모니터링, 댐 저수율 실시간, 전국 댐 현황, 소양강댐 저수율, 충주댐 수위, 대청댐 방류량, 안동댐 저수량, 주암댐 저수율, 용담댐, 합천댐, 남강댐, 가뭄 모니터링, K-water 실시간 수문, 환경부 WAMIS, 댐 방류 현황, 국가수문관측" />
   <meta name="author" content="agnusdei1207" />
-  <meta name="robots" content="index, follow" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
   <link rel="canonical" href="https://agnusdei1207.github.io/k-dam-live/" />
+
+  <!-- Geographic Meta Tags -->
+  <meta name="geo.region" content="KR" />
+  <meta name="geo.placename" content="Republic of Korea" />
+  <meta name="revisit-after" content="1 days" />
+
+  <!-- PWA & Mobile Optimization -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="K-DAM LIVE" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
   <!-- Theme Color -->
   <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
-  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#fcfaf6" media="(prefers-color-scheme: light)" />
 
-  <!-- Open Graph -->
+  <!-- Open Graph / Kakao / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="K-DAM LIVE" />
   <meta property="og:locale" content="ko_KR" />
   <meta property="og:url" content="https://agnusdei1207.github.io/k-dam-live/" />
   <meta property="og:title" content="K-DAM LIVE | 대한민국 댐별 실시간 저수율 · 전국 댐 라이브 모니터링" />
-  <meta property="og:description" content="대한민국 34개 주요 댐 실시간 저수율, 전국 저수율, 수위, 유입·방류량 라이브 모니터링 콘솔" />
+  <meta property="og:description" content="대한민국 34개 주요 댐 실시간 저수율, 전국 저수율, 수위, 유입·방류량 라이브 모니터링 및 5개년 시계열 추이" />
   <meta property="og:image" content="https://agnusdei1207.github.io/k-dam-live/favicon.svg" />
+  <meta property="og:image:type" content="image/svg+xml" />
+  <meta property="og:image:alt" content="K-DAM LIVE 실시간 댐 수문 현황 로고" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary" />
@@ -33,7 +47,7 @@
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="css/admin.css" />
 
-  <!-- Structured Data (JSON-LD) -->
+  <!-- Structured Data (JSON-LD) for Rich Search Snippets & Sitelinks -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -46,7 +60,26 @@
         "description": "대한민국 34개 주요 댐의 실시간 저수율 및 수문 관측 대시보드",
         "applicationCategory": "PublicSafetyApplication",
         "operatingSystem": "All",
-        "inLanguage": "ko"
+        "inLanguage": "ko",
+        "featureList": [
+          "15분 단위 실시간 저수율 및 수위 관측",
+          "최대 5개년(2022~2026) 다기간 변동 추이 차트",
+          "GPS 위치 기반 사용자 최근접 댐 자동 정렬",
+          "엑셀 호환 UTF-8 BOM CSV 데이터 다운로드"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://agnusdei1207.github.io/k-dam-live/#website",
+        "url": "https://agnusdei1207.github.io/k-dam-live/",
+        "name": "K-DAM LIVE",
+        "description": "대한민국 댐별 실시간 저수율 및 수문 라이브 모니터링",
+        "inLanguage": "ko",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://agnusdei1207.github.io/k-dam-live/?search={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
       },
       {
         "@type": "Dataset",
@@ -54,8 +87,38 @@
         "name": "대한민국 댐별 실시간 수문 관측 데이터셋",
         "description": "한강, 낙동강, 금강, 영산강·섬진강 4대 수계 34개 댐의 수위, 저수율, 유입량, 방류량 관측 데이터",
         "spatialCoverage": "KR",
-        "temporalCoverage": "2026/..",
-        "keywords": ["저수율", "수위", "유입량", "방류량", "수문관측"]
+        "temporalCoverage": "2022/2026",
+        "keywords": ["실시간 저수율", "전국 저수율", "수위", "유입량", "방류량", "수문관측"]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://agnusdei1207.github.io/k-dam-live/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "전국 댐 저수율 데이터는 얼마나 자주 갱신되나요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "K-DAM LIVE는 15분 주기로 대한민국 34개 주요 다목적댐 및 용수전용댐의 실시간 수위, 저수율, 유입량, 방류량 데이터를 수집 및 갱신합니다."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "특정 댐의 과거 저수율 변동 추이를 확인할 수 있나요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "테이블에서 원하는 댐을 클릭하면 24시간, 30일, 1년, 3년, 최대 5개년(2022~2026)의 장기 시계열 저수율 변동 추이 인터랙티브 차트를 즉시 조회할 수 있습니다."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "내 위치에서 가장 가까운 댐 순으로 볼 수 있나요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "상단 헤더의 GPS 아이콘 또는 지역 프리셋 버튼(춘천, 대전, 광주, 순천, 대구 등)을 클릭하면 현재 위치 기준 거리(km) 계산 및 최근접 댐 순으로 즉시 정렬됩니다."
+            }
+          }
+        ]
       }
     ]
   }

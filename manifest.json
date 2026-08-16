@@ -1,0 +1,20 @@
+{
+  "name": "K-DAM LIVE | 대한민국 댐별 실시간 저수율",
+  "short_name": "K-DAM LIVE",
+  "description": "대한민국 34개 주요 댐 실시간 저수율, 전국 저수율, 수위, 유입·방류량 라이브 모니터링",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["utilities", "news", "weather"],
+  "lang": "ko-KR"
+}
