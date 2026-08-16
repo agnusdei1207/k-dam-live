@@ -782,21 +782,21 @@
 
     classifyStatus(rate, outflow, currentLevel, floodLevel) {
       if (currentLevel >= floodLevel * 0.98) {
-        return { code: 'FLOOD', label: '홍수주의 ⚠️', class: 'status-tag-flood' };
+        return { code: 'FLOOD', label: '홍수주의', class: 'status-tag-flood' };
       }
       if (outflow >= 20.0) {
-        return { code: 'DISCHARGE', label: '수문방류 🌊', class: 'status-tag-discharge' };
+        return { code: 'DISCHARGE', label: '수문방류', class: 'status-tag-discharge' };
       }
       if (rate < 40.0) {
-        return { code: 'DROUGHT_ALERT', label: '가뭄경계 🔴', class: 'status-tag-alert' };
+        return { code: 'DROUGHT_ALERT', label: '가뭄경계', class: 'status-tag-alert' };
       }
       if (rate < 50.0) {
-        return { code: 'DROUGHT_CAUTION', label: '가뭄주의 🟡', class: 'status-tag-caution' };
+        return { code: 'DROUGHT_CAUTION', label: '가뭄주의', class: 'status-tag-caution' };
       }
       if (rate < 60.0) {
-        return { code: 'DROUGHT_ATTENTION', label: '가뭄관심 🔵', class: 'status-tag-caution' };
+        return { code: 'DROUGHT_ATTENTION', label: '가뭄관심', class: 'status-tag-caution' };
       }
-      return { code: 'NORMAL', label: '정상 🟢', class: 'status-tag-normal' };
+      return { code: 'NORMAL', label: '정상', class: 'status-tag-normal' };
     }
 
     generateHourlyTrend(currentRate, normalLevel, lowLevel) {

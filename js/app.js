@@ -183,7 +183,7 @@
 
       if (dam.currentOutflow >= 20) {
         badgeClass = 'badge-blue';
-        badgeLabel = '방류중';
+        badgeLabel = '수문방류';
         barColor = 'var(--badge-blue-text)';
       } else if (dam.storageRate < 40) {
         badgeClass = 'badge-red';
@@ -218,7 +218,7 @@
               </div>
             </div>
           </td>
-          <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
+          <td><span class="badge ${badgeClass}"><span class="badge-dot"></span>${badgeLabel}</span></td>
           <td class="text-right num" style="color: ${diffColor}">${diffSign}${dam.diffPrevYear}%p</td>
           <td class="text-right num">
             <strong>${dam.currentWaterLevel.toFixed(1)}</strong> <small style="color:var(--text-subtle)">/ ${dam.normalFullLevel}m</small>
@@ -290,7 +290,7 @@
             <span class="modal-rate-label">현재 저수율</span>
             <div class="modal-rate-big">${dam.storageRate}%</div>
           </div>
-          <span class="badge ${badgeClass}">${badgeLabel}</span>
+          <span class="badge ${badgeClass}"><span class="badge-dot"></span>${badgeLabel}</span>
         </div>
         <div class="modal-rate-bar-track">
           <div class="modal-rate-bar-fill" style="width: ${Math.min(100, dam.storageRate)}%; background: ${barColor};"></div>
