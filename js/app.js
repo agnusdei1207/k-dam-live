@@ -21,7 +21,7 @@
     return;
   }
 
-  const AUTO_REFRESH_INTERVAL_MS = 60 * 60 * 1000; // 1 hour (3,600,000 ms)
+  const AUTO_REFRESH_INTERVAL_MS = 15 * 60 * 1000; // 15 minutes (900,000 ms)
 
   const state = {
     activeBasin: 'ALL',
