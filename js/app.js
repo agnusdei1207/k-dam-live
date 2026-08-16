@@ -107,19 +107,69 @@
     const data = telemetryService.currentData;
     if (!data || data.length === 0) return;
 
-    // Pick 1 or 2 random dams to pulse live telemetry
+    // Pick 1~2 random dams to pulse live telemetry
     const targetDam = data[Math.floor(Math.random() * data.length)];
     const deltaInflow = parseFloat((Math.random() * 0.8 - 0.4).toFixed(1));
-    const deltaOutflow = targetDam.currentOutflow >= 20 ? parseFloat((Math.random() * 0.6 - 0.3).toFixed(1)) : parseFloat((Math.random() * 0.2 - 0.1).toFixed(1));
+    const deltaOutflow = targetDam.currentOutflow >= 20
+      ? parseFloat((Math.random() * 0.6 - 0.3).toFixed(1))
+      : parseFloat((Math.random() * 0.2 - 0.1).toFixed(1));
+    const deltaWaterLevel = parseFloat((Math.random() * 0.04 - 0.02).toFixed(2));
+    const deltaRate = parseFloat((Math.random() * 0.06 - 0.03).toFixed(2));
 
     targetDam.currentInflow = Math.max(0.1, parseFloat((targetDam.currentInflow + deltaInflow).toFixed(1)));
     targetDam.currentOutflow = Math.max(0.0, parseFloat((targetDam.currentOutflow + deltaOutflow).toFixed(1)));
+    targetDam.currentWaterLevel = parseFloat((targetDam.currentWaterLevel + deltaWaterLevel).toFixed(1));
+    targetDam.storageRate = Math.min(100, Math.max(5, parseFloat((targetDam.storageRate + deltaRate).toFixed(1))));
+    targetDam.currentStorageVolume = Math.round((targetDam.totalStorage * targetDam.storageRate) / 100);
 
-    // Momentarily flash the table cell if visible
+    // Momentarily flash the table cells if visible
     const rowEl = document.querySelector(`tr[data-dam-id="${targetDam.id}"]`);
     if (rowEl) {
-      const inflowCell = rowEl.children[8]; // inflow
-      const outflowCell = rowEl.children[9]; // outflow
+      // 1. Rate Cell (Col index 3)
+      const rateCell = rowEl.children[3];
+      if (rateCell) {
+        const rateValEl = rateCell.querySelector('.rate-val');
+        const rateBarFill = rateCell.querySelector('.rate-bar-fill');
+        if (rateValEl) {
+          rateValEl.textContent = `${targetDam.storageRate.toFixed(1)}%`;
+          const flashClass = deltaRate >= 0 ? 'cell-flash-up' : 'cell-flash-down';
+          rateValEl.classList.remove('cell-flash-up', 'cell-flash-down');
+          void rateValEl.offsetWidth;
+          rateValEl.classList.add(flashClass);
+          setTimeout(() => rateValEl.classList.remove(flashClass), 1600);
+        }
+        if (rateBarFill) {
+          rateBarFill.style.width = `${Math.min(100, targetDam.storageRate)}%`;
+        }
+      }
+
+      // 2. Water Level Cell (Col index 6)
+      const waterLevelCell = rowEl.children[6];
+      if (waterLevelCell) {
+        const strongEl = waterLevelCell.querySelector('strong');
+        if (strongEl) {
+          strongEl.textContent = targetDam.currentWaterLevel.toFixed(1);
+          const flashClass = deltaWaterLevel >= 0 ? 'cell-flash-up' : 'cell-flash-down';
+          strongEl.classList.remove('cell-flash-up', 'cell-flash-down');
+          void strongEl.offsetWidth;
+          strongEl.classList.add(flashClass);
+          setTimeout(() => strongEl.classList.remove(flashClass), 1600);
+        }
+      }
+
+      // 3. Storage Volume Cell (Col index 7)
+      const storageVolCell = rowEl.children[7];
+      if (storageVolCell) {
+        storageVolCell.textContent = targetDam.currentStorageVolume.toLocaleString();
+        const flashClass = deltaRate >= 0 ? 'cell-flash-up' : 'cell-flash-down';
+        storageVolCell.classList.remove('cell-flash-up', 'cell-flash-down');
+        void storageVolCell.offsetWidth;
+        storageVolCell.classList.add(flashClass);
+        setTimeout(() => storageVolCell.classList.remove(flashClass), 1600);
+      }
+
+      // 4. Inflow Cell (Col index 8)
+      const inflowCell = rowEl.children[8];
       if (inflowCell) {
         inflowCell.textContent = targetDam.currentInflow.toFixed(1);
         const flashClass = deltaInflow >= 0 ? 'cell-flash-up' : 'cell-flash-down';
@@ -128,6 +178,9 @@
         inflowCell.classList.add(flashClass);
         setTimeout(() => inflowCell.classList.remove(flashClass), 1600);
       }
+
+      // 5. Outflow Cell (Col index 9)
+      const outflowCell = rowEl.children[9];
       if (outflowCell) {
         outflowCell.textContent = targetDam.currentOutflow.toFixed(1);
         const flashClass = deltaOutflow >= 0 ? 'cell-flash-up' : 'cell-flash-down';
