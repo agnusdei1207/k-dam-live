@@ -818,11 +818,57 @@
   ];
 
   /**
-   * Distance Calculation Helper using Haversine Formula (Returns km)
+   * Comprehensive Dictionary of Korean Metropolitan Cities, Counties & Districts with Authentic WGS84 GPS Coordinates
+   */
+  const KOREA_REGIONS = [
+    { name: '광주광역시', shortName: '광주', lat: 35.1595, lng: 126.8526 },
+    { name: '전남 순천시 (주암·상사)', shortName: '순천/주암', lat: 34.9506, lng: 127.4872 },
+    { name: '전남 순천시 주암면', shortName: '주암면', lat: 35.0567, lng: 127.2383 },
+    { name: '전남 화순군 (동복호)', shortName: '화순/동복', lat: 35.0644, lng: 126.9864 },
+    { name: '전남 장성군 (평림호)', shortName: '장성/평림', lat: 35.3016, lng: 126.7847 },
+    { name: '전남 여수시', shortName: '여수', lat: 34.7604, lng: 127.6622 },
+    { name: '전남 광양시 (수어호)', shortName: '광양', lat: 34.9407, lng: 127.6959 },
+    { name: '전남 나주시', shortName: '나주', lat: 35.0161, lng: 126.7108 },
+    { name: '전남 목포시', shortName: '목포', lat: 34.8118, lng: 126.3922 },
+    { name: '전남 장흥군 (장흥댐)', shortName: '장흥', lat: 34.6817, lng: 126.9070 },
+    { name: '전남 담양군', shortName: '담양', lat: 35.3212, lng: 126.9882 },
+    { name: '전남 보성군', shortName: '보성', lat: 34.7714, lng: 127.0799 },
+    { name: '전북 전주시', shortName: '전주', lat: 35.8242, lng: 127.1480 },
+    { name: '전북 익산시', shortName: '익산', lat: 35.9483, lng: 126.9576 },
+    { name: '전북 군산시', shortName: '군산', lat: 35.9676, lng: 126.7366 },
+    { name: '전북 임실군 (섬진강댐)', shortName: '임실/섬진강', lat: 35.6178, lng: 127.2789 },
+    { name: '전북 진안군 (용담댐)', shortName: '진안/용담', lat: 35.7917, lng: 127.4248 },
+    { name: '전북 부안군 (부안댐)', shortName: '부안', lat: 35.7317, lng: 126.7333 },
+    { name: '서울특별시', shortName: '서울', lat: 37.5665, lng: 126.9780 },
+    { name: '인천광역시', shortName: '인천', lat: 37.4563, lng: 126.7052 },
+    { name: '경기 수원시', shortName: '수원', lat: 37.2636, lng: 127.0286 },
+    { name: '경기 성남시', shortName: '성남/분당', lat: 37.4201, lng: 127.1265 },
+    { name: '대전광역시 (대청댐)', shortName: '대전', lat: 36.3504, lng: 127.3845 },
+    { name: '세종특별자치시', shortName: '세종', lat: 36.4800, lng: 127.2890 },
+    { name: '충북 청주시', shortName: '청주', lat: 36.6424, lng: 127.4890 },
+    { name: '충북 충주시 (충주댐)', shortName: '충주', lat: 36.9910, lng: 127.9259 },
+    { name: '충남 천안시', shortName: '천안', lat: 36.8151, lng: 127.1139 },
+    { name: '충남 보령시 (보령댐)', shortName: '보령', lat: 36.3333, lng: 126.6128 },
+    { name: '대구광역시', shortName: '대구', lat: 35.8714, lng: 128.6014 },
+    { name: '경북 안동시 (안동·임하댐)', shortName: '안동', lat: 36.5684, lng: 128.7294 },
+    { name: '경북 포항시', shortName: '포항', lat: 36.0190, lng: 129.3435 },
+    { name: '경북 구미시', shortName: '구미', lat: 36.1195, lng: 128.3446 },
+    { name: '경북 경주시', shortName: '경주', lat: 35.8562, lng: 129.2247 },
+    { name: '부산광역시', shortName: '부산', lat: 35.1796, lng: 129.0756 },
+    { name: '울산광역시 (사연·대암댐)', shortName: '울산', lat: 35.5384, lng: 129.3114 },
+    { name: '경남 창원시', shortName: '창원', lat: 35.2280, lng: 128.6811 },
+    { name: '경남 진주시 (남강댐)', shortName: '진주', lat: 35.1802, lng: 128.1076 },
+    { name: '강원특별자치도 춘천시 (소양강댐)', shortName: '춘천', lat: 37.8813, lng: 127.7298 },
+    { name: '강원특별자치도 원주시', shortName: '원주', lat: 37.3422, lng: 127.9202 },
+    { name: '강원특별자치도 강릉시', shortName: '강릉', lat: 37.7519, lng: 128.8761 }
+  ];
+
+  /**
+   * Spherical Haversine Great-Circle Distance Calculator (Returns km)
    */
   function calcDistanceKm(lat1, lon1, lat2, lon2) {
     if (!lat1 || !lon1 || !lat2 || !lon2) return null;
-    const R = 6371; // Earth's mean radius in km
+    const R = 6371; // Earth mean radius in km
     const dLat = (lat2 - lat1) * (Math.PI / 180);
     const dLon = (lon2 - lon1) * (Math.PI / 180);
     const a = (
@@ -988,6 +1034,7 @@
     BASINS,
     DAM_TYPES,
     DAMS_DATABASE,
+    KOREA_REGIONS,
     calcDistanceKm,
     telemetryService
   };
