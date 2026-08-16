@@ -1,20 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
   <defs>
-    <linearGradient id="drop-fill" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="kdam-brand-grad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#38bdf8"/>
-      <stop offset="100%" stop-color="#2563eb"/>
-    </linearGradient>
-    <linearGradient id="drop-accent" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.9"/>
-      <stop offset="100%" stop-color="#1d4ed8" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#0284c7"/>
     </linearGradient>
   </defs>
 
-  <!-- Transparent Background Water Drop Icon -->
-  <path d="M32 4 C32 4, 52 26, 52 40 C52 51.05 43.05 60 32 60 C20.95 60 12 51.05 12 40 C12 26, 32 4, 32 4 Z" fill="url(#drop-fill)"/>
+  <!-- Water Drop Outline & Body -->
+  <path d="M12 2.5 C12 2.5, 19.5 11, 19.5 15.8 C19.5 19.8 16.1 23 12 23 C7.9 23 4.5 19.8 4.5 15.8 C4.5 11, 12 2.5, 12 2.5 Z" fill="url(#kdam-brand-grad)" stroke="#0284c7" stroke-width="1.2" stroke-linejoin="round"/>
   
   <!-- Dam Wall & Wave Levels inside Drop -->
-  <path d="M19 40 C24 37, 30 37, 35 40 C39 42.5, 45 42.5, 49 40" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
-  <path d="M22 47 C26 45, 30 45, 34 47 C38 49, 42 49, 46 47" stroke="rgba(255,255,255,0.75)" stroke-width="2.5" stroke-linecap="round"/>
-  <circle cx="38" cy="20" r="3" fill="#ffffff" fill-opacity="0.6"/>
+  <path d="M7.5 15.5 C9.5 14.2, 11.5 14.2, 13.5 15.5 C15 16.5, 16.5 16.5, 17.5 15.5" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M8.5 18.5 C10.2 17.5, 12 17.5, 13.8 18.5 C15 19.2, 16.2 19.2, 17 18.5" stroke="rgba(255,255,255,0.75)" stroke-width="1.4" stroke-linecap="round"/>
+  <circle cx="14.5" cy="8.5" r="1.2" fill="#ffffff" fill-opacity="0.75"/>
 </svg>
