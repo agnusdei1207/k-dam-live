@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#09090b"/>
+      <stop offset="50%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#030712"/>
+    </linearGradient>
+
+    <!-- Water Drop Gradient -->
+    <linearGradient id="water-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+
+    <!-- Wave Glow -->
+    <linearGradient id="wave-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#10b981" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#0284c7" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg-grad)"/>
+
+  <!-- Subtle Water Wave in Background -->
+  <path d="M 0 460 Q 300 410, 600 470 T 1200 440 L 1200 630 L 0 630 Z" fill="url(#wave-grad)"/>
+  <path d="M 0 510 Q 350 470, 700 520 T 1200 490 L 1200 630 L 0 630 Z" fill="#0284c7" fill-opacity="0.15"/>
+
+  <!-- Left Side: Icon Container -->
+  <g transform="translate(100, 140)">
+    <!-- Glow behind logo -->
+    <circle cx="95" cy="115" r="110" fill="#38bdf8" fill-opacity="0.15" filter="blur(20px)"/>
+    
+    <!-- Water Drop Graphic -->
+    <path d="M95 10 C95 10, 175 90, 175 145 C175 190, 140 225, 95 225 C50 225, 15 190, 15 145 C15 90, 95 10, 95 10 Z" 
+          fill="url(#water-grad)" stroke="#38bdf8" stroke-width="3" stroke-linejoin="round"/>
+    
+    <!-- Waves inside drop -->
+    <path d="M45 145 C68 132, 92 132, 115 145 C132 155, 148 155, 160 145" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+    <path d="M55 175 C72 165, 90 165, 108 175 C122 182, 136 182, 145 175" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-opacity="0.8"/>
+    <circle cx="120" cy="70" r="10" fill="#ffffff" fill-opacity="0.75"/>
+  </g>
+
+  <!-- Right Side: Typography & Metadata -->
+  <g transform="translate(340, 150)">
+    <!-- Category Chip -->
+    <rect x="0" y="0" width="180" height="36" rx="18" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <circle cx="18" cy="18" r="5" fill="#10b981"/>
+    <text x="32" y="23" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif" font-size="14" font-weight="700" letter-spacing="1">LIVE TELEMETRY</text>
+
+    <!-- Main Title -->
+    <text x="0" y="90" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Noto Sans KR', sans-serif" font-size="52" font-weight="800" letter-spacing="-1">
+      K-DAM LIVE
+    </text>
+
+    <!-- Korean Subtitle -->
+    <text x="0" y="145" fill="#38bdf8" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Noto Sans KR', sans-serif" font-size="28" font-weight="700">
+      대한민국 댐별 실시간 저수율 모니터링
+    </text>
+
+    <!-- Description -->
+    <text x="0" y="195" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Noto Sans KR', sans-serif" font-size="19" font-weight="400">
+      전국 34개 주요 댐 실시간 수위 · 유입·방류량 및 최대 5개년 시계열 추이 분석
+    </text>
+
+    <!-- 3 Key Highlights Badges -->
+    <g transform="translate(0, 240)">
+      <!-- Badge 1 -->
+      <rect x="0" y="0" width="220" height="42" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+      <text x="110" y="26" fill="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="15" font-weight="600" text-anchor="middle">🌊 전국 4대 수계 34개 댐</text>
+
+      <!-- Badge 2 -->
+      <rect x="235" y="0" width="200" height="42" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+      <text x="335" y="26" fill="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="15" font-weight="600" text-anchor="middle">⏱️ 15분 주기 실시간 갱신</text>
+
+      <!-- Badge 3 -->
+      <rect x="450" y="0" width="230" height="42" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+      <text x="565" y="26" fill="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="15" font-weight="600" text-anchor="middle">📍 내 위치 최근접 댐 정렬</text>
+    </g>
+  </g>
+
+  <!-- Bottom Brand Footer Line -->
+  <line x1="100" y1="560" x2="1100" y2="560" stroke="#334155" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="100" y="590" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14">https://agnusdei1207.github.io/k-dam-live</text>
+  <text x="1100" y="590" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14" text-anchor="end">환경부 WAMIS · K-water 실시간 수문 데이터</text>
+</svg>
