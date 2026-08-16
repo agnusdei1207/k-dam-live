@@ -79,6 +79,10 @@
     initTheme();
     updateTimestamp();
     initEvents();
+
+    // Check and restore cached GPS coordinates if previously enabled
+    loadCachedLocation();
+
     renderAll();
 
     telemetryService.subscribe(() => {
@@ -92,10 +96,46 @@
       updateTimestamp();
     }, AUTO_REFRESH_INTERVAL_MS);
 
-    // Initial GPS location prompt on access
+    // Initial GPS location check on access
     setTimeout(() => {
       requestUserLocation(true);
     }, 400);
+  }
+
+  function loadCachedLocation() {
+    try {
+      const savedLoc = localStorage.getItem('kdam_user_location');
+      const isGeoSaved = localStorage.getItem('kdam_geo_active');
+      if (savedLoc && isGeoSaved === 'true') {
+        const { lat, lng } = JSON.parse(savedLoc);
+        if (typeof lat === 'number' && typeof lng === 'number') {
+          state.userLocation = { lat, lng };
+          state.isGeoActive = true;
+          state.sortField = 'distanceKm';
+          state.sortOrder = 'asc';
+          telemetryService.updateUserLocation(lat, lng);
+
+          const sorted = [...telemetryService.currentData].sort(
+            (a, b) => (a.distanceKm ?? 9999) - (b.distanceKm ?? 9999)
+          );
+          const nearest = sorted[0];
+
+          if (elements.btnHeaderGps) {
+            elements.btnHeaderGps.classList.add('active');
+            elements.btnHeaderGps.setAttribute('title', '내 위치 기준 정렬 활성화됨 (클릭 시 해제)');
+          }
+
+          if (elements.geoInfoBar) {
+            elements.geoInfoBar.classList.remove('hidden');
+            if (elements.geoInfoText && nearest) {
+              elements.geoInfoText.innerHTML = `현재 위치에서 가장 가까운 댐은 <strong>${nearest.name}</strong>(약 <span class="num">${nearest.distanceKm}km</span>)입니다. 가까운 순서대로 정렬되었습니다.`;
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to load cached location', e);
+    }
   }
 
   function updateTimestamp() {
@@ -150,6 +190,16 @@
         state.sortField = 'distanceKm';
         state.sortOrder = 'asc';
 
+        // Persist coordinates and active status to localStorage
+        try {
+          localStorage.setItem('kdam_user_location', JSON.stringify({
+            lat: latitude,
+            lng: longitude,
+            updatedAt: Date.now()
+          }));
+          localStorage.setItem('kdam_geo_active', 'true');
+        } catch (e) {}
+
         telemetryService.updateUserLocation(latitude, longitude);
 
         // Find the closest dam
@@ -193,6 +243,10 @@
     state.isGeoActive = false;
     state.sortField = 'storageRate';
     state.sortOrder = 'desc';
+
+    try {
+      localStorage.setItem('kdam_geo_active', 'false');
+    } catch (e) {}
 
     if (elements.btnHeaderGps) {
       elements.btnHeaderGps.classList.remove('active');
