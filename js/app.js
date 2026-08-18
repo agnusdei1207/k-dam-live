@@ -772,18 +772,13 @@
 
     const modal = elements.modalInspector || document.getElementById('dam-inspector-modal');
     if (modal) {
-      // Scroll modal content to top on open
+      const panel = modal.querySelector('.inspector-modal-panel');
+      if (panel) panel.scrollTop = 0;
       const body = modal.querySelector('.modal-body');
       if (body) body.scrollTop = 0;
 
       modal.classList.add('active');
       modal.setAttribute('aria-hidden', 'false');
-      // Lock background scroll (position:fixed for iOS Safari)
-      document.body.dataset.scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${window.scrollY}px`;
-      document.body.style.left = '0';
-      document.body.style.right = '0';
       document.body.style.overflow = 'hidden';
     }
   }
@@ -793,14 +788,7 @@
     if (modal) {
       modal.classList.remove('active');
       modal.setAttribute('aria-hidden', 'true');
-      // Restore background scroll
-      const scrollY = parseInt(document.body.dataset.scrollY || '0', 10);
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.left = '';
-      document.body.style.right = '';
       document.body.style.overflow = '';
-      window.scrollTo(0, scrollY);
     }
   }
 
