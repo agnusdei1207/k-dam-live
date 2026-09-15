@@ -49,12 +49,12 @@ v1.x 사이트는 `js/data.js` 에 36개 댐의 저수율·수위·유입·방�
 | 주암댐 값 일치 | 포털 `getVers` ITEM22=47.1, `getHydr` 최신행 DATA7=47.1, live.json `jwam.current.storageRate=47.1` | 통과 |
 | 시뮬레이션 잔재 0 | `grep -rn "Math.random\|baseRate\|simulateLiveTick\|hourlyTrend\|LIVE_EVENT_FEED" js/ index.html` → 0건 | 통과 |
 | 헤드리스 렌더 | jsdom 스모크: 36행, 상태 배지 분포 정상 11/방류 5/가뭄 19/홍수조절 1, 필터·검색·정렬·모달 5기간(25/31/366/366/366점)·EN 전환·GPS·CSV 36행, `ERRORS: none` | 통과 |
-| 워크플로 | `.github/workflows/deploy-pages.yml`: `schedule: '20 * * * *'`, deploy job 의 `npm run fetch` 실패 시 후속 단계 미실행. 실배포 확인은 푸시 후 Actions 실행 결과로 갱신 | 통과 (배포 확인은 아래 남은 것) |
+| 워크플로 | Actions run 34955408022 (commit baa5cc9) success, 1분 4초. 배포 후 `https://agnusdei1207.github.io/k-dam-live/data/live.json` HTTP 200, generatedAt 2026-09-15T09:59Z, 36/36 댐, 주암댐 47.1%; `index.html` 이 `js/registry.js` 를 참조하고 배포된 `data.js` 에 `Math.random` 0건 | 통과 |
 | 낡은 문구 0 | `grep -n "34\|15분" index.html README.md manifest.json og-image.svg js/i18n.js` → 0건 | 통과 |
 
 구조 지도 변경: `js/registry.js`(댐 목록 정본)·`scripts/fetch-dam-data.mjs`·`docs/` 신설, `js/data.js` 는 시뮬레이터에서 로더로 교체. `docs/ARCHITECTURE.md` 참조.
 
-남은 것: 첫 실배포 후 Pages URL 에서 `data/live.json` 응답과 표 렌더를 확인해 이 표를 갱신한다.
+남은 것: 없음. 다음 정시 cron(매시 :20 UTC) 실행이 성공하는지 한 번 더 확인하면 운영 안정성이 입증된다.
 
 남는 위험: 포털이 AJAX 응답 형식을 바꾸면 수집이 실패한다. 실패는 워크플로 실패로 드러나고 직전 배포본이 유지된다. 배포 시각과 포털 관측 시각 사이 최대 약 1시간 지연이 있다.
 
