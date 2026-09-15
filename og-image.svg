@@ -63,18 +63,18 @@
 
     <!-- Description -->
     <text x="0" y="195" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Noto Sans KR', sans-serif" font-size="19" font-weight="400">
-      전국 34개 주요 댐 실시간 수위 · 유입·방류량 및 최대 5개년 시계열 추이 분석
+      전국 36개 댐 수위 · 유입·방류량 및 최근 5년 저수율 추이 (K-water 물정보포털 관측 자료)
     </text>
 
     <!-- 3 Key Highlights Badges -->
     <g transform="translate(0, 240)">
       <!-- Badge 1 -->
       <rect x="0" y="0" width="220" height="42" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
-      <text x="110" y="26" fill="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="15" font-weight="600" text-anchor="middle">🌊 전국 4대 수계 34개 댐</text>
+      <text x="110" y="26" fill="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="15" font-weight="600" text-anchor="middle">🌊 전국 4대 수계 36개 댐</text>
 
       <!-- Badge 2 -->
       <rect x="235" y="0" width="200" height="42" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
-      <text x="335" y="26" fill="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="15" font-weight="600" text-anchor="middle">⏱️ 15분 주기 실시간 갱신</text>
+      <text x="335" y="26" fill="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="15" font-weight="600" text-anchor="middle">⏱️ 매시간 관측 자료 갱신</text>
 
       <!-- Badge 3 -->
       <rect x="450" y="0" width="230" height="42" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>

@@ -1,7 +1,7 @@
 {
   "name": "K-DAM LIVE | 대한민국 댐별 실시간 저수율",
   "short_name": "K-DAM LIVE",
-  "description": "대한민국 34개 주요 댐 실시간 저수율, 전국 저수율, 수위, 유입·방류량 라이브 모니터링",
+  "description": "대한민국 36개 댐 저수율, 수위, 유입·방류량 현황 (K-water 물정보포털 관측 자료)",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#09090b",

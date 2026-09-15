@@ -32,3 +32,6 @@ Thumbs.db
 node_modules/
 dist/
 .cache/
+
+# Generated at build time by scripts/fetch-dam-data.mjs (never committed)
+data/

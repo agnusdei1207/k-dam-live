@@ -1,5 +1,7 @@
-name: CI/CD & Deploy GitHub Pages
+name: Build Data & Deploy GitHub Pages
 
+# Deploys on every push to main and, on a schedule, rebuilds the site with a fresh
+# K-water snapshot every hour (data/*.json are generated at build time, never committed).
 on:
   push:
     branches:
@@ -7,6 +9,8 @@ on:
   pull_request:
     branches:
       - main
+  schedule:
+    - cron: '20 * * * *'   # every hour at :20 UTC — MyWater publishes hourly rows shortly after the hour (KST)
   workflow_dispatch:
 
 permissions:
@@ -33,13 +37,11 @@ jobs:
           node-version: '20'
 
       - name: Validate JavaScript Syntax
-        run: |
-          node --check js/data.js
-          node --check js/app.js
+        run: npm run check
 
-  # 2. CD Deploy Gate (Main branch only)
+  # 2. Build data + Deploy (main branch only)
   deploy:
-    name: Deploy to GitHub Pages
+    name: Fetch K-water Data & Deploy to GitHub Pages
     needs: validate
     if: github.ref == 'refs/heads/main'
     environment:
@@ -49,6 +51,23 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch live dam data from K-water MyWater
+        run: npm run fetch
+
+      - name: Summarize fetched data
+        run: |
+          node -e "
+            const l = require('./data/live.json');
+            const withData = l.dams.filter(d => d.current && d.current.storageRate !== null).length;
+            console.log('observedAt', l.observedAt, '· dams with data', withData + '/' + l.dams.length);
+            for (const d of l.dams) console.log(d.id.padEnd(11), String(d.current.storageRate).padStart(5) + '%', 'in', d.current.inflow, 'out', d.current.outflow);
+          "
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
