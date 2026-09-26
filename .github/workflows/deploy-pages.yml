@@ -60,6 +60,9 @@ jobs:
       - name: Fetch live dam data from K-water MyWater
         run: npm run fetch
 
+      - name: Validate fresh observations
+        run: npm run check:data
+
       - name: Summarize fetched data
         run: |
           node -e "
