@@ -10,6 +10,6 @@
 | `js/app.js` | 표·요약 카드·티커·상세 모달·필터·정렬·GPS 정렬·CSV·테마. 데이터는 텔레메트리 서비스에서만 읽는다 | `window.appInspectDam / appCloseModal / appSwitchTrendPeriod / appReRenderTable` | INTENT-0001 |
 | `js/i18n.js` | 22개 언어의 UI 문구와 댐 소재지 영문 표기. 표 헤더·탭·필터·요약 카드 라벨을 바꾼다 | `i18n.setLanguage / t / getLocationEN` | (v1 유지) |
 | `index.html`, `css/` | 마크업과 디자인 토큰. 데이터 문구는 넣지 않고 `--`/빈 값으로 두어 스크립트가 채운다 | — | (v1 유지) |
-| `.github/workflows/deploy-pages.yml` | push 와 매시간 cron 에 문법 검증 → 수집 → Pages 배포 | GitHub Actions | INTENT-0001 |
+| `.github/workflows/deploy-pages.yml` | push 와 10분 cron 에 문법 검증 → 신선도 확인(`scripts/needs-update.mjs`) → 수집 → 데이터 검증 → Pages 배포 | GitHub Actions | INTENT-0001 |
 
 데이터 흐름 요약: `getVers/getYongsu`(현재·전년·예년) + `getBasic`(제원) + `getHydr H`(48시간) + `getPeriod`·`getHydr D`(5년 일별) → `live.json`/`history.json` → 브라우저가 `live.json` 을 즉시, `history.json` 을 모달에서 지연 로드.

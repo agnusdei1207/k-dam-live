@@ -18,6 +18,7 @@
 
   // data/live.json is regenerated hourly by the GitHub Actions deploy; poll it every 10 minutes.
   const AUTO_REFRESH_INTERVAL_MS = 10 * 60 * 1000;
+  const VISIBLE_REFRESH_MIN_MS = 60 * 1000;
   const TICKER_ROTATE_MS = 4200;
 
   // Table sort keys (data-sort attribute) → record fields
@@ -50,6 +51,7 @@
   };
 
   let elements = {};
+  let lastRefreshAt = Date.now();
 
   function cacheElements() {
     elements = {
@@ -203,11 +205,16 @@
 
     setInterval(refreshLiveData, AUTO_REFRESH_INTERVAL_MS);
     setInterval(rotateTickerFeed, TICKER_ROTATE_MS);
+    // Background tabs throttle timers; catch up as soon as the page is looked at again
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && Date.now() - lastRefreshAt > VISIBLE_REFRESH_MIN_MS) refreshLiveData();
+    });
 
     setTimeout(() => requestUserLocation(true), 400);
   }
 
   async function refreshLiveData() {
+    lastRefreshAt = Date.now();
     let result;
     try {
       result = await telemetryService.load();
@@ -215,9 +222,8 @@
       return; // keep showing the last good snapshot
     }
     updateTimestamp();
-    if (!result.changed) return;
+    if (!result.changed) return; // subscribers already re-rendered the new snapshot
     refreshTicker();
-    renderAll();
     // Highlight the cells whose observed values actually changed
     result.changes.forEach(({ id, delta }) => {
       const row = document.querySelector(`tr[data-dam-id="${id}"]`);

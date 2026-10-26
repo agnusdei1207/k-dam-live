@@ -1,7 +1,9 @@
 name: Build Data & Deploy GitHub Pages
 
-# Deploys on every push to main and, on a schedule, rebuilds the site with a fresh
-# K-water snapshot every hour (data/*.json are generated at build time, never committed).
+# Deploys on every push to main. On a schedule, a cheap freshness check runs every 10 minutes and
+# the site is rebuilt only when MyWater has published a newer hour than the deployed snapshot
+# (data/*.json are generated at build time, never committed). GitHub delays/drops sparse cron
+# ticks heavily, so polling often is what keeps the site within roughly one observation hour.
 on:
   push:
     branches:
@@ -10,7 +12,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '20 * * * *'   # every hour at :20 UTC — MyWater publishes hourly rows shortly after the hour (KST)
+    - cron: '*/10 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -20,7 +22,7 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: true
+  cancel-in-progress: false   # never abort a deployment that is already running
 
 jobs:
   # 1. CI Validation Gate
@@ -39,11 +41,37 @@ jobs:
       - name: Validate JavaScript Syntax
         run: npm run check
 
-  # 2. Build data + Deploy (main branch only)
-  deploy:
-    name: Fetch K-water Data & Deploy to GitHub Pages
+  # 2. Scheduled runs: skip the full fetch when the site already shows the portal's latest hour
+  freshness:
+    name: Check for a newer MyWater observation
     needs: validate
     if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      update: ${{ steps.check.outputs.update }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Compare portal hour with deployed snapshot
+        id: check
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            node scripts/needs-update.mjs
+          else
+            echo "update=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  # 3. Build data + Deploy (main branch only)
+  deploy:
+    name: Fetch K-water Data & Deploy to GitHub Pages
+    needs: freshness
+    if: needs.freshness.outputs.update == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

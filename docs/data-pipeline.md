@@ -9,7 +9,9 @@ K-DAM LIVE 화면에 표시되는 모든 수치는 K-water 물정보포털(MyWat
 ## 1. 전체 흐름
 
 ```
-GitHub Actions (매시간 :20 UTC, 또는 main push)
+GitHub Actions (main push, 또는 10분마다 cron)
+  └─ cron 일 때만: scripts/needs-update.mjs  →  getVers 1회 호출로 포털 기준 시각 확인,
+        배포본 data/live.json 의 observedAt 보다 새 시간이 있을 때(또는 배포본이 3시간 이상 묵었을 때)만 계속
   └─ npm run fetch  →  scripts/fetch-dam-data.mjs
         ├─ POST https://www.water.or.kr/kor/realtime/sumun/ajaxProc.do  (약 90회 호출, 15초 내외)
         ├─ data/live.json     (현재 관측값 + 최근 48시간 시간별 자료, 36개 댐)

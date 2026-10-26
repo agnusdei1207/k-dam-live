@@ -201,8 +201,8 @@
             }
             if (touched) changes.push({ id: dam.id, delta });
           }
+          this.notifySubscribers();
         }
-        this.notifySubscribers();
         return { changed: !unchanged, changes };
       } catch (err) {
         this.state = this.meta ? 'ready' : 'error';

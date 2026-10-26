@@ -25,7 +25,7 @@
 
 화면의 모든 수치는 K-water 물정보포털(MyWater) 실시간 현황 › 댐/보 수문자료의 실제 관측값입니다.
 
-- GitHub Actions 가 매시간 포털에서 자료를 수집해 `data/live.json`(현재값 + 48시간 시간별)과 `data/history.json`(5년 일별 저수율)을 생성하고 GitHub Pages 에 함께 배포합니다.
+- GitHub Actions 가 10분마다 포털의 최신 관측 시각을 확인하고, 새 시간 자료가 올라오면 수집해 `data/live.json`(현재값 + 48시간 시간별)과 `data/history.json`(5년 일별 저수율)을 생성하고 GitHub Pages 에 함께 배포합니다.
 - 브라우저는 배포된 JSON 만 읽으며, 10분마다 재조회해 값이 바뀐 셀만 하이라이트합니다.
 - 헤더의 시각은 포털의 관측 시각(KST) 입니다. 시간별 자료이므로 정시 기준으로 갱신됩니다.
 - 수집이 실패하면 직전 배포본이 유지되며, 빈 값은 `-` 로 표시됩니다. 임의 값이나 시뮬레이션은 없습니다.
@@ -64,7 +64,7 @@
 | :--- | :--- | :--- |
 | Frontend | Vanilla HTML5, CSS3, ES6+ | 무의존성, 번들러 없는 즉시 로딩 |
 | Data | Node 20 fetch script (`scripts/fetch-dam-data.mjs`) | K-water MyWater AJAX 엔드포인트 수집, 의존성 0 |
-| CI/CD | GitHub Actions (push + 매시간 cron) | 수집 → 검증 → Pages 배포 |
+| CI/CD | GitHub Actions (push + 10분 주기 신선도 확인) | 수집 → 검증 → Pages 배포 |
 | Design System | Minimalist Tokens (shadcn / Geist) | 고밀도 테이블, 테마 토큰, 일관된 모션 |
 | Data Viz | Pure SVG | 기간별 저수율 추이 곡선 |
 | Hosting | GitHub Pages | 정적 호스팅 |
