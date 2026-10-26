@@ -254,6 +254,7 @@
     updateTimestamp();
     if (!result.changed) return; // subscribers already re-rendered the new snapshot
     refreshTicker();
+    refreshInspector();
     // Highlight the cells whose observed values actually changed
     result.changes.forEach(({ id, delta }) => {
       const row = document.querySelector(`tr[data-dam-id="${id}"]`);
@@ -589,7 +590,7 @@
       const locText = (isI18n && i18n.currentLang !== 'ko' && i18n.getLocationEN(dam.id)) ? i18n.getLocationEN(dam.id) : dam.location;
 
       return `
-        <tr data-dam-id="${dam.id}" title="${isI18n ? i18n.t('modalTitle') : dam.name + ' 상세 제원 보기'}">
+        <tr data-dam-id="${dam.id}" tabindex="0" title="${isI18n ? i18n.t('modalTitle') : dam.name + ' 상세 제원 보기'}">
           <td>
             <div class="dam-title-cell">${dam.name} ${distanceHtml}</div>
             <div class="dam-loc-sub">${escapeHtml(locText)}</div>
@@ -703,34 +704,29 @@
     `;
   }
 
-  function switchTrendPeriod(damId, period) {
-    activeModalPeriod = period;
-    const dam = telemetryService.currentData.find((d) => d.id === damId);
-    if (!dam) return;
-    const { barColor } = getStatusPresentation(dam);
-    const container = document.getElementById(`modal-trend-card-${dam.id}`);
-    if (!container) return;
+  // Long periods need history.json; while it is in flight the chart shows a loading state
+  const isTrendLoading = () => activeModalPeriod !== '24h' && !telemetryService.history && Boolean(telemetryService.historyPromise);
 
-    if (period !== '24h' && !telemetryService.history) {
-      container.innerHTML = renderModalTrendChart(dam, period, barColor, true);
-      telemetryService.loadHistory()
-        .then(() => {
-          if (activeModalDamId === damId && activeModalPeriod === period) {
-            container.innerHTML = renderModalTrendChart(dam, period, barColor);
-          }
-        })
-        .catch(() => {
-          if (activeModalDamId === damId && activeModalPeriod === period) {
-            container.innerHTML = renderModalTrendChart(dam, period, barColor);
-          }
-        });
-      return;
-    }
-    container.innerHTML = renderModalTrendChart(dam, period, barColor);
+  function renderTrendCard() {
+    const dam = telemetryService.currentData.find((d) => d.id === activeModalDamId);
+    const container = dam && document.getElementById(`modal-trend-card-${dam.id}`);
+    if (!container) return;
+    container.innerHTML = renderModalTrendChart(dam, activeModalPeriod, getStatusPresentation(dam).barColor, isTrendLoading());
   }
 
-  function openInspector(damId) {
-    const dam = telemetryService.currentData.find((d) => d.id === damId);
+  function switchTrendPeriod(period) {
+    activeModalPeriod = period;
+    if (period !== '24h' && !telemetryService.history) {
+      const damId = activeModalDamId;
+      const done = () => { if (activeModalDamId === damId && activeModalPeriod === period) renderTrendCard(); };
+      telemetryService.loadHistory().then(done, done);
+    }
+    renderTrendCard();
+  }
+
+  // Fills the modal for the active dam and period from the current snapshot (also used on refresh)
+  function renderInspector() {
+    const dam = telemetryService.currentData.find((d) => d.id === activeModalDamId);
     if (!dam) return;
 
     if (elements.modalDamTitle) elements.modalDamTitle.textContent = dam.name;
@@ -738,10 +734,7 @@
 
     const { badgeClass, label: badgeLabel, barColor } = getStatusPresentation(dam);
 
-    activeModalDamId = dam.id;
-    activeModalPeriod = '24h';
-
-    const chartHtml = renderModalTrendChart(dam, activeModalPeriod, barColor);
+    const chartHtml = renderModalTrendChart(dam, activeModalPeriod, barColor, isTrendLoading());
     const spec = (v, unit = '', digits = 1) => (isNum(v) ? `${fmtNum(v, digits)}${unit}` : '-');
     const isFloodControl = dam.type === DAM_TYPES.FLOOD_CONTROL;
 
@@ -832,27 +825,67 @@
       </div>
     `;
 
-    const modal = elements.modalInspector || document.getElementById('dam-inspector-modal');
-    if (modal) {
-      const panel = modal.querySelector('.inspector-modal-panel');
-      if (panel) panel.scrollTop = 0;
-      const body = modal.querySelector('.modal-body');
-      if (body) body.scrollTop = 0;
+  }
 
-      modal.classList.add('active');
-      modal.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-    }
+  function openInspector(damId) {
+    const modal = elements.modalInspector;
+    if (!modal || !telemetryService.currentData.some((d) => d.id === damId)) return;
+    const wasOpen = Boolean(activeModalDamId);
+    activeModalDamId = damId;
+    activeModalPeriod = '24h';
+    renderInspector();
+
+    const panel = modal.querySelector('.inspector-modal-panel');
+    if (panel) panel.scrollTop = 0;
+    const body = modal.querySelector('.modal-body');
+    if (body) body.scrollTop = 0;
+
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    if (!wasOpen) focusWhenVisible(elements.btnModalClose);
+  }
+
+  // The overlay may refuse focus on the very frame it becomes visible; retry for a few frames
+  function focusWhenVisible(el, attempts = 10) {
+    if (!el || !activeModalDamId) return;
+    el.focus({ preventScroll: true });
+    if (document.activeElement !== el && attempts > 1) setTimeout(() => focusWhenVisible(el, attempts - 1), 16);
+  }
+
+  // A new snapshot arrived while the modal is open: redraw it in place (same period, same scroll)
+  function refreshInspector() {
+    if (!activeModalDamId || !elements.modalInspector) return;
+    const panel = elements.modalInspector.querySelector('.inspector-modal-panel');
+    const scrollTop = panel ? panel.scrollTop : 0;
+    renderInspector();
+    if (panel) panel.scrollTop = scrollTop;
   }
 
   function closeInspector() {
-    const modal = elements.modalInspector || document.getElementById('dam-inspector-modal');
-    if (modal) {
-      modal.classList.remove('active');
-      modal.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-    }
+    const modal = elements.modalInspector;
+    if (!modal || !activeModalDamId) return;
+    const damId = activeModalDamId;
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
     activeModalDamId = null;
+    // Rows are re-rendered while the modal is open, so return focus to the row by id
+    const row = document.querySelector(`tr[data-dam-id="${damId}"]`);
+    if (row) row.focus({ preventScroll: true });
+  }
+
+  // Keep Tab / Shift+Tab inside the open dialog
+  function trapFocus(e) {
+    if (e.key !== 'Tab' || !activeModalDamId) return;
+    const focusables = [...elements.modalInspector.querySelectorAll('button, a[href], [tabindex]:not([tabindex="-1"])')]
+      .filter((el) => !el.disabled && el.offsetParent !== null);
+    if (!focusables.length) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    else if (!elements.modalInspector.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
   }
 
   // i18n.js re-renders after a language switch
@@ -984,11 +1017,18 @@
         const row = e.target.closest('tr[data-dam-id]');
         if (row) openInspector(row.getAttribute('data-dam-id'));
       });
+      elements.damsTbody.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        const row = e.target.closest('tr[data-dam-id]');
+        if (!row) return;
+        e.preventDefault();
+        openInspector(row.getAttribute('data-dam-id'));
+      });
     }
     if (elements.modalDamContent) {
       elements.modalDamContent.addEventListener('click', (e) => {
         const tab = e.target.closest('.btn-period-tab[data-period]');
-        if (tab && activeModalDamId) switchTrendPeriod(activeModalDamId, tab.getAttribute('data-period'));
+        if (tab && activeModalDamId) switchTrendPeriod(tab.getAttribute('data-period'));
       });
     }
     if (elements.btnModalClose) elements.btnModalClose.addEventListener('click', closeInspector);
@@ -996,6 +1036,7 @@
 
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' || e.key === 'Esc') closeInspector();
+      trapFocus(e);
     });
   }
 

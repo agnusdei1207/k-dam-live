@@ -900,6 +900,12 @@ body {
   color: var(--primary);
 }
 
+.data-table tbody tr:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+  background: var(--surface-hover);
+}
+
 .data-table tbody tr:active {
   background: var(--surface-active);
 }
@@ -1206,7 +1212,8 @@ body {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.22s ease;
+  /* hide only after the fade-out; on open (below) it becomes visible at once so focus can move in */
+  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0.22s;
   overflow: hidden;
   overscroll-behavior: contain;
 }
@@ -1247,6 +1254,7 @@ body {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s;
 }
 
 .inspector-modal-overlay.active .inspector-modal-panel {
