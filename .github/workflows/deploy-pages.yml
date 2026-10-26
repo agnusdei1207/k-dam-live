@@ -38,8 +38,8 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Validate JavaScript Syntax
-        run: npm run check
+      - name: Validate JavaScript syntax and run tests
+        run: npm test
 
   # 2. Scheduled runs: skip the full fetch when the site already shows the portal's latest hour
   freshness:
