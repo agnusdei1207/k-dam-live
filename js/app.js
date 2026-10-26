@@ -126,6 +126,11 @@
   const fmtInt = (v) => (isNum(v) ? Math.round(v).toLocaleString() : '-');
   const fmtNum = (v, digits = 1) => (isNum(v) ? Number(v.toFixed(digits)).toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : '-');
   const fmtSigned = (v, digits = 1) => (isNum(v) ? `${v > 0 ? '+' : ''}${v.toFixed(digits)}` : '-');
+  // Every visible string comes from js/i18n.js; Korean is its fallback language
+  const tr = (key, params) => (window.i18n ? i18n.t(key, params) : key);
+  const localizedBasin = (basin) => (window.i18n ? i18n.basin(basin) : basin);
+  const localizedType = (type) => (window.i18n ? i18n.damType(type) : type);
+  const localizedLocation = (dam) => (window.i18n && i18n.currentLang !== 'ko' && i18n.getLocationEN(dam.id)) || dam.location;
   const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   function triggerPulse(el, isUp) {
@@ -145,11 +150,11 @@
     if (!data.length) return items;
 
     if (m.observedAt) {
-      items.push(`📡 K-water 물정보포털 ${m.observedAt} 관측 기준 · 전국 ${m.observedDams}개 댐 수문자료 동기화 완료`);
+      items.push(tr('tickerSync', { time: m.observedAt, count: m.observedDams }));
     }
     if (isNum(m.avgStorageRate)) {
-      const diff = isNum(m.diffNormalYear) ? ` (예년 ${fmt(m.normalYearRate)}% 대비 ${fmtSigned(m.diffNormalYear)}%p)` : '';
-      items.push(`💧 전국 다목적·용수댐 평균 저수율 ${fmt(m.avgStorageRate)}%${diff}`);
+      const diff = isNum(m.diffNormalYear) ? tr('tickerAvgDiff', { normal: fmt(m.normalYearRate), diff: fmtSigned(m.diffNormalYear) }) : '';
+      items.push(tr('tickerAvg', { rate: fmt(m.avgStorageRate) }) + diff);
     }
 
     const storageDams = data.filter((d) => d.type !== DAM_TYPES.FLOOD_CONTROL);
@@ -159,21 +164,24 @@
     const highest = [...storageDams].sort((a, b) => b.storageRate - a.storageRate);
 
     if (byInflow[0]) {
-      items.push(`🌊 ${byInflow[0].basin} ${byInflow[0].name} 시간 유입량 ${fmt(byInflow[0].currentInflow)} ㎥/s 전국 최대 (저수율 ${fmt(byInflow[0].storageRate)}%)`);
+      const d = byInflow[0];
+      items.push(tr('tickerInflow', { basin: localizedBasin(d.basin), name: d.name, inflow: fmt(d.currentInflow), rate: fmt(d.storageRate) }));
     }
     if (byOutflow[0]) {
-      items.push(`⚡ ${byOutflow[0].basin} ${byOutflow[0].name} 총방류량 ${fmt(byOutflow[0].currentOutflow)} ㎥/s 전국 최대 · 방류 ${THRESHOLDS.DISCHARGE_CMS}㎥/s 이상 ${m.dischargingCount}개소`);
+      const d = byOutflow[0];
+      items.push(tr('tickerOutflow', { basin: localizedBasin(d.basin), name: d.name, outflow: fmt(d.currentOutflow), cms: THRESHOLDS.DISCHARGE_CMS, count: m.dischargingCount }));
     }
     if (lowest[0]) {
       const l = lowest.slice(0, 3).map((d) => `${d.name} ${fmt(d.storageRate)}%`).join(' · ');
-      items.push(`🌾 저수율 하위 댐: ${l} (가뭄주의 ${THRESHOLDS.DROUGHT_CAUTION}% 미만 ${m.droughtCount}개소)`);
+      items.push(tr('tickerLowest', { list: l, threshold: THRESHOLDS.DROUGHT_CAUTION, count: m.droughtCount }));
     }
     if (highest[0]) {
-      items.push(`🛡️ ${highest[0].basin} ${highest[0].name} 저수율 ${fmt(highest[0].storageRate)}% 전국 최고 (예년 대비 ${fmtSigned(highest[0].diffNormalYear)}%p)`);
+      const d = highest[0];
+      items.push(tr('tickerHighest', { basin: localizedBasin(d.basin), name: d.name, rate: fmt(d.storageRate), diff: fmtSigned(d.diffNormalYear) }));
     }
     const jwam = data.find((d) => d.id === 'jwam');
     if (jwam && isNum(jwam.rateLastYear)) {
-      items.push(`📉 영산·섬진강 주암댐 저수율 ${fmt(jwam.storageRate)}% · 전년 동일 ${fmt(jwam.rateLastYear)}% · 예년 ${fmt(jwam.rateNormalYear)}%`);
+      items.push(tr('tickerFocus', { basin: localizedBasin(jwam.basin), name: jwam.name, rate: fmt(jwam.storageRate), lastYear: fmt(jwam.rateLastYear), normal: fmt(jwam.rateNormalYear) }));
     }
     return items;
   }
@@ -271,7 +279,7 @@
     elements.damsTbody.innerHTML = `
       <tr>
         <td colspan="10" class="text-center" style="padding: 30px; color: var(--text-muted);">
-          K-water 물정보포털 관측 자료를 불러오는 중…
+          ${tr('loadingData')}
         </td>
       </tr>`;
   }
@@ -281,7 +289,7 @@
     elements.damsTbody.innerHTML = `
       <tr>
         <td colspan="10" class="text-center" style="padding: 30px; color: var(--badge-red-text);">
-          관측 자료(data/live.json)를 불러오지 못했습니다. 잠시 후 새로고침해 주세요.<br>
+          ${tr('loadError')}<br>
           <small style="color: var(--text-muted)">${escapeHtml(err && err.message ? err.message : 'unknown error')}</small>
         </td>
       </tr>`;
@@ -325,7 +333,7 @@
       elements.dataUpdatedTime.textContent = meta.observedAt.replace(/-/g, '.');
       if (elements.liveBadge) {
         const gen = meta.generatedAt ? new Date(meta.generatedAt).toLocaleString('ko-KR') : '-';
-        elements.liveBadge.setAttribute('title', `K-water 물정보포털 관측 시각 ${meta.observedAt} (KST) · 자료 수집 ${gen} · 매시간 자동 갱신`);
+        elements.liveBadge.setAttribute('title', tr('liveBadgeTitle', { time: meta.observedAt, collected: gen }));
       }
     } else {
       elements.dataUpdatedTime.textContent = '--:--';
@@ -359,6 +367,8 @@
   // ─── Geolocation ──────────────────────────────────────────────────────────────
   function applyLocation(latitude, longitude, locationLabel, source, saveToStorage = true) {
     state.userLocation = { lat: latitude, lng: longitude };
+    state.locationLabel = locationLabel;
+    state.locationSource = source;
     state.isGeoActive = true;
     state.sortField = 'distanceKm';
     state.sortOrder = 'asc';
@@ -377,35 +387,36 @@
 
     telemetryService.updateUserLocation(latitude, longitude);
 
-    const sorted = [...telemetryService.currentData].sort(
-      (a, b) => (a.distanceKm ?? 9999) - (b.distanceKm ?? 9999)
-    );
-    const nearest = sorted[0];
-
-    if (elements.btnHeaderGps) {
-      elements.btnHeaderGps.classList.add('active');
-      elements.btnHeaderGps.setAttribute('title', `${locationLabel} 기준 정렬 활성화됨 (클릭 시 해제)`);
-    }
-
     document.querySelectorAll('.btn-city-preset').forEach((btn) => {
       const bLat = parseFloat(btn.getAttribute('data-lat'));
       const bLng = parseFloat(btn.getAttribute('data-lng'));
       btn.classList.toggle('active', Math.abs(bLat - latitude) < 0.05 && Math.abs(bLng - longitude) < 0.05);
     });
 
-    if (elements.geoInfoBar) {
-      elements.geoInfoBar.classList.remove('hidden');
-      if (elements.geoInfoText && nearest) {
-        elements.geoInfoText.innerHTML = `<strong>${escapeHtml(locationLabel)}</strong>에서 가장 가까운 댐은 <strong>${nearest.name}</strong>(약 <span class="num">${nearest.distanceKm}km</span>)입니다. 가까운 순으로 정렬되었습니다.`;
-      }
-    }
-
+    renderGeoState();
     renderTable();
+  }
+
+  // GPS button title and the "nearest dam" banner, in the current language
+  function renderGeoState() {
+    const place = state.locationSource === 'gps' ? tr('gpsLabel') : state.locationLabel;
+    if (elements.btnHeaderGps) {
+      elements.btnHeaderGps.classList.toggle('active', state.isGeoActive);
+      elements.btnHeaderGps.setAttribute('title', state.isGeoActive ? tr('gpsActiveTitle', { place }) : tr('gpsIdleTitle'));
+    }
+    if (!elements.geoInfoBar) return;
+    elements.geoInfoBar.classList.toggle('hidden', !state.isGeoActive);
+    const nearest = state.isGeoActive && [...telemetryService.currentData]
+      .filter((d) => d.distanceKm !== null)
+      .sort((a, b) => a.distanceKm - b.distanceKm)[0];
+    if (elements.geoInfoText && nearest) {
+      elements.geoInfoText.innerHTML = tr('geoNearest', { place: escapeHtml(place), name: nearest.name, km: nearest.distanceKm });
+    }
   }
 
   function requestUserLocation(silent = false) {
     if (!navigator.geolocation) {
-      if (!silent) alert('사용 중인 브라우저 환경에서 GPS 위치 정보를 지원하지 않습니다.');
+      if (!silent) alert(tr('gpsUnsupported'));
       return;
     }
 
@@ -419,11 +430,7 @@
       },
       (error) => {
         if (!silent) {
-          let msg = '위치 정보를 가져올 수 없습니다.';
-          if (error.code === error.PERMISSION_DENIED) {
-            msg = '위치 정보 접근 권한이 허용되지 않았습니다. 브라우저 주소창 좌측의 사이트 설정에서 위치 권한을 허용해 주세요.';
-          }
-          alert(msg);
+          alert(tr(error.code === error.PERMISSION_DENIED ? 'gpsDenied' : 'gpsFailed'));
         }
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
@@ -439,18 +446,8 @@
     writeStorage('kdam_geo_active', 'false');
 
     telemetryService.updateUserLocation(null, null);
-
-    if (elements.btnHeaderGps) {
-      elements.btnHeaderGps.classList.remove('active');
-      elements.btnHeaderGps.setAttribute('title', '내 위치 기준 가까운 댐 순으로 정렬 (GPS)');
-    }
-
     document.querySelectorAll('.btn-city-preset').forEach((btn) => btn.classList.remove('active'));
-
-    if (elements.geoInfoBar) {
-      elements.geoInfoBar.classList.add('hidden');
-    }
-
+    renderGeoState();
     renderTable();
   }
 
@@ -492,6 +489,7 @@
   function renderAll() {
     renderStats();
     renderTable();
+    renderGeoState();
   }
 
   function updateStatCardValue(el, newValStr, numericVal, prevKey) {
@@ -508,7 +506,6 @@
   }
 
   function renderStats() {
-    const isI18n = Boolean(window.i18n);
     const m = telemetryService.getOverviewMetrics();
 
     updateStatCardValue(elements.valAvgRate, isNum(m.avgStorageRate) ? `${fmt(m.avgStorageRate)}%` : '--%', m.avgStorageRate, 'avgRate');
@@ -517,46 +514,36 @@
     updateStatCardValue(elements.valTotalOutflow, `${fmtNum(m.totalOutflow)} ㎥/s`, m.totalOutflow, 'totalOutflow');
 
     if (elements.deltaAvgRate) {
-      const diffLabel = isI18n ? i18n.t('diffNormalYear') : '예년 대비';
+      const diffLabel = tr('diffNormalYear');
       const diff = m.diffNormalYear;
       elements.deltaAvgRate.textContent = isNum(diff)
-        ? `${diffLabel} ${fmtSigned(diff)}%p (예년 ${fmt(m.normalYearRate)}%)`
+        ? `${diffLabel} ${fmtSigned(diff)}%p ${tr('statNormalYear', { rate: fmt(m.normalYearRate) })}`
         : `${diffLabel} --`;
       elements.deltaAvgRate.style.color = isNum(diff) ? (diff >= 0 ? 'var(--badge-green-text)' : 'var(--badge-red-text)') : '';
     }
     if (elements.valTotalCapacity) {
-      elements.valTotalCapacity.textContent = `총 저수용량 ${fmtInt(m.totalCapacity)} M㎥ (홍수조절댐 제외)`;
+      elements.valTotalCapacity.textContent = tr('totalCapacityDesc', { capacity: fmtInt(m.totalCapacity) });
     }
     if (elements.valDischargeCount) {
-      if (isI18n && i18n.currentLang !== 'ko') {
-        elements.valDischargeCount.textContent = i18n.t('dischargingCount', { count: m.dischargingCount });
-      } else {
-        elements.valDischargeCount.textContent = `방류 ${THRESHOLDS.DISCHARGE_CMS}㎥/s 이상 ${m.dischargingCount}개소 / 가뭄주의 ${m.droughtCount}개소`;
-      }
+      elements.valDischargeCount.textContent = tr('statusSummary', { cms: THRESHOLDS.DISCHARGE_CMS, count: m.dischargingCount, drought: m.droughtCount });
     }
   }
 
+  // status.code → badge look and translation key (Korean labels equal data.js status.label)
+  const STATUS_PRESENTATION = {
+    FLOOD: { badgeClass: 'badge-red', key: 'badgeFlood', icon: '⚠️ ', barColor: 'var(--bar-fill-red)' },
+    DISCHARGE: { badgeClass: 'badge-blue live-discharge', key: 'badgeDischarge', icon: '🌊 ', barColor: 'var(--bar-fill-blue)' },
+    DROUGHT_ALERT: { badgeClass: 'badge-red', key: 'badgeDroughtAlert', barColor: 'var(--bar-fill-red)' },
+    DROUGHT_CAUTION: { badgeClass: 'badge-yellow', key: 'badgeDroughtCaution', barColor: 'var(--bar-fill-yellow)' },
+    DROUGHT_ATTENTION: { badgeClass: 'badge-yellow', key: 'badgeDroughtAttention', barColor: 'var(--bar-fill-yellow)' },
+    FLOOD_CONTROL: { badgeClass: 'badge-muted', key: 'badgeFloodControl', barColor: 'var(--bar-fill-blue)' },
+    NO_DATA: { badgeClass: 'badge-muted', key: 'badgeNoData', barColor: 'var(--border-subtle)' },
+    NORMAL: { badgeClass: 'badge-green', key: 'badgeNormal', barColor: 'var(--bar-fill-green)' }
+  };
+
   function getStatusPresentation(dam) {
-    const translated = Boolean(window.i18n) && i18n.currentLang !== 'ko';
-    const code = dam.status ? dam.status.code : 'NO_DATA';
-    const koLabel = dam.status ? dam.status.label : '관측값 없음';
-    switch (code) {
-      case 'FLOOD':
-        return { badgeClass: 'badge-red', label: `⚠️ ${koLabel}`, barColor: 'var(--bar-fill-red)' };
-      case 'DISCHARGE':
-        return { badgeClass: 'badge-blue live-discharge', label: `🌊 ${translated ? i18n.t('statusDischarge') : koLabel}`, barColor: 'var(--bar-fill-blue)' };
-      case 'DROUGHT_ALERT':
-        return { badgeClass: 'badge-red', label: translated ? i18n.t('statusDrought') : koLabel, barColor: 'var(--bar-fill-red)' };
-      case 'DROUGHT_CAUTION':
-      case 'DROUGHT_ATTENTION':
-        return { badgeClass: 'badge-yellow', label: translated ? i18n.t('statusDrought') : koLabel, barColor: 'var(--bar-fill-yellow)' };
-      case 'FLOOD_CONTROL':
-        return { badgeClass: 'badge-muted', label: translated ? i18n.t('floodControl') : koLabel, barColor: 'var(--bar-fill-blue)' };
-      case 'NO_DATA':
-        return { badgeClass: 'badge-muted', label: koLabel, barColor: 'var(--border-subtle)' };
-      default:
-        return { badgeClass: 'badge-green', label: translated ? i18n.t('statusNormal') : koLabel, barColor: 'var(--bar-fill-green)' };
-    }
+    const p = STATUS_PRESENTATION[dam.status ? dam.status.code : 'NO_DATA'] || STATUS_PRESENTATION.NORMAL;
+    return { badgeClass: p.badgeClass, label: `${p.icon || ''}${tr(p.key)}`, barColor: p.barColor };
   }
 
   function renderTable() {
@@ -569,34 +556,30 @@
       elements.damsTbody.innerHTML = `
         <tr>
           <td colspan="10" class="text-center" style="padding: 30px; color: var(--text-muted);">
-            검색 결과가 없습니다.
+            ${tr('noResults')}
           </td>
         </tr>
       `;
       return;
     }
 
-    const isI18n = Boolean(window.i18n);
     elements.damsTbody.innerHTML = dams.map((dam) => {
       const { badgeClass, label: badgeLabel, barColor } = getStatusPresentation(dam);
 
-      const localizedType = isI18n ? i18n.damType(dam.type) : dam.type;
-      const localizedBasin = isI18n ? i18n.basin(dam.basin) : dam.basin;
       const diffColor = isNum(dam.diffNormalYear) ? (dam.diffNormalYear >= 0 ? 'var(--badge-green-text)' : 'var(--badge-red-text)') : 'var(--text-subtle)';
       const diffText = isNum(dam.diffNormalYear) ? `${fmtSigned(dam.diffNormalYear)}%p` : '-';
       const distanceHtml = dam.distanceKm !== null ? `<span class="distance-badge">${dam.distanceKm}km</span>` : '';
       const typeClass = TYPE_BADGE_CLASSES[dam.type] || 'badge-muted';
       const rateWidth = isNum(dam.storageRate) ? Math.min(100, dam.storageRate) : 0;
-      const locText = (isI18n && i18n.currentLang !== 'ko' && i18n.getLocationEN(dam.id)) ? i18n.getLocationEN(dam.id) : dam.location;
 
       return `
-        <tr data-dam-id="${dam.id}" tabindex="0" title="${isI18n ? i18n.t('modalTitle') : dam.name + ' 상세 제원 보기'}">
+        <tr data-dam-id="${dam.id}" tabindex="0" title="${tr('modalTitle')}">
           <td>
             <div class="dam-title-cell">${dam.name} ${distanceHtml}</div>
-            <div class="dam-loc-sub">${escapeHtml(locText)}</div>
+            <div class="dam-loc-sub">${escapeHtml(localizedLocation(dam))}</div>
           </td>
-          <td>${localizedBasin}</td>
-          <td><span class="badge ${typeClass}">${localizedType}</span></td>
+          <td>${localizedBasin(dam.basin)}</td>
+          <td><span class="badge ${typeClass}">${localizedType(dam.type)}</span></td>
           <td class="text-right">
             <div class="rate-cell-wrap">
               <span class="rate-val live-num">${isNum(dam.storageRate) ? `${dam.storageRate.toFixed(1)}%` : '-'}</span>
@@ -606,7 +589,7 @@
             </div>
           </td>
           <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
-          <td class="text-right num" style="color: ${diffColor}" title="예년 저수율 ${fmt(dam.rateNormalYear)}% · 전년 ${fmt(dam.rateLastYear)}%">${diffText}</td>
+          <td class="text-right num" style="color: ${diffColor}" title="${tr('diffCellTitle', { normal: fmt(dam.rateNormalYear), lastYear: fmt(dam.rateLastYear) })}">${diffText}</td>
           <td class="text-right num">
             <span class="live-num level-val"><strong>${fmt(dam.currentWaterLevel, 2)}</strong></span> <small style="color:var(--text-subtle)">/ ${isNum(dam.normalFullLevel) ? `${dam.normalFullLevel}m` : '-'}</small>
           </td>
@@ -622,18 +605,11 @@
   let activeModalDamId = null;
   let activeModalPeriod = '24h';
 
-  const PERIOD_TITLES = {
-    '24h': '최근 24시간 시간별 저수율(%) 추이',
-    '30d': '최근 30일 일별 저수율(%) 추이',
-    '1y': '최근 1년 일별 저수율(%) 추이',
-    '3y': '최근 3년 저수율(%) 추이',
-    '5y': '최근 5년 저수율(%) 추이'
-  };
+  const PERIODS = ['24h', '30d', '1y', '3y', '5y'];
 
   function renderPeriodTabs(damId, period) {
-    return ['24h', '30d', '1y', '3y', '5y'].map((p) => {
-      const label = { '24h': '24시간', '30d': '30일', '1y': '1년', '3y': '3년', '5y': '5년' }[p];
-      return `<button class="btn-period-tab ${period === p ? 'active' : ''}" data-period="${p}" type="button">${label}</button>`;
+    return PERIODS.map((p) => {
+      return `<button class="btn-period-tab ${period === p ? 'active' : ''}" data-period="${p}" type="button">${tr(`period${p}`)}</button>`;
     }).join('');
   }
 
@@ -643,17 +619,17 @@
     const header = (rangeText) => `
       <div class="modal-chart-header">
         <div class="modal-chart-title-wrap">
-          <span class="modal-chart-title">${PERIOD_TITLES[period]}</span>
+          <span class="modal-chart-title">${tr(`trendTitle${period}`)}</span>
           <span class="modal-chart-range">${rangeText}</span>
         </div>
-        <div class="modal-period-tabs" role="tablist" aria-label="추이 기간 선택">${renderPeriodTabs(dam.id, period)}</div>
+        <div class="modal-period-tabs" role="tablist" aria-label="${tr('periodTabsLabel')}">${renderPeriodTabs(dam.id, period)}</div>
       </div>`;
 
     if (loading) {
-      return `${header('장기 관측 이력을 불러오는 중…')}<div class="modal-chart-empty">데이터 로딩 중</div>`;
+      return `${header(tr('chartLoadingRange'))}<div class="modal-chart-empty">${tr('chartLoading')}</div>`;
     }
     if (!available || valid.length < 2) {
-      return `${header('해당 기간 관측 자료 없음')}<div class="modal-chart-empty">K-water 물정보포털에 이 기간의 자료가 없습니다.</div>`;
+      return `${header(tr('chartNoDataRange'))}<div class="modal-chart-empty">${tr('chartNoData')}</div>`;
     }
 
     let minRate = Infinity, maxRate = -Infinity;
@@ -680,8 +656,8 @@
 
     const startLabel = points[0].label;
     const midLabel = points[Math.floor(n / 2)].label;
-    const endLabel = period === '24h' ? `${points[n - 1].label} 현재` : points[n - 1].label;
-    const rangeText = `${minRate.toFixed(1)}% ~ ${maxRate.toFixed(1)}% (변동폭 ${(maxRate - minRate).toFixed(1)}%p · ${valid.length}개 관측값)`;
+    const endLabel = period === '24h' ? tr('chartNow', { time: points[n - 1].label }) : points[n - 1].label;
+    const rangeText = tr('chartRange', { min: minRate.toFixed(1), max: maxRate.toFixed(1), span: (maxRate - minRate).toFixed(1), count: valid.length });
 
     return `
       ${header(rangeText)}
@@ -730,7 +706,7 @@
     if (!dam) return;
 
     if (elements.modalDamTitle) elements.modalDamTitle.textContent = dam.name;
-    if (elements.modalDamSub) elements.modalDamSub.textContent = `${dam.basin} · ${dam.type} · ${dam.agency}${dam.observedAt ? ` · ${dam.observedAt} 관측` : ''}`;
+    if (elements.modalDamSub) elements.modalDamSub.textContent = `${localizedBasin(dam.basin)} · ${localizedType(dam.type)} · ${dam.agency}${dam.observedAt ? ` · ${tr('modalObserved', { time: dam.observedAt })}` : ''}`;
 
     const { badgeClass, label: badgeLabel, barColor } = getStatusPresentation(dam);
 
@@ -742,9 +718,9 @@
       <div class="modal-rate-hero">
         <div class="modal-rate-top">
           <div>
-            <span class="modal-rate-label">현재 저수율${isFloodControl ? ' (홍수조절댐 · 평시 비움)' : ''}</span>
+            <span class="modal-rate-label">${tr('modalCurrentRate')}${isFloodControl ? tr('modalFloodControlNote') : ''}</span>
             <div class="modal-rate-big">${isNum(dam.storageRate) ? `${dam.storageRate.toFixed(1)}%` : '-'}</div>
-            <div class="modal-rate-compare">전년 ${fmt(dam.rateLastYear)}% · 예년 ${fmt(dam.rateNormalYear)}% · 유효저수율 ${fmt(dam.effectiveRate)}%</div>
+            <div class="modal-rate-compare">${tr('modalCompare', { lastYear: fmt(dam.rateLastYear), normal: fmt(dam.rateNormalYear), effective: fmt(dam.effectiveRate) })}</div>
           </div>
           <span class="badge ${badgeClass}">${badgeLabel}</span>
         </div>
@@ -759,24 +735,24 @@
 
       <div class="modal-grid-4">
         <div class="modal-stat-box">
-          <span>현재 수위</span>
+          <span>${tr('modalLevel')}</span>
           <strong>${spec(dam.currentWaterLevel, ' EL.m', 2)}</strong>
-          <small>상시만수위 ${spec(dam.normalFullLevel, 'm', 1)} · 저수위 ${spec(dam.lowWaterLevel, 'm', 1)}</small>
+          <small>${tr('modalLevelSub', { normalFull: spec(dam.normalFullLevel, 'm', 1), low: spec(dam.lowWaterLevel, 'm', 1) })}</small>
         </div>
         <div class="modal-stat-box">
-          <span>현재 저수량</span>
+          <span>${tr('modalVolume')}</span>
           <strong>${spec(dam.currentStorageVolume, ' M㎥', 1)}</strong>
-          <small>총 저수용량 ${spec(dam.totalStorage, ' M㎥', 1)} · 유효 ${spec(dam.effectiveStorage, ' M㎥', 1)}</small>
+          <small>${tr('modalVolumeSub', { total: spec(dam.totalStorage, ' M㎥', 1), effective: spec(dam.effectiveStorage, ' M㎥', 1) })}</small>
         </div>
         <div class="modal-stat-box">
-          <span>유입량 (시간 관측)</span>
+          <span>${tr('modalInflow')}</span>
           <strong style="color: var(--badge-blue-text)">${spec(dam.currentInflow, ' ㎥/s', 2)}</strong>
-          <small>전일 평균 유입 ${spec(dam.inflowYesterday, ' ㎥/s', 1)}</small>
+          <small>${tr('modalInflowSub', { value: spec(dam.inflowYesterday, ' ㎥/s', 1) })}</small>
         </div>
         <div class="modal-stat-box">
-          <span>총방류량 (시간 관측)</span>
+          <span>${tr('modalOutflow')}</span>
           <strong style="color: ${isNum(dam.currentOutflow) && dam.currentOutflow >= THRESHOLDS.DISCHARGE_CMS ? 'var(--badge-blue-text)' : 'inherit'}">${spec(dam.currentOutflow, ' ㎥/s', 2)}</strong>
-          <small>전일 평균 방류 ${spec(dam.outflowYesterday, ' ㎥/s', 1)}</small>
+          <small>${tr('modalOutflowSub', { value: spec(dam.outflowYesterday, ' ㎥/s', 1) })}</small>
         </div>
       </div>
 
@@ -785,40 +761,40 @@
           <tbody>
             ${dam.distanceKm !== null ? `
             <tr>
-              <td>내 위치와의 거리</td>
-              <td class="num" style="color: var(--primary); font-weight: 700;">약 ${dam.distanceKm} km</td>
+              <td>${tr('specDistance')}</td>
+              <td class="num" style="color: var(--primary); font-weight: 700;">${tr('specDistanceValue', { km: dam.distanceKm })}</td>
             </tr>` : ''}
             <tr>
-              <td>계획홍수위 / 홍수기제한수위</td>
+              <td>${tr('specFloodLevels')}</td>
               <td class="num">${spec(dam.floodLevel, ' EL.m', 2)} / ${spec(dam.floodLimitLevel, ' EL.m', 2)}</td>
             </tr>
             <tr>
-              <td>홍수조절용량</td>
+              <td>${tr('specFloodStorage')}</td>
               <td class="num">${spec(dam.floodControlStorage, ' M㎥', 1)}</td>
             </tr>
             <tr>
-              <td>유역면적</td>
+              <td>${tr('specCatchment')}</td>
               <td class="num">${spec(dam.catchmentArea, ' km²', 1)}</td>
             </tr>
             <tr>
-              <td>댐 높이 / 길이 / 형식</td>
+              <td>${tr('specDimensions')}</td>
               <td class="num">${spec(dam.damHeight, 'm', 1)} / ${spec(dam.damLength, 'm', 1)} / ${escapeHtml(dam.damType || '-')}</td>
             </tr>
             <tr>
-              <td>소재지</td>
-              <td>${escapeHtml(dam.location)}</td>
+              <td>${tr('specLocation')}</td>
+              <td>${escapeHtml(localizedLocation(dam))}</td>
             </tr>
             <tr>
-              <td>준공연도</td>
-              <td class="num">${dam.builtYear ? `${dam.builtYear}년` : '-'}</td>
+              <td>${tr('specBuilt')}</td>
+              <td class="num">${dam.builtYear ? tr('specBuiltValue', { year: dam.builtYear }) : '-'}</td>
             </tr>
             <tr>
-              <td>관리기관 / 댐코드</td>
+              <td>${tr('specAgency')}</td>
               <td>${escapeHtml(dam.agency)} / <span class="num">${dam.code}</span></td>
             </tr>
             <tr>
-              <td>자료 출처</td>
-              <td><a class="footer-link" href="https://www.water.or.kr/kor/realtime/sumun/index.do?mode=sumun&menuId=13_91_93_94" target="_blank" rel="noopener noreferrer">K-water 물정보포털 수문자료</a></td>
+              <td>${tr('specSource')}</td>
+              <td><a class="footer-link" href="https://www.water.or.kr/kor/realtime/sumun/index.do?mode=sumun&menuId=13_91_93_94" target="_blank" rel="noopener noreferrer">${tr('specSourceLink')}</a></td>
             </tr>
           </tbody>
         </table>
@@ -889,7 +865,13 @@
   }
 
   // i18n.js re-renders after a language switch
-  window.appReRenderTable = renderAll;
+  window.appReRenderTable = () => {
+    renderAll();
+    if (!telemetryService.meta) return;
+    refreshTicker();
+    updateTimestamp();
+    refreshInspector();
+  };
 
   // ─── CSV export (UTF-8 BOM for Excel) ─────────────────────────────────────────
   function exportCsv() {
