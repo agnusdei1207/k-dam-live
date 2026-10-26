@@ -16,7 +16,7 @@
  *   mode=getHydr    수문현황 시계열   (param1=H 시간별 / D 일별: 수위·저수량·강우·유입·방류·저수율)
  *   mode=getPeriod  기간별 자료       (댐군 단위 일별 저수량, 최대 365일 창)
  *
- * Runs on Node 20+ with no dependencies:  node scripts/fetch-dam-data.mjs
+ * Runs on Node 22+ with no dependencies:  node scripts/fetch-dam-data.mjs
  * Exits non-zero if the primary snapshot cannot be fetched so a failed run never
  * overwrites the previous deployment with empty data.
  */

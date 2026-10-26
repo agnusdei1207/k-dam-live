@@ -13,6 +13,6 @@
     "serve": "npx --yes serve -l 4173 ."
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   }
 }

@@ -63,7 +63,7 @@
 | 구분 | 기술 | 설명 |
 | :--- | :--- | :--- |
 | Frontend | Vanilla HTML5, CSS3, ES6+ | 무의존성, 번들러 없는 즉시 로딩 |
-| Data | Node 20 fetch script (`scripts/fetch-dam-data.mjs`) | K-water MyWater AJAX 엔드포인트 수집, 의존성 0 |
+| Data | Node 22 fetch script (`scripts/fetch-dam-data.mjs`) | K-water MyWater AJAX 엔드포인트 수집, 의존성 0 |
 | CI/CD | GitHub Actions (push + 10분 주기 신선도 확인) | 수집 → 검증 → Pages 배포 |
 | Design System | Minimalist Tokens (shadcn / Geist) | 고밀도 테이블, 테마 토큰, 일관된 모션 |
 | Data Viz | Pure SVG | 기간별 저수율 추이 곡선 |
