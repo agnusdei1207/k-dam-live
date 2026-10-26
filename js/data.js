@@ -33,11 +33,14 @@
   // Live fields compared on refresh so the UI can pulse cells that really changed
   const LIVE_FIELDS = ['storageRate', 'currentWaterLevel', 'currentStorageVolume', 'currentInflow', 'currentOutflow'];
 
+  const isNum = (v) => typeof v === 'number' && Number.isFinite(v);
+  const round1 = (v) => (isNum(v) ? Math.round(v * 10) / 10 : null);
+
   /**
    * Spherical Haversine great-circle distance (km)
    */
   function calcDistanceKm(lat1, lon1, lat2, lon2) {
-    if (!lat1 || !lon1 || !lat2 || !lon2) return null;
+    if (![lat1, lon1, lat2, lon2].every(isNum)) return null;
     const R = 6371;
     const dLat = (lat2 - lat1) * (Math.PI / 180);
     const dLon = (lon2 - lon1) * (Math.PI / 180);
@@ -50,8 +53,6 @@
     return parseFloat((R * c).toFixed(1));
   }
 
-  const isNum = (v) => typeof v === 'number' && Number.isFinite(v);
-  const round1 = (v) => (isNum(v) ? Math.round(v * 10) / 10 : null);
 
   function classifyStatus(dam) {
     const rate = dam.storageRate;
@@ -100,7 +101,7 @@
       // comparison (MyWater 전년/예년)
       rateLastYear: null, rateNormalYear: null, effectiveRate: null,
       inflowYesterday: null, outflowYesterday: null,
-      diffPrevYear: null,
+      diffNormalYear: null,
       hourly: [],
       distanceKm: null,
       status: null
@@ -140,7 +141,7 @@
         outflowYesterday: isNum(r.outflowYesterday) ? r.outflowYesterday : null,
         hourly: Array.isArray(live.hourly) ? live.hourly : []
       });
-      rec.diffPrevYear = (isNum(rec.storageRate) && isNum(rec.rateNormalYear)) ? round1(rec.storageRate - rec.rateNormalYear) : null;
+      rec.diffNormalYear = (isNum(rec.storageRate) && isNum(rec.rateNormalYear)) ? round1(rec.storageRate - rec.rateNormalYear) : null;
     }
     rec.distanceKm = userLocation ? calcDistanceKm(userLocation.lat, userLocation.lng, rec.lat, rec.lng) : null;
     rec.status = classifyStatus(rec);
@@ -259,31 +260,23 @@
       const slice = series.slice(-daysWanted);
       const offset = series.length - slice.length;
       const step = Math.max(1, Math.ceil(slice.length / 400));
-      const startDate = new Date(`${h.start}T00:00:00Z`);
-      const points = [];
-      for (let i = 0; i < slice.length; i += step) {
-        const d = new Date(startDate.getTime() + (offset + i) * 86400000);
+      const startMs = Date.parse(`${h.start}T00:00:00Z`);
+      const point = (i) => {
+        const d = new Date(startMs + (offset + i) * 86400000);
         const yy = String(d.getUTCFullYear()).slice(2);
         const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
         const dd = String(d.getUTCDate()).padStart(2, '0');
-        points.push({
+        return {
           label: period === '30d' ? `${mm}/${dd}` : `${yy}.${mm}${period === '1y' ? `.${dd}` : ''}`,
           date: `${d.getUTCFullYear()}-${mm}-${dd}`,
           rate: slice[i]
-        });
-      }
+        };
+      };
+      const points = [];
+      for (let i = 0; i < slice.length; i += step) points.push(point(i));
       // Always end on the most recent day
       const lastIdx = slice.length - 1;
-      if ((lastIdx % step) !== 0) {
-        const d = new Date(startDate.getTime() + (offset + lastIdx) * 86400000);
-        const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
-        const dd = String(d.getUTCDate()).padStart(2, '0');
-        points.push({
-          label: period === '30d' ? `${mm}/${dd}` : `${String(d.getUTCFullYear()).slice(2)}.${mm}${period === '1y' ? `.${dd}` : ''}`,
-          date: `${d.getUTCFullYear()}-${mm}-${dd}`,
-          rate: slice[lastIdx]
-        });
-      }
+      if ((lastIdx % step) !== 0) points.push(point(lastIdx));
       return { available: points.some((p) => p.rate !== null), points };
     }
 
@@ -316,27 +309,26 @@
       const currentRateOfRefDams = refCapacity > 0
         ? (refDams.reduce((acc, d) => acc + d.currentStorageVolume, 0) / refCapacity) * 100
         : null;
-      const diffPrevYear = (isNum(normalYearRate) && isNum(currentRateOfRefDams)) ? currentRateOfRefDams - normalYearRate : null;
+      const diffNormalYear = (isNum(normalYearRate) && isNum(currentRateOfRefDams)) ? currentRateOfRefDams - normalYearRate : null;
 
       const totalInflow = observed.reduce((acc, d) => acc + (isNum(d.currentInflow) ? d.currentInflow : 0), 0);
       const totalOutflow = observed.reduce((acc, d) => acc + (isNum(d.currentOutflow) ? d.currentOutflow : 0), 0);
       const dischargingCount = observed.filter((d) => isNum(d.currentOutflow) && d.currentOutflow >= THRESHOLDS.DISCHARGE_CMS).length;
       const droughtCount = storageDams.filter((d) => d.storageRate < THRESHOLDS.DROUGHT_CAUTION).length;
-      const floodRiskCount = observed.filter((d) => d.status && d.status.code === 'FLOOD').length;
 
+      // Same 0.1 rounding as the UI's toFixed(1) so formatting the number later cannot drift
+      const fixed1 = (v) => (isNum(v) ? Number(v.toFixed(1)) : null);
       return {
-        totalDams: this.currentData.length,
         observedDams: observed.length,
-        avgStorageRate: isNum(avgStorageRate) ? avgStorageRate.toFixed(1) : null,
-        normalYearRate: isNum(normalYearRate) ? normalYearRate.toFixed(1) : null,
-        diffPrevYear: isNum(diffPrevYear) ? diffPrevYear.toFixed(1) : null,
-        totalStorageVolume: totalStorageVolume.toFixed(1),
-        totalCapacity: totalCapacity.toFixed(1),
-        totalInflow: totalInflow.toFixed(1),
-        totalOutflow: totalOutflow.toFixed(1),
+        avgStorageRate: fixed1(avgStorageRate),
+        normalYearRate: fixed1(normalYearRate),
+        diffNormalYear: fixed1(diffNormalYear),
+        totalStorageVolume: fixed1(totalStorageVolume),
+        totalCapacity: fixed1(totalCapacity),
+        totalInflow: fixed1(totalInflow),
+        totalOutflow: fixed1(totalOutflow),
         dischargingCount,
         droughtCount,
-        floodRiskCount,
         observedAt: this.meta ? this.meta.observedAt : null
       };
     }

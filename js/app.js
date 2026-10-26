@@ -22,13 +22,28 @@
   const TICKER_ROTATE_MS = 4200;
   const GPS_LABEL = '현재 GPS 위치';
 
+  // Live record field → table cell that pulses when a new observation changes it
+  const PULSE_TARGETS = {
+    storageRate: '.rate-val',
+    currentWaterLevel: '.level-val',
+    currentStorageVolume: '.vol-val',
+    currentInflow: '.inflow-val',
+    currentOutflow: '.outflow-val'
+  };
+
+  const TYPE_BADGE_CLASSES = {
+    [DAM_TYPES.MULTIPURPOSE]: 'badge-type-multi',
+    [DAM_TYPES.WATER_SUPPLY]: 'badge-type-water',
+    [DAM_TYPES.FLOOD_CONTROL]: 'badge-type-flood'
+  };
+
   // Table sort keys (data-sort attribute) → record fields
   const SORT_FIELDS = {
     name: 'name',
     basin: 'basin',
     type: 'type',
     storageRate: 'storageRate',
-    diffPrevYear: 'diffPrevYear',
+    diffNormalYear: 'diffNormalYear',
     waterLevel: 'currentWaterLevel',
     storageVolume: 'currentStorageVolume',
     inflow: 'currentInflow',
@@ -100,7 +115,8 @@
       modalDamTitle: document.getElementById('modal-dam-title'),
       modalDamSub: document.getElementById('modal-dam-sub'),
       modalDamContent: document.getElementById('modal-dam-content'),
-      btnModalClose: document.getElementById('btn-modal-close')
+      btnModalClose: document.getElementById('btn-modal-close'),
+      modalBackdrop: document.querySelector('.inspector-modal-backdrop')
     };
   }
 
@@ -131,9 +147,9 @@
     if (m.observedAt) {
       items.push(`📡 K-water 물정보포털 ${m.observedAt} 관측 기준 · 전국 ${m.observedDams}개 댐 수문자료 동기화 완료`);
     }
-    if (m.avgStorageRate) {
-      const diff = isNum(parseFloat(m.diffPrevYear)) ? ` (예년 ${m.normalYearRate}% 대비 ${fmtSigned(parseFloat(m.diffPrevYear))}%p)` : '';
-      items.push(`💧 전국 다목적·용수댐 평균 저수율 ${m.avgStorageRate}%${diff}`);
+    if (isNum(m.avgStorageRate)) {
+      const diff = isNum(m.diffNormalYear) ? ` (예년 ${fmt(m.normalYearRate)}% 대비 ${fmtSigned(m.diffNormalYear)}%p)` : '';
+      items.push(`💧 전국 다목적·용수댐 평균 저수율 ${fmt(m.avgStorageRate)}%${diff}`);
     }
 
     const storageDams = data.filter((d) => d.type !== DAM_TYPES.FLOOD_CONTROL);
@@ -153,7 +169,7 @@
       items.push(`🌾 저수율 하위 댐: ${l} (가뭄주의 ${THRESHOLDS.DROUGHT_CAUTION}% 미만 ${m.droughtCount}개소)`);
     }
     if (highest[0]) {
-      items.push(`🛡️ ${highest[0].basin} ${highest[0].name} 저수율 ${fmt(highest[0].storageRate)}% 전국 최고 (예년 대비 ${fmtSigned(highest[0].diffPrevYear)}%p)`);
+      items.push(`🛡️ ${highest[0].basin} ${highest[0].name} 저수율 ${fmt(highest[0].storageRate)}% 전국 최고 (예년 대비 ${fmtSigned(highest[0].diffNormalYear)}%p)`);
     }
     const jwam = data.find((d) => d.id === 'jwam');
     if (jwam && isNum(jwam.rateLastYear)) {
@@ -242,15 +258,8 @@
     result.changes.forEach(({ id, delta }) => {
       const row = document.querySelector(`tr[data-dam-id="${id}"]`);
       if (!row) return;
-      const map = {
-        storageRate: '.rate-val',
-        currentWaterLevel: '.level-val',
-        currentStorageVolume: '.vol-val',
-        currentInflow: '.inflow-val',
-        currentOutflow: '.outflow-val'
-      };
       Object.entries(delta).forEach(([field, [prev, next]]) => {
-        const el = row.querySelector(map[field]);
+        const el = row.querySelector(PULSE_TARGETS[field]);
         if (el && isNum(prev) && isNum(next)) triggerPulse(el, next >= prev);
       });
     });
@@ -501,21 +510,21 @@
     const isI18n = Boolean(window.i18n);
     const m = telemetryService.getOverviewMetrics();
 
-    updateStatCardValue(elements.valAvgRate, m.avgStorageRate ? `${m.avgStorageRate}%` : '--%', parseFloat(m.avgStorageRate), 'avgRate');
-    updateStatCardValue(elements.valTotalStorage, `${fmtInt(parseFloat(m.totalStorageVolume))} M㎥`, parseFloat(m.totalStorageVolume), 'totalStorage');
-    updateStatCardValue(elements.valTotalInflow, `${fmtNum(parseFloat(m.totalInflow))} ㎥/s`, parseFloat(m.totalInflow), 'totalInflow');
-    updateStatCardValue(elements.valTotalOutflow, `${fmtNum(parseFloat(m.totalOutflow))} ㎥/s`, parseFloat(m.totalOutflow), 'totalOutflow');
+    updateStatCardValue(elements.valAvgRate, isNum(m.avgStorageRate) ? `${fmt(m.avgStorageRate)}%` : '--%', m.avgStorageRate, 'avgRate');
+    updateStatCardValue(elements.valTotalStorage, `${fmtInt(m.totalStorageVolume)} M㎥`, m.totalStorageVolume, 'totalStorage');
+    updateStatCardValue(elements.valTotalInflow, `${fmtNum(m.totalInflow)} ㎥/s`, m.totalInflow, 'totalInflow');
+    updateStatCardValue(elements.valTotalOutflow, `${fmtNum(m.totalOutflow)} ㎥/s`, m.totalOutflow, 'totalOutflow');
 
     if (elements.deltaAvgRate) {
-      const diffLabel = isI18n ? i18n.t('diffPrevYear') : '예년 대비';
-      const diff = parseFloat(m.diffPrevYear);
+      const diffLabel = isI18n ? i18n.t('diffNormalYear') : '예년 대비';
+      const diff = m.diffNormalYear;
       elements.deltaAvgRate.textContent = isNum(diff)
-        ? `${diffLabel} ${fmtSigned(diff)}%p (예년 ${m.normalYearRate}%)`
+        ? `${diffLabel} ${fmtSigned(diff)}%p (예년 ${fmt(m.normalYearRate)}%)`
         : `${diffLabel} --`;
       elements.deltaAvgRate.style.color = isNum(diff) ? (diff >= 0 ? 'var(--badge-green-text)' : 'var(--badge-red-text)') : '';
     }
     if (elements.valTotalCapacity) {
-      elements.valTotalCapacity.textContent = `총 저수용량 ${fmtInt(parseFloat(m.totalCapacity))} M㎥ (홍수조절댐 제외)`;
+      elements.valTotalCapacity.textContent = `총 저수용량 ${fmtInt(m.totalCapacity)} M㎥ (홍수조절댐 제외)`;
     }
     if (elements.valDischargeCount) {
       if (isI18n && i18n.currentLang !== 'ko') {
@@ -526,33 +535,26 @@
     }
   }
 
-  function getTypeBadgeClass(type) {
-    if (type.includes('다목적')) return 'badge-type-multi';
-    if (type.includes('용수전용')) return 'badge-type-water';
-    if (type.includes('홍수조절')) return 'badge-type-flood';
-    return 'badge-muted';
-  }
-
   function getStatusPresentation(dam) {
-    const isI18n = Boolean(window.i18n) && i18n.currentLang !== 'ko';
+    const translated = Boolean(window.i18n) && i18n.currentLang !== 'ko';
     const code = dam.status ? dam.status.code : 'NO_DATA';
     const koLabel = dam.status ? dam.status.label : '관측값 없음';
     switch (code) {
       case 'FLOOD':
         return { badgeClass: 'badge-red', label: `⚠️ ${koLabel}`, barColor: 'var(--bar-fill-red)' };
       case 'DISCHARGE':
-        return { badgeClass: 'badge-blue live-discharge', label: `🌊 ${isI18n ? i18n.t('statusDischarge') : koLabel}`, barColor: 'var(--bar-fill-blue)' };
+        return { badgeClass: 'badge-blue live-discharge', label: `🌊 ${translated ? i18n.t('statusDischarge') : koLabel}`, barColor: 'var(--bar-fill-blue)' };
       case 'DROUGHT_ALERT':
-        return { badgeClass: 'badge-red', label: isI18n ? i18n.t('statusDrought') : koLabel, barColor: 'var(--bar-fill-red)' };
+        return { badgeClass: 'badge-red', label: translated ? i18n.t('statusDrought') : koLabel, barColor: 'var(--bar-fill-red)' };
       case 'DROUGHT_CAUTION':
       case 'DROUGHT_ATTENTION':
-        return { badgeClass: 'badge-yellow', label: isI18n ? i18n.t('statusDrought') : koLabel, barColor: 'var(--bar-fill-yellow)' };
+        return { badgeClass: 'badge-yellow', label: translated ? i18n.t('statusDrought') : koLabel, barColor: 'var(--bar-fill-yellow)' };
       case 'FLOOD_CONTROL':
-        return { badgeClass: 'badge-muted', label: isI18n ? i18n.t('floodControl') : koLabel, barColor: 'var(--bar-fill-blue)' };
+        return { badgeClass: 'badge-muted', label: translated ? i18n.t('floodControl') : koLabel, barColor: 'var(--bar-fill-blue)' };
       case 'NO_DATA':
         return { badgeClass: 'badge-muted', label: koLabel, barColor: 'var(--border-subtle)' };
       default:
-        return { badgeClass: 'badge-green', label: isI18n ? i18n.t('statusNormal') : koLabel, barColor: 'var(--bar-fill-green)' };
+        return { badgeClass: 'badge-green', label: translated ? i18n.t('statusNormal') : koLabel, barColor: 'var(--bar-fill-green)' };
     }
   }
 
@@ -577,30 +579,17 @@
     elements.damsTbody.innerHTML = dams.map((dam) => {
       const { badgeClass, label: badgeLabel, barColor } = getStatusPresentation(dam);
 
-      let localizedType = dam.type;
-      if (isI18n) {
-        if (dam.type.includes('다목적')) localizedType = i18n.t('multiPurpose');
-        else if (dam.type.includes('용수전용')) localizedType = i18n.t('waterSupply');
-        else if (dam.type.includes('홍수조절')) localizedType = i18n.t('floodControl');
-      }
-
-      let localizedBasin = dam.basin;
-      if (isI18n) {
-        if (dam.basin.includes('한강')) localizedBasin = i18n.t('basinHan');
-        else if (dam.basin.includes('낙동강')) localizedBasin = i18n.t('basinNakdong');
-        else if (dam.basin.includes('금강')) localizedBasin = i18n.t('basinGeum');
-        else if (dam.basin.includes('영산') || dam.basin.includes('섬진')) localizedBasin = i18n.t('basinYeongsan');
-      }
-
-      const diffColor = isNum(dam.diffPrevYear) ? (dam.diffPrevYear >= 0 ? 'var(--badge-green-text)' : 'var(--badge-red-text)') : 'var(--text-subtle)';
-      const diffText = isNum(dam.diffPrevYear) ? `${fmtSigned(dam.diffPrevYear)}%p` : '-';
+      const localizedType = isI18n ? i18n.damType(dam.type) : dam.type;
+      const localizedBasin = isI18n ? i18n.basin(dam.basin) : dam.basin;
+      const diffColor = isNum(dam.diffNormalYear) ? (dam.diffNormalYear >= 0 ? 'var(--badge-green-text)' : 'var(--badge-red-text)') : 'var(--text-subtle)';
+      const diffText = isNum(dam.diffNormalYear) ? `${fmtSigned(dam.diffNormalYear)}%p` : '-';
       const distanceHtml = dam.distanceKm !== null ? `<span class="distance-badge">${dam.distanceKm}km</span>` : '';
-      const typeClass = getTypeBadgeClass(dam.type);
+      const typeClass = TYPE_BADGE_CLASSES[dam.type] || 'badge-muted';
       const rateWidth = isNum(dam.storageRate) ? Math.min(100, dam.storageRate) : 0;
       const locText = (isI18n && i18n.currentLang !== 'ko' && i18n.getLocationEN(dam.id)) ? i18n.getLocationEN(dam.id) : dam.location;
 
       return `
-        <tr data-dam-id="${dam.id}" onclick="window.appInspectDam('${dam.id}')" title="${isI18n ? i18n.t('modalTitle') : dam.name + ' 상세 제원 보기'}">
+        <tr data-dam-id="${dam.id}" title="${isI18n ? i18n.t('modalTitle') : dam.name + ' 상세 제원 보기'}">
           <td>
             <div class="dam-title-cell">${dam.name} ${distanceHtml}</div>
             <div class="dam-loc-sub">${escapeHtml(locText)}</div>
@@ -643,7 +632,7 @@
   function renderPeriodTabs(damId, period) {
     return ['24h', '30d', '1y', '3y', '5y'].map((p) => {
       const label = { '24h': '24시간', '30d': '30일', '1y': '1년', '3y': '3년', '5y': '5년' }[p];
-      return `<button class="btn-period-tab ${period === p ? 'active' : ''}" onclick="window.appSwitchTrendPeriod('${damId}', '${p}')" type="button">${label}</button>`;
+      return `<button class="btn-period-tab ${period === p ? 'active' : ''}" data-period="${p}" type="button">${label}</button>`;
     }).join('');
   }
 
@@ -739,8 +728,6 @@
     }
     container.innerHTML = renderModalTrendChart(dam, period, barColor);
   }
-
-  window.appSwitchTrendPeriod = switchTrendPeriod;
 
   function openInspector(damId) {
     const dam = telemetryService.currentData.find((d) => d.id === damId);
@@ -868,12 +855,8 @@
     activeModalDamId = null;
   }
 
-  window.appInspectDam = openInspector;
-  window.appCloseModal = closeInspector;
-  window.appReRenderTable = () => {
-    renderTable();
-    renderStats();
-  };
+  // i18n.js re-renders after a language switch
+  window.appReRenderTable = renderAll;
 
   // ─── CSV export (UTF-8 BOM for Excel) ─────────────────────────────────────────
   function exportCsv() {
@@ -896,7 +879,7 @@
       cell(d.storageRate), cell(d.rateLastYear), cell(d.rateNormalYear), cell(d.effectiveRate),
       cell(d.currentStorageVolume), cell(d.totalStorage), cell(d.effectiveStorage),
       cell(d.currentInflow), cell(d.currentOutflow), cell(d.inflowYesterday), cell(d.outflowYesterday),
-      cell(d.diffPrevYear), escapeCell(d.status ? d.status.label : ''), escapeCell(d.agency)
+      cell(d.diffNormalYear), escapeCell(d.status ? d.status.label : ''), escapeCell(d.agency)
     ].join(','));
 
     const csvContent = '﻿' + headers.join(',') + '\r\n' + rows.join('\r\n');
@@ -995,12 +978,21 @@
       });
     });
 
-    if (elements.btnModalClose) {
-      elements.btnModalClose.addEventListener('click', (e) => {
-        e.stopPropagation();
-        closeInspector();
+    // Rows and period tabs are re-rendered often: one delegated listener each instead of inline handlers
+    if (elements.damsTbody) {
+      elements.damsTbody.addEventListener('click', (e) => {
+        const row = e.target.closest('tr[data-dam-id]');
+        if (row) openInspector(row.getAttribute('data-dam-id'));
       });
     }
+    if (elements.modalDamContent) {
+      elements.modalDamContent.addEventListener('click', (e) => {
+        const tab = e.target.closest('.btn-period-tab[data-period]');
+        if (tab && activeModalDamId) switchTrendPeriod(activeModalDamId, tab.getAttribute('data-period'));
+      });
+    }
+    if (elements.btnModalClose) elements.btnModalClose.addEventListener('click', closeInspector);
+    if (elements.modalBackdrop) elements.modalBackdrop.addEventListener('click', closeInspector);
 
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' || e.key === 'Esc') closeInspector();

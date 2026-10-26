@@ -2,6 +2,7 @@
 /** Reject stale or internally inconsistent MyWater snapshots before deployment. */
 import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
+import { kstStampMs } from './mywater.mjs';
 
 const { DAMS } = createRequire(import.meta.url)('../js/registry.js');
 const file = new URL('../data/live.json', import.meta.url);
@@ -22,9 +23,7 @@ for (const reg of DAMS) {
   }
   const { current, specs } = dam;
   const stamp = current?.observedAt;
-  const match = /^\d{4}-\d{2}-\d{2} (\d{2}):\d{2}$/.exec(stamp || '');
-  const date = match && Date.parse(`${stamp.slice(0, 10)}T00:00:00+09:00`) + Number(match[1]) * 3600000;
-  const age = now - date;
+  const age = now - kstStampMs(stamp);
   if (!Number.isFinite(age) || age < -3600000 || age > 6 * 3600000) {
     errors.push(`${reg.id}: stale or invalid observation time ${stamp}`);
     continue;

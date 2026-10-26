@@ -179,8 +179,7 @@ body {
   background: var(--surface-hover);
 }
 
-.btn-icon,
-.btn-action {
+.btn-icon {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -201,19 +200,16 @@ body {
   padding: 0 10px;
 }
 
-.btn-icon:hover,
-.btn-action:hover {
+.btn-icon:hover {
   background: var(--surface-hover);
   border-color: var(--border-strong);
 }
 
-.btn-icon:active,
-.btn-action:active {
+.btn-icon:active {
   background: var(--surface-active);
 }
 
 .btn-icon:focus-visible,
-.btn-action:focus-visible,
 .tab-btn:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 1px;
@@ -1605,15 +1601,6 @@ body {
     font-size: 0.72rem;
   }
 
-  .btn-action span {
-    display: none;
-  }
-
-  .btn-action {
-    padding: 0 8px;
-    height: 32px;
-  }
-
   .btn-icon {
     height: 32px;
     padding: 0 8px;
@@ -1648,10 +1635,6 @@ body {
 
   .ticker-text {
     font-size: 0.74rem;
-  }
-
-  .ticker-meta {
-    display: none;
   }
 
   /* 2x2 Stats Grid on mobile */

@@ -71,7 +71,7 @@ test('observations are merged as-is, storage rate rounded to 0.1 and non-positiv
   const soyang = find(telemetryService, 'soyang');
   assert.equal(soyang.storageRate, 63);
   assert.equal(soyang.currentWaterLevel, 182.799);
-  assert.equal(soyang.diffPrevYear, 2.1); // 63.0 − 예년 60.9
+  assert.equal(soyang.diffNormalYear, 2.1); // 63.0 − 예년 60.9
   const peace = find(telemetryService, 'peace');
   assert.equal(peace.normalFullLevel, null);
   assert.equal(peace.effectiveStorage, 0);
@@ -142,7 +142,7 @@ test('national overview is capacity-weighted and excludes the flood-control dam'
   assert.equal(m.dischargingCount, 1);   // peace 28.068 ㎥/s
   assert.equal(m.droughtCount, 2);       // andong 42.4, jwam 42.9
   assert.equal(m.observedDams, 4);
-  assert.equal(Number(m.diffPrevYear), Number(((volume / capacity) * 100 - 60.9).toFixed(1)));
+  assert.equal(Number(m.diffNormalYear), Number(((volume / capacity) * 100 - 60.9).toFixed(1)));
 });
 
 test('24h trend uses the last 25 hourly rows', async () => {

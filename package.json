@@ -6,7 +6,7 @@
   "license": "MIT",
   "homepage": "https://agnusdei1207.github.io/k-dam-live/",
   "scripts": {
-    "check": "node --check js/registry.js && node --check js/data.js && node --check js/app.js && node --check js/i18n.js && node --check scripts/fetch-dam-data.mjs && node --check scripts/check-live-data.mjs && node --check scripts/needs-update.mjs",
+    "check": "node --check js/registry.js && node --check js/data.js && node --check js/app.js && node --check js/i18n.js && node --check scripts/fetch-dam-data.mjs && node --check scripts/check-live-data.mjs && node --check scripts/needs-update.mjs && node --check scripts/mywater.mjs",
     "test": "npm run check && node --test \"tests/*.test.mjs\"",
     "check:data": "node scripts/check-live-data.mjs",
     "fetch": "node scripts/fetch-dam-data.mjs",

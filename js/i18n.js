@@ -76,7 +76,7 @@
       title: '전국 댐 저수율 실시간 모니터링',
       subtitle: '전국 36개 주요 다목적댐 및 용수전용댐의 실시간 수위, 저수율, 유입량 및 방류량 현황',
       avgRate: '전국 평균 저수율',
-      diffPrevYear: '예년 대비',
+      diffNormalYear: '예년 대비',
       totalStorage: '전국 총 저수량',
       totalInflow: '실시간 총 유입량',
       totalOutflow: '실시간 총 방류량',
@@ -111,7 +111,7 @@
       title: 'Korea Real-Time Dam Storage Monitoring',
       subtitle: 'Real-time water levels, storage rates, inflow, and outflow telemetry across 36 major dams',
       avgRate: 'National Avg Storage Rate',
-      diffPrevYear: 'vs. Normal Year',
+      diffNormalYear: 'vs. Normal Year',
       totalStorage: 'Total Water Storage',
       totalInflow: 'Total Live Inflow',
       totalOutflow: 'Total Live Outflow',
@@ -146,7 +146,7 @@
       title: '韓国ダム貯水率 リアルタイム監視',
       subtitle: '全国36の主要ダムの水位・貯水率・流入量・放流量リアルタイムテレメトリ',
       avgRate: '全国平均貯水率',
-      diffPrevYear: '平年比',
+      diffNormalYear: '平年比',
       totalStorage: '全国総貯水量',
       totalInflow: 'リアルタイム総流入量',
       totalOutflow: 'リアルタイム総放流量',
@@ -181,7 +181,7 @@
       title: '韩国水库蓄水量 实时监测平台',
       subtitle: '全国36座主要多功能大坝实时水位、蓄水率、入库及出库流量遥测',
       avgRate: '全国平均蓄水率',
-      diffPrevYear: '对比往年同期',
+      diffNormalYear: '对比往年同期',
       totalStorage: '全国总蓄水量',
       totalInflow: '实时总入库流量',
       totalOutflow: '实时总泄洪量',
@@ -216,7 +216,7 @@
       title: '韓國水庫蓄水量 即時監測平台',
       subtitle: '全國36座主要水壩即時水位、蓄水率、入流及放水量水文監測',
       avgRate: '全國平均蓄水率',
-      diffPrevYear: '對比往年同期',
+      diffNormalYear: '對比往年同期',
       totalStorage: '全國總蓄水量',
       totalInflow: '即時總入流量',
       totalOutflow: '即時總放流量',
@@ -251,7 +251,7 @@
       title: 'Giám sát Mực nước Đập Thủy điện Hàn Quốc Trực tiếp',
       subtitle: 'Mực nước, tỷ lệ trữ nước, lưu lượng vào và xả lũ trực tiếp của 36 đập lớn tại Hàn Quốc',
       avgRate: 'Tỷ lệ Trữ nước Trung bình',
-      diffPrevYear: 'So với Trung bình Năm',
+      diffNormalYear: 'So với Trung bình Năm',
       totalStorage: 'Tổng Dung tích Trữ nước',
       totalInflow: 'Tổng Lưu lượng Nước vào',
       totalOutflow: 'Tổng Lưu lượng Nước xả',
@@ -286,7 +286,7 @@
       title: 'ระบบติดตามปริมาณน้ำในเขื่อนเกาหลีแบบเรียลไทม์',
       subtitle: 'ระดับน้ำ อัตรากักเก็บ ปริมาณน้ำไหลเข้าและระบายน้ำจาก 36 เขื่อนหลักในเกาหลีใต้',
       avgRate: 'อัตรากักเก็บเฉลี่ยทั้งประเทศ',
-      diffPrevYear: 'เทียบกับค่าเฉลี่ยปกติ',
+      diffNormalYear: 'เทียบกับค่าเฉลี่ยปกติ',
       totalStorage: 'ปริมาณน้ำกักเก็บรวม',
       totalInflow: 'น้ำไหลเข้ารวมเรียลไทม์',
       totalOutflow: 'น้ำระบายรวมเรียลไทม์',
@@ -321,7 +321,7 @@
       title: 'Real-Time Pagsubaybay sa Imbakan ng Tubig sa Dam ng Korea',
       subtitle: 'Mga antas ng tubig, rate ng imbakan, papasok at papalabas na daloy ng 36 pangunahing dam',
       avgRate: 'Pambansang Karaniwang Imbakan',
-      diffPrevYear: 'Kompormasyon sa Normal',
+      diffNormalYear: 'Kompormasyon sa Normal',
       totalStorage: 'Kabuuang Imbak na Tubig',
       totalInflow: 'Kabuuang Papasok na Tubig',
       totalOutflow: 'Kabuuang Pinakawalang Tubig',
@@ -356,7 +356,7 @@
       title: 'Pemantauan Real-Time Bendungan Korea Selatan',
       subtitle: 'Tinggi muka air, kapasitas waduk, debit masuk dan keluar dari 36 bendungan utama',
       avgRate: 'Rata-rata Kapasitas Nasional',
-      diffPrevYear: 'Dibanding Rata-rata Normal',
+      diffNormalYear: 'Dibanding Rata-rata Normal',
       totalStorage: 'Total Volume Air Tersimpan',
       totalInflow: 'Total Debit Masuk Langsung',
       totalOutflow: 'Total Debit Keluar/Pelepasan',
@@ -391,7 +391,7 @@
       title: 'Мониторинг водохранилищ Южной Кореи в реальном времени',
       subtitle: 'Уровни воды, процент наполнения, приток и водосброс на 36 крупнейших плотинах',
       avgRate: 'Среднее наполнение по стране',
-      diffPrevYear: 'По сравнению с нормой',
+      diffNormalYear: 'По сравнению с нормой',
       totalStorage: 'Общий объем воды',
       totalInflow: 'Общий текущий приток',
       totalOutflow: 'Общий сброс воды',
@@ -426,7 +426,7 @@
       title: 'Солонгосын далангуудын усны нөөцийн шууд мониторинг',
       subtitle: '36 томоохон далангийн усны түвшин, нөөцийн хувь, орц ба гарцын хяналт',
       avgRate: 'Улсын дундаж нөөц',
-      diffPrevYear: 'Өмнөх жилийн дундажтай харьцуулахад',
+      diffNormalYear: 'Өмнөх жилийн дундажтай харьцуулахад',
       totalStorage: 'Улсын нийт усны нөөц',
       totalInflow: 'Шууд нийт усны орц',
       totalOutflow: 'Шууд нийт усны гарц',
@@ -461,7 +461,7 @@
       title: 'Janubiy Koreya Suv Omborlari Jonli Monitoringi',
       subtitle: '36 ta yirik to‘g‘onning suv sathi, zaxira foizi, suv kelishi va chiqarilishi',
       avgRate: 'Respublika o‘rtacha suv zaxirasi',
-      diffPrevYear: 'O‘rtacha ko‘rsatkichga nisbatan',
+      diffNormalYear: 'O‘rtacha ko‘rsatkichga nisbatan',
       totalStorage: 'Umumiy suv hajmi',
       totalInflow: 'Jonli suv kelish hajmi',
       totalOutflow: 'Jonli suv chiqarish hajmi',
@@ -496,7 +496,7 @@
       title: 'दक्षिण कोरियाका बाँधहरूको प्रत्यक्ष अनुगमन',
       subtitle: '३४ मुख्य बाँधहरूको जलस्तर, भण्डारण दर र पानीको बहावको प्रत्यक्ष जानकारी',
       avgRate: 'राष्ट्रिय औसत भण्डारण दर',
-      diffPrevYear: 'सामान्य वर्षको तुलनामा',
+      diffNormalYear: 'सामान्य वर्षको तुलनामा',
       totalStorage: 'कुल पानी भण्डारण',
       totalInflow: 'कुल प्रत्यक्ष पानी प्रवेश',
       totalOutflow: 'कुल पानी निष्कासन',
@@ -531,7 +531,7 @@
       title: 'ကိုရီးယားနိုင်ငံ ဆည်ရေလှောင်တမံများ တိုက်ရိုက်စောင့်ကြည့်မှုစနစ်',
       subtitle: 'အဓိကဆည်ကြီး ၃၄ ခု၏ ရေမျက်နှာပြင်အမြင့်၊ ရေလှောင်ပမာဏနှင့် ရေစီးဝင်/ထွက်နှုန်းများ',
       avgRate: 'တစ်နိုင်ငံလုံး ပျမ်းမျှရေလှောင်နှုန်း',
-      diffPrevYear: 'ပုံမှန်နှစ်နှင့် နှိုင်းယှဉ်ချက်',
+      diffNormalYear: 'ပုံမှန်နှစ်နှင့် နှိုင်းယှဉ်ချက်',
       totalStorage: 'စုစုပေါင်း ရေလှောင်ပမာဏ',
       totalInflow: 'စုစုပေါင်း ရေစီးဝင်မှု',
       totalOutflow: 'စုစုပေါင်း ရေထုတ်လွှတ်မှု',
@@ -566,7 +566,7 @@
       title: 'ការតាមដានទំនប់ទឹកកូរ៉េផ្ទាល់',
       subtitle: 'កម្រិតទឹក អត្រាស្តុក និងបរិមាណទឹកហូរចូល-ចេញនៃទំនប់សំខាន់ៗទាំង ៣៤ នៅកូរ៉េខាងត្បូង',
       avgRate: 'អត្រាស្តុកទឹកជាមធ្យមទូទាំងប្រទេស',
-      diffPrevYear: 'ធៀបនឹងឆ្នាំធម្មតា',
+      diffNormalYear: 'ធៀបនឹងឆ្នាំធម្មតា',
       totalStorage: 'បរិមាណស្តុកទឹកសរុប',
       totalInflow: 'ទឹកហូរចូលសរុបផ្ទាល់',
       totalOutflow: 'ទឹកបង្ហូរចេញសរុបផ្ទាល់',
@@ -601,7 +601,7 @@
       title: 'Monitoreo en Tiempo Real de Presas de Corea del Sur',
       subtitle: 'Niveles de agua, porcentaje de almacenamiento, afluencia y descarga de 36 presas principales',
       avgRate: 'Almacenamiento Promedio Nacional',
-      diffPrevYear: 'vs. Año Normal',
+      diffNormalYear: 'vs. Año Normal',
       totalStorage: 'Volumen Total Almacenado',
       totalInflow: 'Caudal Total de Entrada',
       totalOutflow: 'Caudal Total de Descarga',
@@ -636,7 +636,7 @@
       title: 'Surveillance en Temps Réel des Barrages de Corée',
       subtitle: 'Niveaux d’eau, taux de remplissage, débit entrant et débit sortant de 36 barrages majeurs',
       avgRate: 'Taux Moyen National',
-      diffPrevYear: 'Par rapport à la normale',
+      diffNormalYear: 'Par rapport à la normale',
       totalStorage: 'Volume d’Eau Total Stocké',
       totalInflow: 'Débit Entrant Total',
       totalOutflow: 'Débit Sortant Total',
@@ -671,7 +671,7 @@
       title: 'Echtzeit-Überwachung der Talsperren in Südkorea',
       subtitle: 'Wasserstände, Stauinhalte, Zufluss und Abfluss von 36 Haupttalsperren',
       avgRate: 'Bundesweiter Füllstand',
-      diffPrevYear: 'Im Vergleich zum Vorjahr',
+      diffNormalYear: 'Im Vergleich zum Vorjahr',
       totalStorage: 'Gesamter Stauinhalt',
       totalInflow: 'Gesamter Zufluss',
       totalOutflow: 'Gesamter Abfluss',
@@ -706,7 +706,7 @@
       title: 'مراقبة سدود كوريا الجنوبية المباشرة',
       subtitle: 'مناسيب المياه، نسب التخزين، ومعدلات التدفق والتصريف في 36 سداً رئيسياً في كوريا',
       avgRate: 'متوسط التخزين الوطني',
-      diffPrevYear: 'مقارنة بالمعدل الطبيعي',
+      diffNormalYear: 'مقارنة بالمعدل الطبيعي',
       totalStorage: 'إجمالي المياه المخزنة',
       totalInflow: 'إجمالي التدفق الوارد المباشر',
       totalOutflow: 'إجمالي التدفق المنصرف المباشر',
@@ -741,7 +741,7 @@
       title: 'दक्षिण कोरिया के बांधों की रीयल-टाइम निगरानी प्रणाली',
       subtitle: 'दक्षिण कोरिया के ३४ प्रमुख बांधों के जल स्तर, भंडारण दर, अंतर्वाह और बहिर्वाह का सीधा प्रसारण',
       avgRate: 'राष्ट्रीय औसत भंडारण दर',
-      diffPrevYear: 'सामान्य वर्ष की तुलना में',
+      diffNormalYear: 'सामान्य वर्ष की तुलना में',
       totalStorage: 'कुल संचित जल',
       totalInflow: 'कुल रीयल-टाइम अंतर्वाह',
       totalOutflow: 'कुल जल निकासी',
@@ -776,7 +776,7 @@
       title: 'Monitoramento em Tempo Real de Barragens da Coreia',
       subtitle: 'Níveis de água, taxas de armazenamento, fluxo de entrada e vazão de 36 barragens principais',
       avgRate: 'Taxa Média Nacional de Armazenamento',
-      diffPrevYear: 'vs. Ano Normal',
+      diffNormalYear: 'vs. Ano Normal',
       totalStorage: 'Volume Total Armazenado',
       totalInflow: 'Vazão Total de Entrada',
       totalOutflow: 'Vazão Total de Saída',
@@ -811,7 +811,7 @@
       title: 'দক্ষিণ কোরিয়ার বাঁধসমূহের রিয়েল-টাইম পর্যবেক্ষণ',
       subtitle: 'দক্ষিণ কোরিয়ার ৩৪টি প্রধান বাঁধের পানির স্তর, ধারণক্ষমতা, প্রবাহ ও নিষ্কাশন তথ্য',
       avgRate: 'জাতীয় গড় জল ধারণক্ষমতা',
-      diffPrevYear: 'স্বাভাবিক বছরের তুলনায়',
+      diffNormalYear: 'স্বাভাবিক বছরের তুলনায়',
       totalStorage: 'মোট সংরক্ষিত পানি',
       totalInflow: 'মোট সরাসরি পানি প্রবেশ',
       totalOutflow: 'মোট সরাসরি পানি নিষ্কাশন',
@@ -846,36 +846,20 @@
 
   let currentLang = 'ko';
 
+  // navigator.language prefix → supported language (first match wins, so zh-TW precedes zh)
+  const BROWSER_LANG_PREFIXES = [
+    [['zh-tw', 'zh-hk'], 'zh-TW'], [['zh'], 'zh-CN'], [['tl', 'fil'], 'tl'],
+    ...['ja', 'vi', 'th', 'id', 'ru', 'mn', 'uz', 'ne', 'my', 'km', 'es', 'fr', 'de', 'ar', 'hi', 'pt', 'bn', 'en'].map((l) => [[l], l])
+  ];
+
   function getStoredLang() {
     try {
       const saved = localStorage.getItem('kdam_lang');
       if (saved && TRANSLATIONS[saved]) return saved;
-      const browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
-      if (browserLang.startsWith('zh-tw') || browserLang.startsWith('zh-hk')) return 'zh-TW';
-      if (browserLang.startsWith('zh')) return 'zh-CN';
-      if (browserLang.startsWith('ja')) return 'ja';
-      if (browserLang.startsWith('vi')) return 'vi';
-      if (browserLang.startsWith('th')) return 'th';
-      if (browserLang.startsWith('tl') || browserLang.startsWith('fil')) return 'tl';
-      if (browserLang.startsWith('id')) return 'id';
-      if (browserLang.startsWith('ru')) return 'ru';
-      if (browserLang.startsWith('mn')) return 'mn';
-      if (browserLang.startsWith('uz')) return 'uz';
-      if (browserLang.startsWith('ne')) return 'ne';
-      if (browserLang.startsWith('my')) return 'my';
-      if (browserLang.startsWith('km')) return 'km';
-      if (browserLang.startsWith('es')) return 'es';
-      if (browserLang.startsWith('fr')) return 'fr';
-      if (browserLang.startsWith('de')) return 'de';
-      if (browserLang.startsWith('ar')) return 'ar';
-      if (browserLang.startsWith('hi')) return 'hi';
-      if (browserLang.startsWith('pt')) return 'pt';
-      if (browserLang.startsWith('bn')) return 'bn';
-      if (browserLang.startsWith('en')) return 'en';
-    } catch (e) {
-      console.warn('Failed to detect browser language', e);
-    }
-    return 'ko';
+    } catch (e) {}
+    const browserLang = (navigator.language || '').toLowerCase();
+    const match = BROWSER_LANG_PREFIXES.find(([prefixes]) => prefixes.some((p) => browserLang.startsWith(p)));
+    return match ? match[1] : 'ko';
   }
 
   function setLanguage(lang) {
@@ -887,6 +871,12 @@
     document.documentElement.setAttribute('lang', lang);
     applyTranslations();
   }
+
+  // Registry values (js/registry.js BASINS / DAM_TYPES) → translation keys; one map for tabs, filters and table
+  const BASIN_KEYS = { '한강': 'basinHan', '낙동강': 'basinNakdong', '금강': 'basinGeum', '영산·섬진강': 'basinYeongsan' };
+  const DAM_TYPE_KEYS = { '다목적댐': 'multiPurpose', '용수전용댐': 'waterSupply', '홍수조절용': 'floodControl' };
+  const basin = (name) => (BASIN_KEYS[name] ? t(BASIN_KEYS[name]) : name);
+  const damType = (type) => (DAM_TYPE_KEYS[type] ? t(DAM_TYPE_KEYS[type]) : type);
 
   function t(key, params = {}) {
     const dict = TRANSLATIONS[currentLang] || TRANSLATIONS['ko'];
@@ -935,15 +925,10 @@
     }
 
     // 5. Basin Tabs
-    const basinTabs = document.querySelectorAll('.tab-btn');
-    basinTabs.forEach(tab => {
-      const basin = tab.getAttribute('data-basin');
+    document.querySelectorAll('.tab-btn').forEach(tab => {
+      const name = tab.getAttribute('data-basin');
       const labelEl = tab.querySelector('.tab-label') || tab;
-      if (basin === 'ALL') labelEl.textContent = t('basinAll');
-      else if (basin === '한강') labelEl.textContent = t('basinHan');
-      else if (basin === '낙동강') labelEl.textContent = t('basinNakdong');
-      else if (basin === '금강') labelEl.textContent = t('basinGeum');
-      else if (basin === '영산·섬진강') labelEl.textContent = t('basinYeongsan');
+      labelEl.textContent = name === 'ALL' ? t('basinAll') : basin(name);
     });
 
     // 6. Table Headers
@@ -952,7 +937,7 @@
       'basin': 'thBasin',
       'type': 'thType',
       'storageRate': 'thRate',
-      'diffPrevYear': 'thDiff',
+      'diffNormalYear': 'thDiff',
       'waterLevel': 'thLevel',
       'storageVolume': 'thStorage',
       'inflow': 'thInflow',
@@ -981,6 +966,8 @@
     getStoredLang,
     setLanguage,
     t,
+    basin,
+    damType,
     applyTranslations,
     getLocationEN: function(damId) {
       return DAM_LOCATIONS_EN[damId] || null;

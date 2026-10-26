@@ -25,6 +25,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ENDPOINT, PAGE_URL, call } from './mywater.mjs';
 
 const require = createRequire(import.meta.url);
 const REGISTRY = require('../js/registry.js');
@@ -32,15 +33,9 @@ const REGISTRY = require('../js/registry.js');
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT_DIR = path.join(ROOT, 'data');
 
-const ENDPOINT = 'https://www.water.or.kr/kor/realtime/sumun/ajaxProc.do';
-const REFERER = 'https://www.water.or.kr/kor/realtime/sumun/index.do?mode=vers&menuId=13_91_93_96';
-const USER_AGENT = 'k-dam-live/2.0 (+https://github.com/agnusdei1207/k-dam-live)';
-
 const HOURLY_ROWS = 48;         // hours kept in live.json per dam
 const HISTORY_YEARS = 5;        // 365-day windows fetched for history.json
 const CONCURRENCY = 4;
-const REQUEST_TIMEOUT_MS = 60_000;
-const RETRIES = 3;
 const MIN_DAMS_WITH_DATA = 30;  // sanity floor before writing output
 
 // ───────────────────────────────────────────────────────────────────────────────
@@ -52,42 +47,6 @@ const pad2 = (n) => String(n).padStart(2, '0');
 const ymd = (d) => `${d.getUTCFullYear()}-${pad2(d.getUTCMonth() + 1)}-${pad2(d.getUTCDate())}`;
 const addDays = (d, n) => new Date(d.getTime() + n * 86_400_000);
 const daysBetween = (a, b) => Math.round((Date.UTC(b.getUTCFullYear(), b.getUTCMonth(), b.getUTCDate()) - Date.UTC(a.getUTCFullYear(), a.getUTCMonth(), a.getUTCDate())) / 86_400_000);
-const parseYmd = (s) => new Date(Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10)));
-
-// ───────────────────────────────────────────────────────────────────────────────
-// HTTP
-// ───────────────────────────────────────────────────────────────────────────────
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
-async function call(params, attempt = 1) {
-  const body = new URLSearchParams(params).toString();
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
-  try {
-    const res = await fetch(ENDPOINT, {
-      method: 'POST',
-      body,
-      signal: controller.signal,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'Accept': 'application/json, text/javascript, */*; q=0.01',
-        'X-Requested-With': 'XMLHttpRequest',
-        'Referer': REFERER,
-        'User-Agent': USER_AGENT
-      }
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    if (json.errorChk && json.errorChk !== 'N') throw new Error(`MyWater error: ${json.errorTitle || json.errorChk}`);
-    return json;
-  } catch (err) {
-    if (attempt >= RETRIES) throw new Error(`${params.mode} failed after ${attempt} attempts: ${err.message}`);
-    await sleep(1500 * attempt);
-    return call(params, attempt + 1);
-  } finally {
-    clearTimeout(timer);
-  }
-}
 
 async function mapLimit(items, limit, fn) {
   const results = new Array(items.length);
@@ -330,7 +289,7 @@ async function main() {
   const generatedAt = new Date().toISOString();
   const source = {
     name: 'K-water 물정보포털 (MyWater) 실시간 현황 · 댐/보 수문자료',
-    url: 'https://www.water.or.kr/kor/realtime/sumun/index.do?mode=vers&menuId=13_91_93_96',
+    url: PAGE_URL,
     endpoint: ENDPOINT
   };
 

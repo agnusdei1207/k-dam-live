@@ -6,50 +6,41 @@
  * Writes `update=true|false` to $GITHUB_OUTPUT when present.
  */
 import { appendFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
+import { call, kstStampMs } from './mywater.mjs';
 
-const ENDPOINT = 'https://www.water.or.kr/kor/realtime/sumun/ajaxProc.do';
 const DEPLOYED = process.env.DEPLOYED_LIVE_URL || 'https://agnusdei1207.github.io/k-dam-live/data/live.json';
-const MAX_SITE_AGE_MS = 3 * 3600000; // rebuild regardless once the deployed snapshot is this old
+export const MAX_SITE_AGE_MS = 3 * 3_600_000; // rebuild regardless once the deployed snapshot is this old
+
+/**
+ * portal: { hour } | { error }, site: { observedAt, generatedAt } | { error } → { update, reason }
+ */
+export function decide(portal, site, now = Date.now()) {
+  // A full fetch would fail as well; keep the current deployment and try again next tick.
+  if (portal.error) return { update: false, reason: `portal unavailable (${portal.error})` };
+  if (site.error) return { update: true, reason: `deployed snapshot unreadable (${site.error})` };
+  const siteHour = kstStampMs(site.observedAt);
+  if (!(kstStampMs(portal.hour) <= siteHour)) return { update: true, reason: `portal ${portal.hour} is newer than site ${site.observedAt}` };
+  if (!(now - Date.parse(site.generatedAt) < MAX_SITE_AGE_MS)) return { update: true, reason: `site snapshot from ${site.generatedAt} is too old` };
+  return { update: false, reason: `site already shows ${site.observedAt} (portal ${portal.hour})` };
+}
 
 async function portalHour() {
-  const res = await fetch(ENDPOINT, {
-    method: 'POST',
-    body: 'mode=getVers&baseDate=&baseTime=',
-    signal: AbortSignal.timeout(30000),
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      'Accept': 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
-      'Referer': 'https://www.water.or.kr/kor/realtime/sumun/index.do?mode=vers&menuId=13_91_93_96'
-    }
-  });
-  if (!res.ok) throw new Error(`portal HTTP ${res.status}`);
-  const { baseDate, baseTime } = (await res.json()).params || {};
-  if (!baseDate || !baseTime) throw new Error('portal returned no base hour');
-  return `${baseDate} ${String(baseTime).padStart(2, '0')}:00`;
+  const { params = {} } = await call({ mode: 'getVers', baseDate: '', baseTime: '' }, { retries: 1, timeoutMs: 30_000 });
+  if (!params.baseDate || !params.baseTime) throw new Error('portal returned no base hour');
+  return `${params.baseDate} ${String(params.baseTime).padStart(2, '0')}:00`;
 }
 
 async function deployedSnapshot() {
-  const res = await fetch(`${DEPLOYED}?v=${Date.now()}`, { cache: 'no-store', signal: AbortSignal.timeout(30000) });
+  const res = await fetch(`${DEPLOYED}?v=${Date.now()}`, { cache: 'no-store', signal: AbortSignal.timeout(30_000) });
   if (!res.ok) throw new Error(`site HTTP ${res.status}`);
   return res.json();
 }
 
-const [portal, site] = await Promise.allSettled([portalHour(), deployedSnapshot()]);
-let update = true;
-let reason;
-if (portal.status === 'rejected') {
-  // A full fetch would fail as well; keep the current deployment and try again next tick.
-  update = false;
-  reason = `portal unavailable (${portal.reason.message})`;
-} else if (site.status === 'rejected') {
-  reason = `deployed snapshot unreadable (${site.reason.message})`;
-} else {
-  const { observedAt, generatedAt } = site.value;
-  if (portal.value > (observedAt || '')) reason = `portal ${portal.value} is newer than site ${observedAt}`;
-  else if (!(Date.now() - Date.parse(generatedAt) < MAX_SITE_AGE_MS)) reason = `site snapshot from ${generatedAt} is too old`;
-  else { update = false; reason = `site already shows ${observedAt} (portal ${portal.value})`; }
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const failed = (err) => ({ error: err.message });
+  const [portal, site] = await Promise.all([portalHour().then((hour) => ({ hour }), failed), deployedSnapshot().catch(failed)]);
+  const { update, reason } = decide(portal, site);
+  console.log(`[needs-update] ${update} · ${reason}`);
+  if (process.env.GITHUB_OUTPUT) await appendFile(process.env.GITHUB_OUTPUT, `update=${update}\n`);
 }
-
-console.log(`[needs-update] ${update} · ${reason}`);
-if (process.env.GITHUB_OUTPUT) await appendFile(process.env.GITHUB_OUTPUT, `update=${update}\n`);
