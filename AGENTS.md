@@ -1,5 +1,18 @@
 # Agent Operating Contract & Code Quality Guidelines (k-dam-live)
 
+## 0. Development Methodology — mandatory before any change
+
+Every change in this repository (feature, fix, refactor, docs, CI) follows the
+[dev-skill `build-software` methodology](https://github.com/agnusdei1207/dev-skill/blob/main/build-software/SKILL.md).
+It is not copied here; read it from the source. This file only adds what is specific to this repository.
+
+1. **Read first**: `build-software/SKILL.md`, `references/methodology.md` and `references/intent.md` from dev-skill. Then read this repo's `docs/intents/00-project.md`, the latest work intent in `docs/intents/`, `docs/ARCHITECTURE.md` and `docs/GLOSSARY.md`. Open the other references when you enter the phase they own.
+2. **No change without an intent**: create or extend `docs/intents/NNNN-<slug>.md` (format in dev-skill `intent.md`). The top half is the person's request and is not rewritten. The `AI 판정` half is filled in with evidence and updated **in the same commit** as the code it describes. `[x]` means a command or test was actually run.
+3. **Refactors preserve behaviour**: pin the current behaviour first (`npm test`, plus a headless browser pass over the affected UI flows), refactor, and show that the before and after results are identical. Behaviour changes (fixes, features) go in separate commits from refactors.
+4. **Gates in this repo**: `npm test` (syntax check and `node:test` suites in `tests/`) for every commit. After `npm run fetch`, run `npm run check:data`. Any UI change also needs a real headless render of the affected flows. Never report an unrun gate as passed.
+5. **Commit and push** each increment once its gates pass, then confirm the deployment (Actions run plus the deployed `data/live.json`) and record that confirmation in the intent.
+6. **One source per rule**: the dam list lives in `js/registry.js`, the MyWater endpoint, headers and stamp format in `scripts/mywater.mjs`, status thresholds in `js/data.js` `THRESHOLDS`, and label lookups in `js/i18n.js`. Extend the owner; do not re-declare the rule elsewhere.
+
 ## 📌 Repository Core Principles & Technology Contract
 
 1. **Pure Edge Static Architecture**:
@@ -29,4 +42,4 @@
 5. **Commit & Push Conventions**:
    - Use the configured maintainer git identity (`user.name: agnusdei1207`, `user.email: agnusdei1207@gmail.com`).
    - **Do NOT add AI assistant names, tool names, or co-author trailers** to commit messages.
-   - Every commit must be concise, structured (`feat:`, `fix:`, `refactor:`, `ci:`), and pass `node --check` syntax validation before pushing.
+   - Every commit must be concise, structured (`feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `ci:`), and pass `npm test` before pushing.

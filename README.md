@@ -74,7 +74,7 @@
 ## 🧑‍💻 로컬 실행
 
 ```bash
-npm run check   # 문법 검증
+npm test        # 문법 검증 + node:test 테스트
 npm run fetch   # data/live.json, data/history.json 생성 (약 15초)
 npm run serve   # http://localhost:4173
 ```

@@ -11,7 +11,7 @@
 | 저수율 | 현재 저수량 ÷ 총저수용량 × 100 (%) | `storageRate` |
 | 유효저수율 | 유효저수량 기준 저수율. 모달 참고값 | `effectiveRate` |
 | 전년 / 예년 저수율 | 같은 날짜의 작년 값 / 다년 평균값. 포털이 제공 | `rateLastYear`, `rateNormalYear` |
-| 예년 대비 | 현재 저수율 − 예년 저수율 (%p). 표의 열과 요약 카드 | `diffPrevYear` |
+| 예년 대비 | 현재 저수율 − 예년 저수율 (%p). 표의 열과 요약 카드. 전년(작년) 대비가 아니다 | `diffNormalYear` |
 | 현재 수위 | 저수지 수위 (EL.m) | `currentWaterLevel` |
 | 상시만수위 · 저수위 · 계획홍수위 · 홍수기제한수위 | 댐 운영 기준 수위 (EL.m). 포털 제원 | `normalFullLevel`, `lowWaterLevel`, `floodLevel`, `floodLimitLevel` |
 | 총저수용량 · 유효저수량 · 홍수조절용량 | 댐 저수 용량 (백만㎥). 포털 제원 | `totalStorage`, `effectiveStorage`, `floodControlStorage` |
@@ -22,3 +22,6 @@
 | 이력 | 최근 5년 일별 저수율 파일. 모달에서 지연 로드 | `data/history.json` |
 | 레지스트리 | 댐 36개의 정적 정보(코드·이름·수계·구분·소재지·좌표·준공연도) 정본 | `js/registry.js` |
 | 텔레메트리 서비스 | 스냅샷·이력을 읽어 화면용 레코드로 합치는 브라우저 모듈 | `js/data.js` `telemetryService` |
+| 포털 기준 시각 | 포털 관리현황(getVers)이 가리키는 최신 시각. 시간별 수문자료보다 먼저 넘어갈 수 있다 | `params.baseDate/baseTime`, `live.json` `baseDate/baseTime` |
+| 신선도 게이트 | 예약 실행마다 포털 기준 시각과 배포본 관측 시각을 비교해 재수집 여부를 정하는 단계 | `scripts/needs-update.mjs` `decide()` |
+| 위치 출처 | 저장된 위치 정렬 기준이 GPS인지 도시 프리셋인지 | `kdam_user_location.source` (`gps` / `preset`) |

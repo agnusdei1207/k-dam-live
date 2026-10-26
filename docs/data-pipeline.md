@@ -32,7 +32,7 @@ GitHub Actions (main push, 또는 10분마다 cron)
 
 MyWater 실시간 현황 > 댐/보 수문자료 화면이 내부적으로 사용하는 AJAX 엔드포인트를 그대로 호출합니다.
 인증키가 필요 없고, `Accept: application/json` 및 `X-Requested-With: XMLHttpRequest` 헤더만 요구합니다.
-브라우저에서 직접 호출하면 CORS 로 차단되므로 GitHub Actions 에서 수집합니다.
+브라우저에서 직접 호출하면 CORS 로 차단되므로 GitHub Actions 에서 수집합니다. 호출 규칙(엔드포인트·헤더·재시도·시각 해석)은 `scripts/mywater.mjs` 한 곳에 있습니다.
 
 | 모드 (`mode=`) | 화면 | 용도 | 비고 |
 | :--- | :--- | :--- | :--- |
