@@ -274,86 +274,240 @@ body {
 }
 
 /* ==========================================================================
-   2.5 LIVE TELEMETRY STREAM TICKER
+   3. OVERVIEW: MAP + SUMMARY CARDS + BASINS
    ========================================================================== */
-.live-ticker-strip {
+.overview {
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+  align-items: stretch;
+}
+
+.overview-side {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 12px;
+  min-width: 0;
+}
+
+/* The basin panel takes the height the map leaves, spreading its rows evenly */
+.overview-side > .panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.overview-side .basin-list {
+  flex: 1;
+  justify-content: space-evenly;
+}
+
+.panel {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 8px 14px;
-  margin-bottom: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
 }
 
-.ticker-badge {
+.panel-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.panel-hint {
+  font-size: 0.72rem;
+  color: var(--text-subtle);
+  margin-top: 2px;
+}
+
+.map-panel {
+  padding: 12px 12px 10px;
+}
+
+.map-frame {
+  margin-top: 8px;
+}
+
+.korea-map {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+
+.map-land {
+  fill: var(--map-land);
+  stroke: var(--map-coast);
+  stroke-width: 0.7;
+  stroke-linejoin: round;
+}
+
+.map-land-north {
+  fill: var(--map-land-muted);
+  stroke: var(--map-coast-muted);
+  stroke-width: 0.5;
+}
+
+.map-inset {
+  fill: none;
+  stroke: var(--map-coast);
+  stroke-width: 0.7;
+  stroke-dasharray: 3 2;
+}
+
+.map-dot circle {
+  fill: var(--band-color);
+  stroke: var(--surface);
+  stroke-width: 1;
+  fill-opacity: 0.92;
+  transition: fill-opacity 0.15s ease, stroke-width 0.15s ease;
+}
+
+.korea-map[role='group'] .map-dot {
+  cursor: pointer;
+  outline: none;
+}
+
+.korea-map[role='group'] .map-dot:hover circle,
+.korea-map[role='group'] .map-dot:focus-visible circle {
+  stroke: var(--text);
+  stroke-width: 1.6;
+}
+
+.map-dot.is-dimmed circle {
+  fill-opacity: 0.18;
+  stroke-opacity: 0.4;
+}
+
+.map-dot .map-dot-ring {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 1.4;
+}
+
+.map-user circle:first-child {
+  fill: var(--primary-subtle);
+  stroke: var(--primary);
+  stroke-width: 1;
+}
+
+.map-user circle:last-child {
+  fill: var(--primary);
+}
+
+.band-0 { --band-color: var(--band-0); }
+.band-1 { --band-color: var(--band-1); }
+.band-2 { --band-color: var(--band-2); }
+.band-3 { --band-color: var(--band-3); }
+.band-4 { --band-color: var(--band-4); }
+.band-flood { --band-color: var(--band-flood); }
+.band-na { --band-color: var(--border-strong); }
+
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin-top: 8px;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.legend-item {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  background: rgba(56, 189, 248, 0.12);
-  color: #38bdf8;
-  border: 1px solid rgba(56, 189, 248, 0.28);
-  padding: 2px 8px;
-  border-radius: var(--radius);
-  font-size: 0.70rem;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  letter-spacing: 0.04em;
+  gap: 4px;
   white-space: nowrap;
-  flex-shrink: 0;
 }
 
-:root[data-theme='light'] .ticker-badge {
-  background: #e0f2fe;
-  color: #0284c7;
-  border-color: #bae6fd;
+.legend-swatch {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--band-color);
 }
 
-.ticker-signal-icon {
-  width: 13px;
-  height: 13px;
-  color: #38bdf8;
-  animation: pulseBeat 1.8s infinite ease-in-out;
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 
-:root[data-theme='light'] .ticker-signal-icon {
-  color: #0284c7;
-}
-
-@keyframes pulseBeat {
-  0%, 100% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.18); opacity: 1; }
-}
-
-.ticker-track {
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-  height: 20px;
+.basin-list {
+  list-style: none;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
 }
 
-.ticker-text {
-  font-size: 0.80rem;
+.basin-row {
+  display: grid;
+  grid-template-columns: minmax(84px, 150px) minmax(60px, 1fr) 52px 64px;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: transparent;
   color: var(--text);
+  font: inherit;
+  font-size: 0.8rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.basin-row:hover,
+.basin-row.active {
+  background: var(--surface-hover);
+  border-color: var(--border);
+}
+
+.basin-row:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+.basin-name {
+  font-weight: 600;
   white-space: nowrap;
-  transition: opacity 0.25s ease, transform 0.25s ease;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* ==========================================================================
-   3. 4 KEY STATS CARDS
-   ========================================================================== */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 20px;
+.basin-bar {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--bar-track);
+  overflow: hidden;
 }
+
+.basin-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--band-color);
+}
+
+.basin-rate {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-align: right;
+}
+
+.basin-diff {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  text-align: right;
+}
+
+.is-up,
+.data-table td.is-up { color: var(--badge-green-text); }
+.is-down,
+.data-table td.is-down { color: var(--badge-red-text); }
 
 .stat-card {
   background: var(--surface);
@@ -377,169 +531,22 @@ body {
   margin-bottom: 6px;
 }
 
+button.stat-card {
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+button.stat-card:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
 .stat-card-label {
   font-size: 0.78rem;
   font-weight: 500;
   color: var(--text-muted);
-}
-
-.stat-icon-wrap {
-  width: 30px;
-  height: 30px;
-  border-radius: var(--radius);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
-}
-
-.stat-card:hover .stat-icon-wrap {
-  transform: translateY(-2px) scale(1.06);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-}
-
-/* 1. Droplet Wave Micro-Animation */
-.live-icon-droplet .droplet-body {
-  animation: dropletBreath 3.2s ease-in-out infinite;
-  transform-origin: center bottom;
-}
-
-.live-icon-droplet .droplet-wave-1 {
-  animation: waveSway 2s ease-in-out infinite alternate;
-}
-
-.live-icon-droplet .droplet-wave-2 {
-  animation: waveSway 2.4s ease-in-out infinite alternate-reverse;
-  opacity: 0.75;
-}
-
-@keyframes dropletBreath {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05) translateY(-0.8px); }
-}
-
-@keyframes waveSway {
-  0% { transform: translateX(-1.5px); }
-  100% { transform: translateX(1.5px); }
-}
-
-/* 2. Storage Reservoir Flow Animation */
-.live-icon-storage .storage-pulse {
-  animation: storagePulse 2s ease-in-out infinite;
-}
-
-.live-icon-storage .storage-mid {
-  animation: storageLayer 2.4s ease-in-out infinite alternate;
-}
-
-.live-icon-storage .storage-bot {
-  animation: storageLayer 2.4s ease-in-out infinite alternate-reverse;
-}
-
-@keyframes storagePulse {
-  0%, 100% { opacity: 0.25; transform: scale(0.85); }
-  50% { opacity: 1; transform: scale(1.3); }
-}
-
-@keyframes storageLayer {
-  0% { opacity: 0.65; stroke-width: 1.8; }
-  100% { opacity: 1; stroke-width: 2.2; }
-}
-
-/* 3. Inflow Stream Flow Animation */
-.live-icon-inflow .inflow-arrow {
-  animation: inflowArrowMove 1.6s ease-in-out infinite;
-}
-
-.live-icon-inflow .inflow-wave-1 {
-  animation: streamFlow 2s ease-in-out infinite;
-}
-
-.live-icon-inflow .inflow-wave-2 {
-  animation: streamFlow 2s ease-in-out infinite 0.35s;
-}
-
-.live-icon-inflow .inflow-wave-3 {
-  animation: streamFlow 2s ease-in-out infinite 0.7s;
-}
-
-@keyframes inflowArrowMove {
-  0%, 100% { transform: translateY(0); opacity: 0.7; }
-  50% { transform: translateY(2px); opacity: 1; }
-}
-
-@keyframes streamFlow {
-  0%, 100% { opacity: 0.45; transform: translateX(-1.2px); }
-  50% { opacity: 1; transform: translateX(1.2px); }
-}
-
-/* 4. Outflow Spillway Discharge Animation */
-.live-icon-outflow .outflow-arrow {
-  animation: outflowDischarge 1.3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-.live-icon-outflow .outflow-spray {
-  animation: spraySplash 1.3s ease-in-out infinite;
-}
-
-@keyframes outflowDischarge {
-  0% { transform: translateY(-2px); opacity: 0.25; }
-  50% { transform: translateY(1.5px); opacity: 1; }
-  100% { transform: translateY(3.5px); opacity: 0.1; }
-}
-
-@keyframes spraySplash {
-  0%, 100% { opacity: 0.35; transform: scaleX(0.9); }
-  50% { opacity: 1; transform: scaleX(1.15); }
-}
-
-/* Icon Badges */
-.icon-cyan {
-  background: rgba(56, 189, 248, 0.12);
-  color: #38bdf8;
-  border: 1px solid rgba(56, 189, 248, 0.24);
-}
-
-.icon-blue {
-  background: rgba(129, 140, 248, 0.12);
-  color: #818cf8;
-  border: 1px solid rgba(129, 140, 248, 0.24);
-}
-
-.icon-emerald {
-  background: rgba(52, 211, 153, 0.12);
-  color: #34d399;
-  border: 1px solid rgba(52, 211, 153, 0.24);
-}
-
-.icon-amber {
-  background: rgba(251, 146, 60, 0.12);
-  color: #fb923c;
-  border: 1px solid rgba(251, 146, 60, 0.24);
-}
-
-:root[data-theme='light'] .icon-cyan {
-  background: #e0f2fe;
-  color: #0284c7;
-  border-color: #bae6fd;
-}
-
-:root[data-theme='light'] .icon-blue {
-  background: #ede9fe;
-  color: #6366f1;
-  border-color: #ddd6fe;
-}
-
-:root[data-theme='light'] .icon-emerald {
-  background: #d1fae5;
-  color: #059669;
-  border-color: #a7f3d0;
-}
-
-:root[data-theme='light'] .icon-amber {
-  background: #ffedd5;
-  color: #ea580c;
-  border-color: #fed7aa;
 }
 
 .stat-card-value {
@@ -713,48 +720,6 @@ body {
   background: var(--badge-red-bg);
 }
 
-.geo-city-presets {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  padding-top: 8px;
-  border-top: 1px solid var(--border-subtle);
-}
-
-.geo-preset-label {
-  font-size: 0.74rem;
-  color: var(--text-muted);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.btn-city-preset {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-size: 0.74rem;
-  padding: 3px 8px;
-  border-radius: var(--radius);
-  cursor: pointer;
-  font-family: inherit;
-  white-space: nowrap;
-  transition: all 0.12s ease;
-}
-
-.btn-city-preset:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  background: var(--primary-subtle);
-}
-
-.btn-city-preset.active {
-  border-color: var(--primary);
-  background: var(--primary);
-  color: #ffffff;
-  font-weight: 600;
-}
-
 .distance-badge {
   display: inline-flex;
   align-items: center;
@@ -830,26 +795,28 @@ body {
   table-layout: auto;
 }
 
-/* Highly optimized, compact & balanced column width constraints */
-.data-table th:nth-child(1) { width: 14%; min-width: 95px; } /* 댐 이름 */
-.data-table th:nth-child(2) { width: 7.5%; min-width: 58px; } /* 수계 */
-.data-table th:nth-child(3) { width: 8%;  min-width: 62px; }  /* 구분 */
-.data-table th:nth-child(4) { width: 9.5%; min-width: 68px; } /* 저수율 (%) */
-.data-table th:nth-child(5) { width: 6.5%; min-width: 50px; } /* 상태 */
-.data-table th:nth-child(6) { width: 7.5%; min-width: 58px; } /* 예년 대비 */
-.data-table th:nth-child(7) { width: 14%; min-width: 95px; }  /* 현재 수위 (EL.m) */
-.data-table th:nth-child(8) { width: 11%; min-width: 75px; }  /* 저수량 (M㎥) */
-.data-table th:nth-child(9) { width: 11%; min-width: 70px; }  /* 유입량 (㎥/s) */
-.data-table th:nth-child(10){ width: 11%; min-width: 70px; }  /* 방류량 (㎥/s) */
+/* Balanced column widths: 9 columns fit a laptop viewport without horizontal scrolling */
+.data-table th:nth-child(1) { width: 17%; min-width: 110px; } /* 댐 이름 */
+.data-table th:nth-child(2) { width: 9%;  min-width: 62px; }  /* 수계 */
+.data-table th:nth-child(3) { width: 9%;  min-width: 66px; }  /* 구분 */
+.data-table th:nth-child(4) { width: 11%; min-width: 82px; }  /* 저수율 (%) */
+.data-table th:nth-child(5) { width: 8%;  min-width: 62px; }  /* 예년 대비 */
+.data-table th:nth-child(6) { width: 14%; min-width: 100px; } /* 현재 수위 (EL.m) */
+.data-table th:nth-child(7) { width: 11%; min-width: 75px; }  /* 저수량 (M㎥) */
+.data-table th:nth-child(8) { width: 10.5%; min-width: 70px; } /* 유입량 (㎥/s) */
+.data-table th:nth-child(9) { width: 10.5%; min-width: 70px; } /* 방류량 (㎥/s) */
 
 .data-table th {
   padding: 8px 6px;
   font-size: 0.73rem;
   font-weight: 600;
+  line-height: 1.25;
   color: var(--text-muted);
   border-bottom: 1px solid var(--border);
   background: var(--bg-subtle);
-  white-space: nowrap;
+  /* long translated headers wrap instead of forcing horizontal scrolling */
+  white-space: normal;
+  vertical-align: bottom;
   user-select: none;
 }
 
@@ -967,25 +934,6 @@ body {
   position: relative;
   overflow: hidden;
   transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.rate-bar-fill::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.45) 50%,
-    transparent 100%
-  );
-  animation: liquidShimmer 2.4s infinite cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translateX(-100%);
-}
-
-@keyframes liquidShimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
 }
 
 /* Live Number Pure Text Color Pulses (No background / Text Only) */
@@ -1118,45 +1066,6 @@ body {
   font-weight: 600;
   border: 1px solid transparent;
   line-height: 1.2;
-}
-
-.badge-green {
-  background: var(--badge-green-bg);
-  color: var(--badge-green-text);
-  border-color: var(--badge-green-border);
-}
-
-.badge-blue {
-  background: var(--badge-blue-bg);
-  color: var(--badge-blue-text);
-  border-color: var(--badge-blue-border);
-}
-
-.badge-blue.live-discharge {
-  animation: dischargePulseGlow 2s infinite ease-in-out;
-}
-
-@keyframes dischargePulseGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.4); }
-  50% { box-shadow: 0 0 8px 1.5px rgba(56, 189, 248, 0.35); }
-}
-
-.badge-yellow {
-  background: var(--badge-yellow-bg);
-  color: var(--badge-yellow-text);
-  border-color: var(--badge-yellow-border);
-}
-
-.badge-red {
-  background: var(--badge-red-bg);
-  color: var(--badge-red-text);
-  border-color: var(--badge-red-border);
-}
-
-.badge-muted {
-  background: var(--surface-hover);
-  color: var(--text-muted);
-  border-color: var(--border);
 }
 
 /* Dam Type Badges (구분별 전용 컬러) */
@@ -1332,8 +1241,30 @@ body {
 
 .modal-rate-top {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
+  gap: 12px;
+}
+
+.modal-mini-map {
+  width: 112px;
+  flex-shrink: 0;
+}
+
+/* In the dialog the other dams recede to neutral dots so the selected one reads at a glance */
+.modal-mini-map .map-dot.is-dimmed circle {
+  fill: var(--text-subtle);
+  fill-opacity: 0.35;
+  stroke: none;
+}
+
+.modal-mini-map .map-dot.is-selected circle {
+  stroke-width: 3;
+}
+
+.modal-mini-map .map-dot-ring {
+  stroke: var(--text);
+  stroke-width: 4;
 }
 
 .modal-rate-label {
@@ -1447,7 +1378,7 @@ body {
 /* 4-Box Telemetry Grid in Modal */
 .modal-grid-4 {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -1554,8 +1485,11 @@ body {
     padding: 20px 18px 48px;
   }
 
+  .overview {
+    grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+  }
+
   .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
 
@@ -1630,26 +1564,25 @@ body {
     font-size: 0.80rem;
   }
 
-  .live-ticker-strip {
-    padding: 6px 10px;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-
-  .ticker-badge {
-    padding: 2px 6px;
-    font-size: 0.65rem;
-  }
-
-  .ticker-text {
-    font-size: 0.74rem;
-  }
-
-  /* 2x2 Stats Grid on mobile */
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+  .overview {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
     margin-bottom: 14px;
+  }
+
+  .map-panel .map-frame {
+    max-width: 360px;
+    margin: 8px auto 0;
+  }
+
+  .stats-grid {
+    gap: 8px;
+  }
+
+  .basin-row {
+    grid-template-columns: 84px 1fr 46px 58px;
+    gap: 8px;
+    font-size: 0.76rem;
   }
 
   .stat-card {
@@ -1658,16 +1591,6 @@ body {
 
   .stat-card-label {
     font-size: 0.72rem;
-  }
-
-  .stat-icon-wrap {
-    width: 26px;
-    height: 26px;
-  }
-
-  .stat-icon-wrap svg {
-    width: 14px;
-    height: 14px;
   }
 
   .stat-card-value {
@@ -1750,35 +1673,6 @@ body {
     white-space: nowrap;
   }
 
-  .geo-city-presets {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 5px 0 2px;
-    gap: 5px;
-    scrollbar-width: none;
-    width: 100%;
-  }
-
-  .geo-city-presets::-webkit-scrollbar {
-    display: none;
-  }
-
-  .geo-preset-label {
-    font-size: 0.68rem;
-    white-space: nowrap;
-    flex-shrink: 0;
-    padding-right: 2px;
-  }
-
-  .btn-city-preset {
-    font-size: 0.69rem;
-    padding: 3px 6px;
-    flex-shrink: 0;
-    white-space: nowrap;
-  }
-
   /* Table: Flawless Horizontal Scrolling */
   .table-wrapper {
     border-radius: var(--radius);
@@ -1788,7 +1682,7 @@ body {
   }
 
   .data-table {
-    min-width: 780px;
+    min-width: 720px;
     width: 100%;
   }
 
@@ -1877,7 +1771,7 @@ body {
   }
 
   .modal-grid-4 {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;
   }
 
@@ -1932,7 +1826,7 @@ body {
   }
 
   .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;
   }
 
@@ -1945,7 +1839,7 @@ body {
   }
 
   .modal-grid-4 {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;
   }
 
@@ -1971,6 +1865,9 @@ body {
 }
 
 /* ─── Inspector: real-data comparison line & empty chart state ─────────────── */
+.modal-rate-compare.is-up { color: var(--badge-green-text); }
+.modal-rate-compare.is-down { color: var(--badge-red-text); }
+
 .modal-rate-compare {
   margin-top: 6px;
   font-family: var(--font-mono);

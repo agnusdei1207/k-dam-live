@@ -30,30 +30,30 @@
   --primary: #e2a06e;
   --primary-subtle: rgba(226, 160, 110, 0.12);
 
-  /* Status Badges */
-  --badge-green-bg: rgba(52, 211, 153, 0.12);
+  /* Up / down accents (예년 대비, alerts) */
   --badge-green-text: #34d399;
-  --badge-green-border: rgba(52, 211, 153, 0.25);
-
-  --badge-blue-bg: rgba(56, 189, 248, 0.12);
-  --badge-blue-text: #38bdf8;
-  --badge-blue-border: rgba(56, 189, 248, 0.25);
-
-  --badge-yellow-bg: rgba(251, 191, 36, 0.12);
-  --badge-yellow-text: #fbbf24;
-  --badge-yellow-border: rgba(251, 191, 36, 0.25);
 
   --badge-red-bg: rgba(248, 113, 113, 0.12);
   --badge-red-text: #f87171;
   --badge-red-border: rgba(248, 113, 113, 0.25);
 
-  /* High-Contrast Progress Bar Tokens */
+  /* Progress bar track */
   --bar-track: #3d3731;
   --bar-track-border: rgba(255, 255, 255, 0.12);
-  --bar-fill-green: #10b981;
-  --bar-fill-blue: #38bdf8;
-  --bar-fill-yellow: #f59e0b;
-  --bar-fill-red: #ef4444;
+
+  /* Storage-rate colour bands (map dots, bars): low → high = warm → water blue */
+  --band-0: #e5534b;
+  --band-1: #ef8a3c;
+  --band-2: #e3c04f;
+  --band-3: #4fb58c;
+  --band-4: #4a9be0;
+  --band-flood: #8c867e;
+
+  /* Map */
+  --map-land: #2c2824;
+  --map-coast: #4f4942;
+  --map-land-muted: #221f1c;
+  --map-coast-muted: #2f2b27;
 
   --radius: 6px;
   --radius-lg: 8px;
@@ -83,28 +83,26 @@
   --primary: #a65b32;
   --primary-subtle: rgba(166, 91, 50, 0.12);
 
-  /* Status Badges */
-  --badge-green-bg: #d1fae5;
+  /* Up / down accents (예년 대비, alerts) */
   --badge-green-text: #065f46;
-  --badge-green-border: #a7f3d0;
-
-  --badge-blue-bg: #e0f2fe;
-  --badge-blue-text: #0369a1;
-  --badge-blue-border: #bae6fd;
-
-  --badge-yellow-bg: #fef9c3;
-  --badge-yellow-text: #854d0e;
-  --badge-yellow-border: #fef08a;
 
   --badge-red-bg: #fee2e2;
   --badge-red-text: #991b1b;
   --badge-red-border: #fecaca;
 
-  /* High-Contrast Progress Bar Tokens (Light Theme) */
+  /* Progress bar track (Light Theme) */
   --bar-track: #e2dac8;
   --bar-track-border: rgba(0, 0, 0, 0.1);
-  --bar-fill-green: #10b981;
-  --bar-fill-blue: #0284c7;
-  --bar-fill-yellow: #d97706;
-  --bar-fill-red: #dc2626;
+
+  --band-0: #d03b33;
+  --band-1: #df7426;
+  --band-2: #c9a227;
+  --band-3: #2e9a6f;
+  --band-4: #2f7fc4;
+  --band-flood: #8e8575;
+
+  --map-land: #e6dece;
+  --map-coast: #b9ae99;
+  --map-land-muted: #ede7db;
+  --map-coast-muted: #d6ccb9;
 }

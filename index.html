@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>K-DAM LIVE | 대한민국 댐별 실시간 저수율 · 전국 댐 라이브 모니터링</title>
   <meta name="description" content="K-water 물정보포털 관측 자료 기반 대한민국 36개 다목적댐·용수댐·홍수조절댐의 저수율, 수위, 유입량, 방류량 현황 및 최근 5년 저수율 추이" />
-  <meta name="keywords" content="실시간 저수율, 전국 댐 저수율, 전국 저수율, 댐 라이브 모니터링, 댐 저수율 실시간, 전국 댐 현황, 소양강댐 저수율, 충주댐 수위, 대청댐 방류량, 안동댐 저수량, 주암댐 저수율, 용담댐, 합천댐, 남강댐, 가뭄 모니터링, K-water 실시간 수문, 환경부 WAMIS, 댐 방류 현황, 국가수문관측" />
+  <meta name="keywords" content="실시간 저수율, 전국 댐 저수율, 전국 저수율, 댐 라이브 모니터링, 댐 저수율 실시간, 전국 댐 현황, 소양강댐 저수율, 충주댐 수위, 대청댐 방류량, 안동댐 저수량, 주암댐 저수율, 용담댐, 합천댐, 남강댐, 가뭄 모니터링, K-water 실시간 수문, 댐 방류 현황, 국가수문관측" />
   <meta name="author" content="agnusdei1207" />
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
   <link rel="canonical" href="https://agnusdei1207.github.io/k-dam-live/" />
@@ -95,8 +95,9 @@
         "inLanguage": "ko",
         "featureList": [
           "시간 단위 저수율 및 수위 관측 (K-water 물정보포털)",
-          "최대 5개년(2022~2026) 다기간 변동 추이 차트",
-          "GPS 위치 기반 사용자 최근접 댐 자동 정렬",
+          "24시간·30일·1년·3년·5년 저수율 추이 차트",
+          "한반도 지도 위 댐 위치·저수율 표시",
+          "GPS 위치 기반 가까운 댐 순 정렬",
           "엑셀 호환 UTF-8 BOM CSV 데이터 다운로드"
         ]
       },
@@ -119,7 +120,6 @@
         "name": "대한민국 댐별 실시간 수문 관측 데이터셋",
         "description": "한강, 낙동강, 금강, 영산강·섬진강 4대 수계 36개 댐의 수위, 저수율, 유입량, 방류량 관측 데이터 (출처: K-water 물정보포털)",
         "spatialCoverage": "KR",
-        "temporalCoverage": "2022/2026",
         "keywords": ["실시간 저수율", "전국 저수율", "수위", "유입량", "방류량", "수문관측"]
       },
       {
@@ -131,7 +131,7 @@
             "name": "전국 댐 저수율 데이터는 얼마나 자주 갱신되나요?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "K-DAM LIVE는 K-water 물정보포털(MyWater)의 댐/보 수문자료를 매시간 수집하여 대한민국 36개 다목적댐·용수댐·홍수조절댐의 수위, 저수율, 유입량, 방류량 데이터를 갱신합니다."
+              "text": "K-DAM LIVE는 K-water 물정보포털(MyWater)의 댐/보 수문자료를 매시간 반영하여 대한민국 36개 다목적댐·용수댐·홍수조절댐의 수위, 저수율, 유입량, 방류량 데이터를 갱신합니다."
             }
           },
           {
@@ -139,7 +139,7 @@
             "name": "특정 댐의 과거 저수율 변동 추이를 확인할 수 있나요?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "테이블에서 원하는 댐을 클릭하면 24시간, 30일, 1년, 3년, 최대 5개년(2022~2026)의 장기 시계열 저수율 변동 추이 인터랙티브 차트를 즉시 조회할 수 있습니다."
+              "text": "지도나 표에서 댐을 누르면 최근 24시간, 30일, 1년, 3년, 5년의 저수율 추이를 볼 수 있습니다."
             }
           },
           {
@@ -147,7 +147,7 @@
             "name": "내 위치에서 가장 가까운 댐 순으로 볼 수 있나요?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "상단 헤더의 GPS 아이콘 또는 지역 프리셋 버튼(춘천, 대전, 광주, 순천, 대구 등)을 클릭하면 현재 위치에서 각 댐까지의 거리(km) 계산 및 최근접 댐 순으로 즉시 정렬됩니다."
+              "text": "상단 헤더의 위치 아이콘을 누르면 현재 위치에서 각 댐까지의 거리(km)를 계산해 가까운 댐 순으로 정렬합니다."
             }
           }
         ]
@@ -160,7 +160,7 @@
   <!-- Header -->
   <header class="site-header" role="banner">
     <div class="header-container">
-      <a href="./" class="brand-wrap" aria-label="K-DAM LIVE 홈으로 이동">
+      <a href="./" class="brand-wrap" aria-label="K-DAM LIVE">
         <svg class="brand-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <defs>
             <linearGradient id="header-brand-grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -169,21 +169,20 @@
             </linearGradient>
           </defs>
           <path d="M12 2.5 C12 2.5, 19.5 11, 19.5 15.8 C19.5 19.8 16.1 23 12 23 C7.9 23 4.5 19.8 4.5 15.8 C4.5 11, 12 2.5, 12 2.5 Z" fill="url(#header-brand-grad)" stroke="#0284c7" stroke-width="1.2" stroke-linejoin="round"/>
-          <path d="M7.5 15.5 C9.5 14.2, 11.5 14.2, 13.5 15.5 C15 16.5, 16.5 16.5, 17.5 15.5" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
-          <path d="M8.5 18.5 C10.2 17.5, 12 17.5, 13.8 18.5 C15 19.2, 16.2 19.2, 17 18.5" stroke="rgba(255,255,255,0.75)" stroke-width="1.4" stroke-linecap="round"/>
-          <circle cx="14.5" cy="8.5" r="1.2" fill="#ffffff" fill-opacity="0.85"/>
+          <path d="M7.5 15.5 C9.5 14.2, 11.5 14.2, 13.5 15.5 C15 16.5, 16.5 16.5, 17.5 15.5" stroke="#f4efe3" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M8.5 18.5 C10.2 17.5, 12 17.5, 13.8 18.5 C15 19.2, 16.2 19.2, 17 18.5" stroke="rgba(244,239,227,0.75)" stroke-width="1.4" stroke-linecap="round"/>
         </svg>
         <span class="brand-title">K-DAM LIVE</span>
       </a>
 
       <div class="header-actions">
-        <div class="live-badge" title="K-water 물정보포털 관측 자료 · 매시간 자동 갱신" aria-live="polite">
+        <div class="live-badge" aria-live="polite">
           <span class="status-dot" aria-hidden="true"></span>
           <span id="data-updated-time">--:--</span>
         </div>
 
         <div class="lang-select-wrap">
-          <select id="lang-select" class="lang-select" aria-label="언어 선택 / Select Language" title="언어 선택 (22개 다국어 지원)">
+          <select id="lang-select" class="lang-select" aria-label="언어 선택 / Select Language">
             <option value="ko" selected>🇰🇷 KO</option>
             <option value="en">🇺🇸 EN</option>
             <option value="ja">🇯🇵 JA</option>
@@ -209,20 +208,20 @@
           </select>
         </div>
 
-        <button id="btn-export-csv" class="btn-icon" type="button" aria-label="관측 데이터 다운로드" title="관측 데이터 다운로드">
+        <button id="btn-export-csv" class="btn-icon" type="button" aria-label="관측 데이터 다운로드 (CSV)" data-i18n-label="btnCsv" data-i18n-title="btnCsv" title="관측 데이터 다운로드 (CSV)">
           <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2" aria-hidden="true">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
           </svg>
         </button>
 
-        <button id="btn-header-gps" class="btn-icon" type="button" aria-label="내 GPS 위치 기반 정렬" title="내 위치 기준 가까운 댐 순으로 정렬 (GPS)">
+        <button id="btn-header-gps" class="btn-icon" type="button" aria-label="내 위치 기준 가까운 댐 순으로 정렬 (GPS)" data-i18n-label="gpsIdleTitle" title="내 위치 기준 가까운 댐 순으로 정렬 (GPS)">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 2a7.5 7.5 0 0 0-7.5 7.5c0 5.25 7.5 12.5 7.5 12.5s7.5-7.25 7.5-12.5A7.5 7.5 0 0 0 12 2z"/>
             <circle cx="12" cy="9.5" r="2.5"/>
           </svg>
         </button>
 
-        <button id="btn-theme-toggle" class="btn-icon" type="button" aria-label="다크/라이트 테마 전환">
+        <button id="btn-theme-toggle" class="btn-icon" type="button" aria-label="다크/라이트 테마 전환" data-i18n-label="btnTheme" data-i18n-title="btnTheme" title="다크/라이트 테마 전환">
           <svg id="theme-moon" viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2" aria-hidden="true">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
           </svg>
@@ -234,135 +233,87 @@
     </div>
   </header>
 
-  <!-- Main Content -->
   <main class="main-container" role="main">
     <div class="page-intro">
-      <h1>전국 댐 저수율 실시간 모니터링</h1>
-      <p>전국 36개 다목적댐·용수댐·홍수조절댐의 수위, 저수율, 유입량 및 방류량 현황 (K-water 물정보포털 관측 자료)</p>
+      <h1 data-i18n="title">전국 댐 저수율 실시간 모니터링</h1>
+      <p data-i18n="subtitle">전국 36개 다목적댐·용수댐·홍수조절댐의 수위, 저수율, 유입량 및 방류량 현황 (K-water 물정보포털 관측 자료)</p>
     </div>
 
-    <!-- Live Telemetry Stream Ticker -->
-    <div class="live-ticker-strip" aria-label="실시간 수문 속보 피드">
-      <div class="ticker-badge">
-        <svg class="ticker-signal-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
-          <path d="M2 12h5l3-7 4 14 3-7h5"/>
-        </svg>
-        <span class="ticker-badge-text">LIVE</span>
-      </div>
-      <div class="ticker-track">
-        <div id="ticker-content" class="ticker-text">
-          K-water 물정보포털 관측 자료를 불러오는 중…
-        </div>
-      </div>
-    </div>
-
-    <!-- 4 Key Stats Cards -->
-    <section class="stats-grid" aria-label="전국 수문 요약 지표">
-      <div class="stat-card">
-        <div class="stat-card-header">
-          <span class="stat-card-label">전국 평균 저수율</span>
-          <div class="stat-icon-wrap icon-cyan" aria-hidden="true" title="전국 댐 평균 저수율">
-            <svg class="live-icon-droplet" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2.5 C12 2.5, 19.5 11, 19.5 15.8 C19.5 19.8 16.1 23 12 23 C7.9 23 4.5 19.8 4.5 15.8 C4.5 11, 12 2.5, 12 2.5 Z" class="droplet-body"/>
-              <path d="M7 16 c2 -1.5, 4 -1.5, 6 0 s4 1.5, 5 0" class="droplet-wave-1"/>
-              <path d="M8 18.5 c1.8 -1.2, 3.8 -1.2, 5.5 0 s3.5 1.2, 4.5 0" class="droplet-wave-2"/>
-            </svg>
-          </div>
-        </div>
-        <div class="stat-card-value live-num" id="val-avg-rate">--%</div>
-        <div class="stat-card-desc" id="delta-avg-rate">예년 대비 --</div>
+    <!-- Overview: where the dams are and how full they are -->
+    <section class="overview" aria-labelledby="map-title">
+      <div class="panel map-panel">
+        <h2 class="panel-title" id="map-title" data-i18n="mapTitle">댐 위치와 저수율</h2>
+        <p class="panel-hint" data-i18n="mapHint">점 크기는 총저수용량, 색은 저수율 · 누르면 상세 정보</p>
+        <div class="map-frame" id="overview-map"></div>
+        <div class="map-legend" id="map-legend" aria-hidden="true"></div>
       </div>
 
-      <div class="stat-card">
-        <div class="stat-card-header">
-          <span class="stat-card-label">전국 총 저수량</span>
-          <div class="stat-icon-wrap icon-blue" aria-hidden="true" title="전국 댐 현재 총 저수용량">
-            <svg class="live-icon-storage" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <ellipse cx="12" cy="5" rx="8" ry="2.8" class="storage-top"/>
-              <path d="M4 5v6c0 1.5 3.58 2.8 8 2.8s8-1.3 8-2.8V5" class="storage-mid"/>
-              <path d="M4 11v6c0 1.5 3.58 2.8 8 2.8s8-1.3 8-2.8v-6" class="storage-bot"/>
-              <circle cx="12" cy="11" r="1.5" fill="currentColor" class="storage-pulse"/>
-            </svg>
+      <div class="overview-side">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-header"><span class="stat-card-label" data-i18n="avgRate">전국 평균 저수율</span></div>
+            <div class="stat-card-value live-num" id="val-avg-rate">--%</div>
+            <div class="stat-card-desc" id="delta-avg-rate">--</div>
           </div>
+          <div class="stat-card">
+            <div class="stat-card-header"><span class="stat-card-label" data-i18n="totalStorage">전국 총 저수량</span></div>
+            <div class="stat-card-value live-num" id="val-total-storage">-- M㎥</div>
+            <div class="stat-card-desc" id="val-total-capacity">--</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header"><span class="stat-card-label" data-i18n="statBelowNormal">예년보다 낮은 댐</span></div>
+            <div class="stat-card-value live-num" id="val-below-normal">--</div>
+            <div class="stat-card-desc" data-i18n="statBelowNormalDesc">같은 날짜 예년 저수율과 비교</div>
+          </div>
+          <button class="stat-card" id="card-lowest" type="button">
+            <div class="stat-card-header"><span class="stat-card-label" data-i18n="statLowest">저수율이 가장 낮은 댐</span></div>
+            <div class="stat-card-value live-num" id="val-lowest-rate">--%</div>
+            <div class="stat-card-desc" id="val-lowest-name">--</div>
+          </button>
         </div>
-        <div class="stat-card-value live-num" id="val-total-storage">-- M㎥</div>
-        <div class="stat-card-desc" id="val-total-capacity">총 저수용량 -- M㎥</div>
-      </div>
 
-      <div class="stat-card">
-        <div class="stat-card-header">
-          <span class="stat-card-label">실시간 총 유입량</span>
-          <div class="stat-icon-wrap icon-emerald" aria-hidden="true" title="상류 하천 유입량 합산">
-            <svg class="live-icon-inflow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 7c4 1.5 6 3 9 3s5-1.8 9-3" class="inflow-wave-1"/>
-              <path d="M3 13c4 1.5 6 3 9 3s5-1.8 9-3" class="inflow-wave-2"/>
-              <path d="M3 19c4 1.5 6 3 9 3s5-1.8 9-3" class="inflow-wave-3"/>
-              <path d="M12 2v6M9.5 5.5L12 8l2.5-2.5" class="inflow-arrow"/>
-            </svg>
-          </div>
+        <div class="panel">
+          <h2 class="panel-title" data-i18n="basinTitle">수계별 저수율</h2>
+          <p class="panel-hint" data-i18n="basinHint">총저수용량 가중 평균 · 누르면 그 수계만 보기</p>
+          <ul class="basin-list" id="basin-list"></ul>
         </div>
-        <div class="stat-card-value live-num" id="val-total-inflow">-- ㎥/s</div>
-        <div class="stat-card-desc">관측 댐 시간 유입량 합산</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-card-header">
-          <span class="stat-card-label">실시간 총 방류량</span>
-          <div class="stat-icon-wrap icon-amber" aria-hidden="true" title="하류 수문 방류량 합산">
-            <svg class="live-icon-outflow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 4h18" class="outflow-gate-top"/>
-              <path d="M6 4v4c0 3 2 5 6 5s6-2 6-5V4" class="outflow-dam"/>
-              <path d="M12 13v7M9.5 17.5L12 20l2.5-2.5" class="outflow-arrow"/>
-              <path d="M4 17c2.5-1.5 5-1.5 8 0s5.5 1.5 8 0" class="outflow-spray"/>
-            </svg>
-          </div>
-        </div>
-        <div class="stat-card-value live-num" id="val-total-outflow">-- ㎥/s</div>
-        <div class="stat-card-desc" id="val-discharge-count">방류 중인 댐 --개소</div>
       </div>
     </section>
 
     <!-- Filter & Search Bar -->
-    <div class="filter-bar" role="search" aria-label="댐 관측소 검색 및 필터">
+    <div class="filter-bar" role="search">
       <div class="filter-left">
         <div class="search-box">
           <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2" aria-hidden="true">
             <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
           </svg>
-          <input
-            id="search-input"
-            type="text"
-            placeholder="댐 이름 또는 지역 검색..."
-            autocomplete="off"
-            aria-label="댐 이름 또는 소재지 검색"
-          />
+          <input id="search-input" type="text" placeholder="댐 이름 또는 지역 검색" data-i18n-placeholder="searchPlaceholder" data-i18n-label="searchPlaceholder" autocomplete="off" aria-label="댐 이름 또는 지역 검색" />
         </div>
 
-        <select id="select-status-filter" class="filter-select" aria-label="수문 상태별 필터">
-          <option value="ALL">전체 상태</option>
-          <option value="DISCHARGING">방류 중인 댐 (20㎥/s 이상)</option>
-          <option value="DROUGHT">가뭄 주의 (50% 미만)</option>
-          <option value="NORMAL">정상 수위 (60% 이상)</option>
+        <select id="select-normal-filter" class="filter-select" aria-label="예년 대비" data-i18n-label="diffNormalYear">
+          <option value="ALL" data-i18n="filterAllNormal">예년 대비 전체</option>
+          <option value="BELOW" data-i18n="filterBelowNormal">예년보다 낮은 댐</option>
+          <option value="ABOVE" data-i18n="filterAboveNormal">예년 이상인 댐</option>
         </select>
 
-        <select id="select-dam-type" class="filter-select" aria-label="댐 구분별 필터">
-          <option value="ALL">모든 구분</option>
-          <option value="다목적댐">다목적댐</option>
-          <option value="용수전용댐">용수전용댐</option>
-          <option value="홍수조절용">홍수조절용</option>
+        <select id="select-dam-type" class="filter-select" aria-label="댐 구분" data-i18n-label="thType">
+          <option value="ALL" data-i18n="allTypes">모든 구분</option>
+          <option value="다목적댐" data-i18n="multiPurpose">다목적댐</option>
+          <option value="용수전용댐" data-i18n="waterSupply">용수전용댐</option>
+          <option value="홍수조절용" data-i18n="floodControl">홍수조절용</option>
         </select>
       </div>
 
-      <div class="basin-tabs" role="tablist" aria-label="수계별 탭">
-        <button class="tab-btn active" data-basin="ALL" role="tab" aria-selected="true" type="button"><span class="tab-label">전체</span> <span class="tab-count"></span></button>
-        <button class="tab-btn" data-basin="한강" role="tab" aria-selected="false" type="button"><span class="tab-label">한강</span> <span class="tab-count"></span></button>
-        <button class="tab-btn" data-basin="낙동강" role="tab" aria-selected="false" type="button"><span class="tab-label">낙동강</span> <span class="tab-count"></span></button>
-        <button class="tab-btn" data-basin="금강" role="tab" aria-selected="false" type="button"><span class="tab-label">금강</span> <span class="tab-count"></span></button>
-        <button class="tab-btn" data-basin="영산·섬진강" role="tab" aria-selected="false" type="button"><span class="tab-label">영산·섬진강</span> <span class="tab-count"></span></button>
+      <div class="basin-tabs" role="tablist">
+        <button class="tab-btn active" data-basin="ALL" role="tab" aria-selected="true" type="button"><span class="tab-label" data-i18n="basinAll">전체</span> <span class="tab-count"></span></button>
+        <button class="tab-btn" data-basin="한강" role="tab" aria-selected="false" type="button"><span class="tab-label" data-i18n="basinHan">한강</span> <span class="tab-count"></span></button>
+        <button class="tab-btn" data-basin="낙동강" role="tab" aria-selected="false" type="button"><span class="tab-label" data-i18n="basinNakdong">낙동강</span> <span class="tab-count"></span></button>
+        <button class="tab-btn" data-basin="금강" role="tab" aria-selected="false" type="button"><span class="tab-label" data-i18n="basinGeum">금강</span> <span class="tab-count"></span></button>
+        <button class="tab-btn" data-basin="영산·섬진강" role="tab" aria-selected="false" type="button"><span class="tab-label" data-i18n="basinYeongsan">영산·섬진강</span> <span class="tab-count"></span></button>
       </div>
     </div>
 
-    <!-- Location Status Banner & Regional Quick Preset Selector -->
+    <!-- Location banner (shown while sorting by distance) -->
     <div id="geo-info-bar" class="geo-info-bar hidden" aria-live="polite">
       <div class="geo-info-top">
         <div class="geo-info-content">
@@ -370,82 +321,62 @@
             <path d="M12 2a7.5 7.5 0 0 0-7.5 7.5c0 5.25 7.5 12.5 7.5 12.5s7.5-7.25 7.5-12.5A7.5 7.5 0 0 0 12 2z"/>
             <circle cx="12" cy="9.5" r="2.5"/>
           </svg>
-          <span id="geo-info-text">현재 위치를 기반으로 가까운 댐 순으로 정렬되었습니다.</span>
+          <span id="geo-info-text"></span>
         </div>
-        <button id="btn-geo-reset" class="geo-info-reset" type="button" title="위치 정렬 해제">기본순 복귀 ✕</button>
-      </div>
-      <div class="geo-city-presets" aria-label="지역별 빠른 위치 선택">
-        <span class="geo-preset-label">지역 직접 선택 (IP 오차 보정):</span>
-        <button class="btn-city-preset" data-lat="35.1595" data-lng="126.8526" data-city="광주광역시" type="button">광주</button>
-        <button class="btn-city-preset" data-lat="35.0567" data-lng="127.2383" data-city="순천시 주암면" type="button">순천/주암</button>
-        <button class="btn-city-preset" data-lat="35.0644" data-lng="126.9864" data-city="화순군" type="button">화순</button>
-        <button class="btn-city-preset" data-lat="35.8242" data-lng="127.1480" data-city="전북특별자치도" type="button">전주/전북</button>
-        <button class="btn-city-preset" data-lat="36.3504" data-lng="127.3845" data-city="대전/충청" type="button">대전/충청</button>
-        <button class="btn-city-preset" data-lat="35.8714" data-lng="128.6014" data-city="대구/경북" type="button">대구/경북</button>
-        <button class="btn-city-preset" data-lat="35.1796" data-lng="129.0756" data-city="부산/경남" type="button">부산/경남</button>
-        <button class="btn-city-preset" data-lat="37.5665" data-lng="126.9780" data-city="서울/수도권" type="button">서울/경기</button>
-        <button class="btn-city-preset" data-lat="37.8813" data-lng="127.7298" data-city="강원특별자치도" type="button">춘천/강원</button>
+        <button id="btn-geo-reset" class="geo-info-reset" type="button" data-i18n="geoReset">기본순 복귀 ✕</button>
       </div>
     </div>
 
-    <!-- Main Data Table -->
     <div class="table-wrapper">
       <table class="data-table" id="dams-table">
         <thead>
           <tr>
-            <th scope="col" data-sort="name" class="sortable">댐 이름</th>
-            <th scope="col" data-sort="basin" class="sortable">수계</th>
-            <th scope="col" data-sort="type" class="sortable">구분</th>
-            <th scope="col" data-sort="storageRate" class="sortable text-right">저수율 (%)</th>
-            <th scope="col">상태</th>
-            <th scope="col" data-sort="diffNormalYear" class="sortable text-right">예년 대비</th>
-            <th scope="col" data-sort="waterLevel" class="sortable text-right">현재 수위 (EL.m)</th>
-            <th scope="col" data-sort="storageVolume" class="sortable text-center">저수량 (M㎥)</th>
-            <th scope="col" data-sort="inflow" class="sortable text-center">유입량 (㎥/s)</th>
-            <th scope="col" data-sort="outflow" class="sortable text-center">방류량 (㎥/s)</th>
+            <th scope="col" data-sort="name" class="sortable" data-i18n="thName">댐 이름</th>
+            <th scope="col" data-sort="basin" class="sortable" data-i18n="thBasin">수계</th>
+            <th scope="col" data-sort="type" class="sortable" data-i18n="thType">구분</th>
+            <th scope="col" data-sort="storageRate" class="sortable text-right" data-i18n="thRate">저수율 (%)</th>
+            <th scope="col" data-sort="diffNormalYear" class="sortable text-right" data-i18n="thDiff">예년 대비</th>
+            <th scope="col" data-sort="waterLevel" class="sortable text-right" data-i18n="thLevel">현재 수위 (EL.m)</th>
+            <th scope="col" data-sort="storageVolume" class="sortable text-center" data-i18n="thStorage">저수량 (M㎥)</th>
+            <th scope="col" data-sort="inflow" class="sortable text-center" data-i18n="thInflow">유입량 (㎥/s)</th>
+            <th scope="col" data-sort="outflow" class="sortable text-center" data-i18n="thOutflow">방류량 (㎥/s)</th>
           </tr>
         </thead>
-        <tbody id="dams-tbody">
-          <!-- Populated by js/app.js -->
-        </tbody>
+        <tbody id="dams-tbody"></tbody>
       </table>
     </div>
   </main>
 
-  <!-- Dam Detail Modal Overlay -->
+  <!-- Dam detail dialog -->
   <div id="dam-inspector-modal" class="inspector-modal-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-dam-title">
     <div class="inspector-modal-backdrop"></div>
     <div class="inspector-modal-panel">
       <header class="modal-header">
         <div class="modal-title-group">
-          <h2 id="modal-dam-title">댐 상세 정보</h2>
-          <span class="modal-sub" id="modal-dam-sub">수계 및 관리기관</span>
+          <h2 id="modal-dam-title"></h2>
+          <span class="modal-sub" id="modal-dam-sub"></span>
         </div>
-        <button id="btn-modal-close" class="modal-close" type="button" aria-label="닫기">
+        <button id="btn-modal-close" class="modal-close" type="button" aria-label="닫기" data-i18n-label="closeLabel">
           <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2" aria-hidden="true">
             <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         </button>
       </header>
-      <div class="modal-body" id="modal-dam-content">
-        <!-- Populated on click -->
-      </div>
+      <div class="modal-body" id="modal-dam-content"></div>
     </div>
   </div>
 
-  <!-- Footer -->
   <footer class="site-footer" role="contentinfo">
     <div class="footer-container">
-      <span>K-DAM LIVE · 대한민국 댐별 저수율 현황 · 자료 출처: <a href="https://www.water.or.kr/kor/realtime/sumun/index.do?mode=vers&amp;menuId=13_91_93_96" target="_blank" rel="noopener noreferrer" class="footer-link">K-water 물정보포털(MyWater) 댐/보 수문자료</a> (매시간 수집)</span>
-      <a href="https://github.com/agnusdei1207/k-dam-live" target="_blank" rel="noopener noreferrer" class="footer-link">
-        GitHub Repository
-      </a>
+      <span><span data-i18n="footerSource">자료 출처</span>: <a href="https://www.water.or.kr/kor/realtime/sumun/index.do?mode=vers&amp;menuId=13_91_93_96" target="_blank" rel="noopener noreferrer" class="footer-link" data-i18n="footerSourceLink">K-water 물정보포털(MyWater) 댐/보 수문자료</a> · <span data-i18n="footerMap">지도: Natural Earth</span></span>
+      <a href="https://github.com/agnusdei1207/k-dam-live" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub</a>
     </div>
   </footer>
 
   <script src="js/i18n.js"></script>
   <script src="js/registry.js"></script>
   <script src="js/data.js"></script>
+  <script src="js/map.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

@@ -55,13 +55,13 @@ function live({ generatedAt = '2026-10-26T06:17:04Z', current = {} } = {}) {
 const find = (service, id) => service.currentData.find((d) => d.id === id);
 
 test('every registry dam gets a record; dams missing from the snapshot show no data instead of invented values', async () => {
-  const { telemetryService, DAMS } = boot([live()]);
+  const { telemetryService, DAMS, rateBand } = boot([live()]);
   await telemetryService.load();
   assert.equal(telemetryService.currentData.length, DAMS.length);
   const missing = find(telemetryService, 'chungju');
   assert.equal(missing.storageRate, null);
   assert.equal(missing.currentWaterLevel, null);
-  assert.equal(missing.status.code, 'NO_DATA');
+  assert.equal(rateBand(missing), null);
   assert.equal(telemetryService.meta.observedAt, '2026-10-26 15:00');
 });
 
@@ -77,27 +77,21 @@ test('observations are merged as-is, storage rate rounded to 0.1 and non-positiv
   assert.equal(peace.effectiveStorage, 0);
 });
 
-test('status follows the documented thresholds', async () => {
-  const { telemetryService } = boot([live({
-    current: {
-      andong: { waterLevel: 161 },          // ≥ 50 % of the 160→161.7 surcharge band
-      jwam: { outflow: 20 }                 // at the discharge threshold
-    }
-  })]);
+test('colour band is a 20 %p step of the observed rate; the flood-control dam has its own band', async () => {
+  for (const [rate, expected] of [[0, 0], [19.9, 0], [20, 1], [39.9, 1], [40, 2], [59.9, 2], [60, 3], [79.9, 3], [80, 4], [100, 4]]) {
+    const { telemetryService, rateBand } = boot([live({ current: { soyang: { storageRate: rate } } })]);
+    await telemetryService.load();
+    assert.equal(rateBand(find(telemetryService, 'soyang')), expected, `rate ${rate}`);
+  }
+  const { telemetryService, rateBand } = boot([live()]);
   await telemetryService.load();
-  const code = (id) => find(telemetryService, id).status.code;
-  assert.equal(code('peace'), 'FLOOD_CONTROL');
-  assert.equal(code('andong'), 'FLOOD');
-  assert.equal(code('jwam'), 'DISCHARGE');
-  assert.equal(code('soyang'), 'NORMAL');
+  assert.equal(rateBand(find(telemetryService, 'peace')), 'flood');
 });
 
-test('drought bands: <40 alert, <50 caution, <60 attention', async () => {
-  for (const [rate, expected] of [[39.9, 'DROUGHT_ALERT'], [40, 'DROUGHT_CAUTION'], [49.9, 'DROUGHT_CAUTION'], [50, 'DROUGHT_ATTENTION'], [59.9, 'DROUGHT_ATTENTION'], [60, 'NORMAL']]) {
-    const { telemetryService } = boot([live({ current: { soyang: { storageRate: rate } } })]);
-    await telemetryService.load();
-    assert.equal(find(telemetryService, 'soyang').status.code, expected, `rate ${rate}`);
-  }
+test('no record carries an invented status label', async () => {
+  const { telemetryService } = boot([live({ current: { andong: { waterLevel: 161.5 }, jwam: { outflow: 500 } } })]);
+  await telemetryService.load();
+  for (const dam of telemetryService.currentData) assert.equal('status' in dam, false, dam.id);
 });
 
 test('reload reports only real changes and does not notify when the snapshot is the same', async () => {
@@ -138,10 +132,10 @@ test('national overview is capacity-weighted and excludes the flood-control dam'
   const capacity = 2900 + 1248 + 457;
   assert.equal(Number(m.avgStorageRate), Number(((volume / capacity) * 100).toFixed(1)));
   assert.equal(Number(m.totalCapacity), Number(capacity.toFixed(1)));
-  assert.equal(Number(m.totalInflow), Number((29.972 + 29.485 + 10.194 + 77.195).toFixed(1)));
-  assert.equal(m.dischargingCount, 1);   // peace 28.068 ㎥/s
-  assert.equal(m.droughtCount, 2);       // andong 42.4, jwam 42.9
   assert.equal(m.observedDams, 4);
+  assert.equal(m.comparableDams, 3);     // flood-control dam excluded
+  assert.equal(m.belowNormalCount, 2);   // andong 42.4, jwam 42.9 < 예년 60.9; soyang 63.0 is above
+  assert.deepEqual(JSON.parse(JSON.stringify(m.lowestDam)), { id: 'andong', name: '안동댐', storageRate: 42.4 });
   assert.equal(Number(m.diffNormalYear), Number(((volume / capacity) * 100 - 60.9).toFixed(1)));
 });
 

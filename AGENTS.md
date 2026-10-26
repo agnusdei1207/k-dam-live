@@ -11,7 +11,7 @@ It is not copied here; read it from the source. This file only adds what is spec
 3. **Refactors preserve behaviour**: pin the current behaviour first (`npm test`, plus a headless browser pass over the affected UI flows), refactor, and show that the before and after results are identical. Behaviour changes (fixes, features) go in separate commits from refactors.
 4. **Gates in this repo**: `npm test` (syntax check and `node:test` suites in `tests/`) for every commit. After `npm run fetch`, run `npm run check:data`. Any UI change also needs a real headless render of the affected flows. Never report an unrun gate as passed.
 5. **Commit and push** each increment once its gates pass, then confirm the deployment (Actions run plus the deployed `data/live.json`) and record that confirmation in the intent.
-6. **One source per rule**: the dam list lives in `js/registry.js`, the MyWater endpoint, headers and stamp format in `scripts/mywater.mjs`, status thresholds in `js/data.js` `THRESHOLDS`, and label lookups in `js/i18n.js`. Extend the owner; do not re-declare the rule elsewhere.
+6. **One source per rule**: the dam list lives in `js/registry.js`, the MyWater endpoint, headers and stamp format in `scripts/mywater.mjs`, storage-rate colour bands in `js/data.js` `RATE_BANDS`, the peninsula outline and projection in `js/map.js`, and label lookups in `js/i18n.js`. Extend the owner; do not re-declare the rule elsewhere.
 
 ## 📌 Repository Core Principles & Technology Contract
 
@@ -29,6 +29,7 @@ It is not copied here; read it from the source. This file only adds what is spec
 3. **Real Data Only — No Simulation**:
    - Every hydrological number on screen (저수율, 수위, 저수량, 유입·방류량, 전년/예년 비교, 제원, 추이) comes from K-water MyWater via `scripts/fetch-dam-data.mjs` → `data/live.json` / `data/history.json`. See `docs/data-pipeline.md`.
    - **Never** reintroduce hard-coded observation values, random jitter, synthetic trends, or "heartbeat" animations that change numbers without a real observation. Missing values are rendered as `-`, not invented.
+   - **Never** label dams with judgements the portal does not publish (drought stages, flood watch, "releasing" status). Comparisons use the portal's own 예년 (normal-year) rate; colour bands are visual steps only (INTENT-0003).
    - `js/registry.js` is the single list of dams (36, all K-water managed: 21 다목적, 14 용수, 1 홍수조절) with dam code, basin, type, location, WGS84 `lat`/`lng` and 준공연도. Add a dam only if the portal actually serves its data.
    - Geolocation Haversine spherical calculations must remain mathematically accurate.
    - User coordinates and location preference must be safely persisted in `localStorage` (`kdam_user_location`, `kdam_geo_active`) for frictionless, zero-latency subsequent visits.
@@ -36,7 +37,7 @@ It is not copied here; read it from the source. This file only adds what is spec
 4. **UI/UX & Accessibility Standards (Radix / shadcn-grade)**:
    - **Eye-comfort Warm Palette**: Maintain the soothing dark (`#191715`) and light parchment (`#f4efe3`) theme tokens inherited from `/study`. Avoid piercing pure `#ffffff` or unnatural vibrant neons.
    - **Rock-Solid Table Layout**: Zero jitter or vertical/horizontal layout shifts during data filter changes. Keep column min-widths balanced and proportional.
-   - **Full Visibility without PC Horizontal Scrolling**: 10 columns must fit seamlessly within standard desktop/laptop viewports.
+   - **Full Visibility without PC Horizontal Scrolling**: all 9 table columns must fit within standard desktop/laptop viewports (≥ 1024 px).
    - **Smooth Animations**: Modal open/close, theme switches, and location banners must use buttery cubic-bezier easing (`0.16, 1, 0.3, 1`) with graceful exit/closing keyframes.
 
 5. **Commit & Push Conventions**:

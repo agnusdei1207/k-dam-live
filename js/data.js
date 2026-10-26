@@ -16,19 +16,22 @@
     return;
   }
 
-  const { DAM_TYPES, DAMS } = REGISTRY;
+  const { BASINS, DAM_TYPES, DAMS } = REGISTRY;
 
   const LIVE_URL = 'data/live.json';
   const HISTORY_URL = 'data/history.json';
 
-  // Thresholds shared by table badges, status filter and overview metrics
-  const THRESHOLDS = Object.freeze({
-    DISCHARGE_CMS: 20.0,      // outflow at/above this is shown as "방류 중"
-    DROUGHT_ALERT: 40.0,      // storage rate below → 가뭄경계
-    DROUGHT_CAUTION: 50.0,    // storage rate below → 가뭄주의
-    DROUGHT_ATTENTION: 60.0,  // storage rate below → 가뭄관심
-    FLOOD_SURCHARGE_RATIO: 0.5 // ≥ 50 % of the band between 상시만수위 and 계획홍수위 is in use → 홍수주의
-  });
+  // Colour bands for the storage rate (map dots, table bars, modal). Purely visual steps of 20 %p:
+  // the portal publishes no per-dam drought stage, so the site does not label dams with one (INTENT-0003).
+  const RATE_BANDS = Object.freeze([20, 40, 60, 80]);
+
+  /** 0‥4 for observed storage dams, 'flood' for the flood-control dam (kept empty on purpose), null without data */
+  function rateBand(dam) {
+    if (!dam || !isNum(dam.storageRate)) return null;
+    if (dam.type === DAM_TYPES.FLOOD_CONTROL) return 'flood';
+    const i = RATE_BANDS.findIndex((edge) => dam.storageRate < edge);
+    return i === -1 ? RATE_BANDS.length : i;
+  }
 
   // Live fields compared on refresh so the UI can pulse cells that really changed
   const LIVE_FIELDS = ['storageRate', 'currentWaterLevel', 'currentStorageVolume', 'currentInflow', 'currentOutflow'];
@@ -54,39 +57,6 @@
   }
 
 
-  function classifyStatus(dam) {
-    const rate = dam.storageRate;
-    const outflow = dam.currentOutflow;
-    const level = dam.currentWaterLevel;
-    const floodLevel = dam.floodLevel;
-
-    if (rate === null) {
-      return { code: 'NO_DATA', label: '관측값 없음' };
-    }
-    if (dam.type === DAM_TYPES.FLOOD_CONTROL) {
-      // Flood-control dams are kept nearly empty on purpose; a low rate is not drought.
-      return { code: 'FLOOD_CONTROL', label: '홍수조절 대기' };
-    }
-    const nfl = dam.normalFullLevel;
-    if (isNum(level) && isNum(floodLevel) && isNum(nfl) && floodLevel > nfl &&
-        level >= nfl + (floodLevel - nfl) * THRESHOLDS.FLOOD_SURCHARGE_RATIO) {
-      return { code: 'FLOOD', label: '홍수주의' };
-    }
-    if (isNum(outflow) && outflow >= THRESHOLDS.DISCHARGE_CMS) {
-      return { code: 'DISCHARGE', label: '방류 중' };
-    }
-    if (rate < THRESHOLDS.DROUGHT_ALERT) {
-      return { code: 'DROUGHT_ALERT', label: '가뭄경계' };
-    }
-    if (rate < THRESHOLDS.DROUGHT_CAUTION) {
-      return { code: 'DROUGHT_CAUTION', label: '가뭄주의' };
-    }
-    if (rate < THRESHOLDS.DROUGHT_ATTENTION) {
-      return { code: 'DROUGHT_ATTENTION', label: '가뭄관심' };
-    }
-    return { code: 'NORMAL', label: '정상' };
-  }
-
   function emptyRecord(reg) {
     return {
       ...reg,
@@ -103,8 +73,7 @@
       inflowYesterday: null, outflowYesterday: null,
       diffNormalYear: null,
       hourly: [],
-      distanceKm: null,
-      status: null
+      distanceKm: null
     };
   }
 
@@ -144,7 +113,6 @@
       rec.diffNormalYear = (isNum(rec.storageRate) && isNum(rec.rateNormalYear)) ? round1(rec.storageRate - rec.rateNormalYear) : null;
     }
     rec.distanceKm = userLocation ? calcDistanceKm(userLocation.lat, userLocation.lng, rec.lat, rec.lng) : null;
-    rec.status = classifyStatus(rec);
     return rec;
   }
 
@@ -311,10 +279,10 @@
         : null;
       const diffNormalYear = (isNum(normalYearRate) && isNum(currentRateOfRefDams)) ? currentRateOfRefDams - normalYearRate : null;
 
-      const totalInflow = observed.reduce((acc, d) => acc + (isNum(d.currentInflow) ? d.currentInflow : 0), 0);
-      const totalOutflow = observed.reduce((acc, d) => acc + (isNum(d.currentOutflow) ? d.currentOutflow : 0), 0);
-      const dischargingCount = observed.filter((d) => isNum(d.currentOutflow) && d.currentOutflow >= THRESHOLDS.DISCHARGE_CMS).length;
-      const droughtCount = storageDams.filter((d) => d.storageRate < THRESHOLDS.DROUGHT_CAUTION).length;
+      // Dams below their own multi-year normal for today (예년), as published by the portal
+      const comparable = storageDams.filter((d) => isNum(d.diffNormalYear));
+      const belowNormalCount = comparable.filter((d) => d.diffNormalYear < 0).length;
+      const lowest = storageDams.reduce((min, d) => (!min || d.storageRate < min.storageRate ? d : min), null);
 
       // Same 0.1 rounding as the UI's toFixed(1) so formatting the number later cannot drift
       const fixed1 = (v) => (isNum(v) ? Number(v.toFixed(1)) : null);
@@ -325,12 +293,35 @@
         diffNormalYear: fixed1(diffNormalYear),
         totalStorageVolume: fixed1(totalStorageVolume),
         totalCapacity: fixed1(totalCapacity),
-        totalInflow: fixed1(totalInflow),
-        totalOutflow: fixed1(totalOutflow),
-        dischargingCount,
-        droughtCount,
+        comparableDams: comparable.length,
+        belowNormalCount,
+        lowestDam: lowest ? { id: lowest.id, name: lowest.name, storageRate: lowest.storageRate } : null,
         observedAt: this.meta ? this.meta.observedAt : null
       };
+    }
+
+    /**
+     * Per basin (registry order): capacity-weighted storage rate of its observed storage dams and the
+     * same weighting applied to the portal's 예년 rates. Flood-control dams are excluded as nationally.
+     */
+    getBasinMetrics() {
+      const fixed1 = (v) => (isNum(v) ? Number(v.toFixed(1)) : null);
+      return Object.values(BASINS).map((basin) => {
+        const dams = this.currentData.filter((d) => d.basin === basin && d.type !== DAM_TYPES.FLOOD_CONTROL &&
+          isNum(d.storageRate) && isNum(d.totalStorage) && isNum(d.currentStorageVolume));
+        const capacity = dams.reduce((acc, d) => acc + d.totalStorage, 0);
+        const rate = capacity > 0 ? (dams.reduce((acc, d) => acc + d.currentStorageVolume, 0) / capacity) * 100 : null;
+        const ref = dams.filter((d) => isNum(d.rateNormalYear));
+        const refCapacity = ref.reduce((acc, d) => acc + d.totalStorage, 0);
+        const refRate = refCapacity > 0 ? (ref.reduce((acc, d) => acc + d.currentStorageVolume, 0) / refCapacity) * 100 : null;
+        const normal = refCapacity > 0 ? (ref.reduce((acc, d) => acc + d.totalStorage * d.rateNormalYear, 0) / refCapacity) : null;
+        return {
+          basin,
+          dams: dams.length,
+          storageRate: fixed1(rate),
+          diffNormalYear: isNum(refRate) && isNum(normal) ? fixed1(refRate - normal) : null
+        };
+      });
     }
 
     subscribe(callback) {
@@ -347,6 +338,6 @@
 
   const telemetryService = new TelemetryService();
 
-  window.KDAM = { DAM_TYPES, DAMS, THRESHOLDS, telemetryService };
+  window.KDAM = { DAM_TYPES, DAMS, RATE_BANDS, rateBand, telemetryService };
 
 })(typeof window !== 'undefined' ? window : this);

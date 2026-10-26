@@ -17,11 +17,13 @@
 | 총저수용량 · 유효저수량 · 홍수조절용량 | 댐 저수 용량 (백만㎥). 포털 제원 | `totalStorage`, `effectiveStorage`, `floodControlStorage` |
 | 유입량 · 총방류량 | 최신 관측 시각의 시간 유입량과 총방류량 (㎥/s) | `currentInflow`, `currentOutflow` |
 | 전일 유입량 · 전일 방류량 | 전날 하루 평균 (㎥/s). 모달 참고값 | `inflowYesterday`, `outflowYesterday` |
-| 상태 | 관측값으로 판정한 배지. 홍수주의 · 방류 중 · 가뭄경계 · 가뭄주의 · 가뭄관심 · 정상 · 홍수조절 대기 · 관측값 없음. 기준은 `docs/data-pipeline.md` 4절 | `status.code` |
+| 저수율 구간 | 지도 점·막대·차트 색에 쓰는 20%p 단위 시각 구간(0–20 · 20–40 · 40–60 · 60–80 · 80% 이상). 판정이 아니다. 홍수조절댐은 별도 회색 | `RATE_BANDS`, `rateBand()` |
+| 예년보다 낮은 댐 | 예년 대비가 음수인 댐(홍수조절댐 제외). 요약 카드와 필터 | `belowNormalCount`, 필터 `BELOW` |
+| 수계 저수율 | 수계에 속한 저수 댐의 Σ현재저수량 ÷ Σ총저수용량 | `getBasinMetrics()` |
 | 스냅샷 | 배포 시점에 생성한 현재값 파일 | `data/live.json` |
 | 이력 | 최근 5년 일별 저수율 파일. 모달에서 지연 로드 | `data/history.json` |
 | 레지스트리 | 댐 36개의 정적 정보(코드·이름·수계·구분·소재지·좌표·준공연도) 정본 | `js/registry.js` |
 | 텔레메트리 서비스 | 스냅샷·이력을 읽어 화면용 레코드로 합치는 브라우저 모듈 | `js/data.js` `telemetryService` |
 | 포털 기준 시각 | 포털 관리현황(getVers)이 가리키는 최신 시각. 시간별 수문자료보다 먼저 넘어갈 수 있다 | `params.baseDate/baseTime`, `live.json` `baseDate/baseTime` |
 | 신선도 게이트 | 예약 실행마다 포털 기준 시각과 배포본 관측 시각을 비교해 재수집 여부를 정하는 단계 | `scripts/needs-update.mjs` `decide()` |
-| 위치 출처 | 저장된 위치 정렬 기준이 GPS인지 도시 프리셋인지 | `kdam_user_location.source` (`gps` / `preset`) |
+| 위치 출처 | 저장된 위치 정렬 기준이 GPS인지, 이전 버전의 도시 프리셋인지 | `kdam_user_location.source` (`gps` / `preset`) |
