@@ -20,6 +20,7 @@
   const AUTO_REFRESH_INTERVAL_MS = 10 * 60 * 1000;
   const VISIBLE_REFRESH_MIN_MS = 60 * 1000;
   const TICKER_ROTATE_MS = 4200;
+  const GPS_LABEL = '현재 GPS 위치';
 
   // Table sort keys (data-sort attribute) → record fields
   const SORT_FIELDS = {
@@ -44,7 +45,7 @@
     sortOrder: 'desc',
     userLocation: null,
     isGeoActive: false,
-    theme: localStorage.getItem('kdam_theme') || 'dark',
+    theme: readStorage('kdam_theme') || 'dark',
     prevStats: null,
     tickerItems: [],
     tickerIdx: 0
@@ -52,6 +53,15 @@
 
   let elements = {};
   let lastRefreshAt = Date.now();
+  let locationAppliedAt = 0;
+
+  // Storage can throw (blocked site data, some private modes); the page must still work without it.
+  function readStorage(key) {
+    try { return localStorage.getItem(key); } catch (e) { return null; }
+  }
+  function writeStorage(key, value) {
+    try { localStorage.setItem(key, value); } catch (e) {}
+  }
 
   function cacheElements() {
     elements = {
@@ -186,7 +196,7 @@
       if (elements.langSelect) elements.langSelect.value = initialLang;
     }
 
-    loadCachedLocation();
+    const savedLocationSource = loadCachedLocation();
     renderLoadingRow();
 
     try {
@@ -210,7 +220,11 @@
       if (!document.hidden && Date.now() - lastRefreshAt > VISIBLE_REFRESH_MIN_MS) refreshLiveData();
     });
 
-    setTimeout(() => requestUserLocation(true), 400);
+    // Refresh the GPS fix only on a first visit or when GPS was the saved choice; a chosen city
+    // preset or an explicit "off" must survive reloads (AGENTS.md location persistence).
+    if (savedLocationSource === null || savedLocationSource === 'gps') {
+      setTimeout(() => requestUserLocation(true), 400);
+    }
   }
 
   async function refreshLiveData() {
@@ -273,18 +287,23 @@
     });
   }
 
+  /**
+   * Restores the saved location preference and returns its source:
+   * 'gps' | 'preset' | 'off', or null when the visitor never chose one.
+   */
   function loadCachedLocation() {
+    const active = readStorage('kdam_geo_active');
+    if (active === 'false') return 'off';
+    if (active !== 'true') return null;
     try {
-      const savedLoc = localStorage.getItem('kdam_user_location');
-      const isGeoSaved = localStorage.getItem('kdam_geo_active');
-      if (savedLoc && isGeoSaved === 'true') {
-        const { lat, lng, label } = JSON.parse(savedLoc);
-        if (typeof lat === 'number' && typeof lng === 'number') {
-          applyLocation(lat, lng, label || '현재 위치', false);
-        }
-      }
+      const { lat, lng, label, source } = JSON.parse(readStorage('kdam_user_location'));
+      if (!isNum(lat) || !isNum(lng)) return null;
+      // Entries saved before the source field existed: only the GPS label meant GPS
+      const resolved = source || (label === GPS_LABEL ? 'gps' : 'preset');
+      applyLocation(lat, lng, label || GPS_LABEL, resolved, false);
+      return resolved;
     } catch (e) {
-      console.warn('Failed to load cached location', e);
+      return null;
     }
   }
 
@@ -323,27 +342,27 @@
   function toggleTheme() {
     state.theme = state.theme === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', state.theme);
-    localStorage.setItem('kdam_theme', state.theme);
+    writeStorage('kdam_theme', state.theme);
     updateThemeIcons();
   }
 
   // ─── Geolocation ──────────────────────────────────────────────────────────────
-  function applyLocation(latitude, longitude, locationLabel = '현재 위치', saveToStorage = true) {
+  function applyLocation(latitude, longitude, locationLabel, source, saveToStorage = true) {
     state.userLocation = { lat: latitude, lng: longitude };
     state.isGeoActive = true;
     state.sortField = 'distanceKm';
     state.sortOrder = 'asc';
+    locationAppliedAt = Date.now();
 
     if (saveToStorage) {
-      try {
-        localStorage.setItem('kdam_user_location', JSON.stringify({
-          lat: latitude,
-          lng: longitude,
-          label: locationLabel,
-          updatedAt: Date.now()
-        }));
-        localStorage.setItem('kdam_geo_active', 'true');
-      } catch (e) {}
+      writeStorage('kdam_user_location', JSON.stringify({
+        lat: latitude,
+        lng: longitude,
+        label: locationLabel,
+        source,
+        updatedAt: Date.now()
+      }));
+      writeStorage('kdam_geo_active', 'true');
     }
 
     telemetryService.updateUserLocation(latitude, longitude);
@@ -380,10 +399,13 @@
       return;
     }
 
+    const requestedAt = Date.now();
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        // A background refresh must not override a choice the visitor made while it was pending
+        if (silent && (locationAppliedAt > requestedAt || readStorage('kdam_geo_active') === 'false')) return;
         const { latitude, longitude } = position.coords;
-        applyLocation(latitude, longitude, '현재 GPS 위치', true);
+        applyLocation(latitude, longitude, GPS_LABEL, 'gps', true);
       },
       (error) => {
         if (!silent) {
@@ -404,9 +426,7 @@
     state.sortField = 'storageRate';
     state.sortOrder = 'desc';
 
-    try {
-      localStorage.setItem('kdam_geo_active', 'false');
-    } catch (e) {}
+    writeStorage('kdam_geo_active', 'false');
 
     telemetryService.updateUserLocation(null, null);
 
@@ -927,7 +947,7 @@
         const lat = parseFloat(btn.getAttribute('data-lat'));
         const lng = parseFloat(btn.getAttribute('data-lng'));
         const city = btn.getAttribute('data-city');
-        applyLocation(lat, lng, city, true);
+        applyLocation(lat, lng, city, 'preset', true);
       });
     });
 
